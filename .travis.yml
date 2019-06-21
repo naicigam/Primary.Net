@@ -1,0 +1,14 @@
+language: csharp
+solution: Primary.sln
+mono: none
+dotnet: 2.1.502
+
+install:
+- dotnet restore
+
+script:
+ - dotnet build
+ - dotnet test Primary.Tests/Primary.Tests.csproj
+ - dotnet pack Primary/Primary.csproj /p:NuspecFile=
+  
+# Package and release: https://nicolas.guelpa.me/blog/2018/01/15/travis-ci-net-core.html

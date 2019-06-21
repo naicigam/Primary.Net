@@ -1,0 +1,10 @@
+﻿/git/.vs
+/.vs/Primary
+/packages
+/Primary/bin
+/Primary/obj
+/Primary.Examples/bin
+/Primary.Examples/obj
+/Primary.Tests/bin
+/Primary.Tests/obj
+*.user

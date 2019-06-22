@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using Primary.Serialization;
 
 namespace Primary.Data
 {
@@ -27,44 +28,19 @@ namespace Primary.Data
         }
     } 
 
-    #region JSON serialization
+    #region String serialization
 
-    public class EntryToStringConverter : EnumConverter
+    public class EntryToStringConverter : EnumToStringConverter<Entry>
     {
-        public EntryToStringConverter(Type type) : base(type)
+        public EntryToStringConverter()
         {
+            _enumToString = EntryToString;
         }
-
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
-        }
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            return StringToEntry[(string)value];
-        }
-
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type sourceType)
-        {
-            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            return EntryToString[(Entry) value];
-        }
-
-        private static readonly Dictionary<string, Entry> StringToEntry = new Dictionary<string, Entry>()
-        {
-            {"BI", Entry.Bids},
-            {"OF", Entry.Offers},
-        };
 
         private static readonly Dictionary<Entry, string> EntryToString = new Dictionary<Entry, string>()
         {
             {Entry.Bids, "BI"},
-            {Entry.Offers, "OF"},
+            {Entry.Offers, "OF"}
         };
     }
 

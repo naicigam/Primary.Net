@@ -41,6 +41,7 @@ namespace Primary.Examples
                 //socketTask.Wait();
                 await socketTask;
 
+                // Fix: use semaphore
                 while (true)
                 {
                     Thread.Sleep(100);

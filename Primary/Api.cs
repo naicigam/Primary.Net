@@ -15,10 +15,10 @@ namespace Primary
         
         public Api(Uri baseUri)
         {
-            BaseUri = baseUri;
+            _baseUri = baseUri;
         }
 
-        public Uri BaseUri { get; }
+        private readonly Uri _baseUri;
 
         #region Login
 
@@ -26,7 +26,7 @@ namespace Primary
 
         public async Task Login(string username, string password)
         {
-            var uri = new Uri(BaseUri, "/auth/getToken");
+            var uri = new Uri(_baseUri, "/auth/getToken");
             
             await uri.ToString().PostToUrlAsync(null, "*/*", 
                                                 request =>
@@ -50,7 +50,7 @@ namespace Primary
 
         public async Task< IEnumerable<Instrument> > GetAllInstruments()
         {
-            var uri = new Uri(BaseUri, "/rest/instruments/all");
+            var uri = new Uri(_baseUri, "/rest/instruments/all");
             var response = await uri.ToString().GetJsonFromUrlAsync( request =>
             {
                 request.Headers.Add("X-Auth-Token", AccessToken);
@@ -80,8 +80,7 @@ namespace Primary
                                                                     DateTime dateFrom, 
                                                                     DateTime dateTo)
         {
-            var uri = new Uri(BaseUri, "/rest/data/getTrades");
-            //marketId=ROFX&symbol=DOFeb19&dateFrom=2019-01-01&dateTo=2019-01-10
+            var uri = new Uri(_baseUri, "/rest/data/getTrades");
 
             var response = await uri.ToString()
                                     .AddQueryParam("marketId", instrument.Market)
@@ -110,11 +109,47 @@ namespace Primary
                                                 uint level, uint depth
         )
         {
-            var url = new UriBuilder(BaseUri)
+            var url = new UriBuilder(_baseUri)
             {
                 Scheme = "ws"
             };
             return new MarketDataWebSocket(instruments, entries, level, depth, url.Uri, AccessToken);
         }
+
+        #region Orders
+
+        public async Task<uint> SubmitOrder(Order order)
+        {
+            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
+
+            var response = await uri.ToString()
+                                    .AddQueryParam("marketId", "ROFX")
+                                    .AddQueryParam("symbol", order.Symbol)
+                                    .AddQueryParam("price", order.Price)
+                                    .AddQueryParam("orderQty", order.Quantity)
+                                    .AddQueryParam("ordType", order.Type)
+                                    .AddQueryParam("side", order.Side)
+                                    .AddQueryParam("timeInForce", order.Price)
+                                    .AddQueryParam("account", order.Price)
+                                    .AddQueryParam("cancelPrevious", order.Price)
+                                    .AddQueryParam("iceberg", order.Price)
+                                    .AddQueryParam("expireDate", order.Price)
+                                    .AddQueryParam("displayQty", order.Price)
+                                    .GetJsonFromUrlAsync( request =>
+                                    {
+                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                    });
+            
+            //var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
+            //return data.Trades;
+            return Task.FromResult(42);
+        }
+        
+        public async Task<Order> GetOrder(uint orderId)
+        {
+            return Task.FromResult(new Order());
+        }
+
+        #endregion
     }
 }

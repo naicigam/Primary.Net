@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using Primary.Serialization;
 
 namespace Primary.Data
@@ -45,46 +43,34 @@ namespace Primary.Data
 
     public class OrderTypeToStringConverter : EnumToStringConverter<OrderType>
     {
-        public OrderTypeToStringConverter()
-        {
-            _enumToString = OrderTypeToString;
-        }
-
-        private static readonly Dictionary<OrderType, string> OrderTypeToString = new Dictionary<OrderType, string>()
-        {
-            {OrderType.Market, "Market"},
-            {OrderType.Limit, "Limit"}
-        };
+        protected override Dictionary<OrderType, string> EnumToString =>
+            new Dictionary<OrderType, string>
+            {
+                {OrderType.Market, "Market"},
+                {OrderType.Limit, "Limit"}
+            };
     }
 
     public class OrderSideToStringConverter : EnumToStringConverter<OrderSide>
     {
-        public OrderSideToStringConverter()
-        {
-            _enumToString = OrderSideToString;
-        }
-
-        private static readonly Dictionary<OrderSide, string> OrderSideToString = new Dictionary<OrderSide, string>()
-        {
-            {OrderSide.Sell, "Sell"},
-            {OrderSide.Buy, "Buy"}
-        };
+        protected override Dictionary<OrderSide, string> EnumToString =>
+            new Dictionary<OrderSide, string>
+            {
+                {OrderSide.Sell, "Sell"},
+                {OrderSide.Buy, "Buy"}
+            };
     }
 
     public class OrderExpirationToStringConverter : EnumToStringConverter<OrderExpiration>
     {
-        public OrderExpirationToStringConverter()
-        {
-            _enumToString = OrderExpirationToString;
-        }
-
-        private static readonly Dictionary<OrderExpiration, string> OrderExpirationToString = new Dictionary<OrderExpiration, string>()
-        {
-            {OrderExpiration.Day, "Day"},
-            {OrderExpiration.FillOrKill, "FOK"},
-            {OrderExpiration.GoodTillDate, "GTD"},
-            {OrderExpiration.ImmediateOrCancel, "IOC"}
-        };
+        protected override Dictionary<OrderExpiration, string> EnumToString =>
+            new Dictionary<OrderExpiration, string>
+            {
+                {OrderExpiration.Day, "Day"},
+                {OrderExpiration.FillOrKill, "FOK"},
+                {OrderExpiration.GoodTillDate, "GTD"},
+                {OrderExpiration.ImmediateOrCancel, "IOC"}
+            };
     }
 
     #endregion

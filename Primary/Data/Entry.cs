@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using Primary.Serialization;
 
 namespace Primary.Data
@@ -32,16 +30,12 @@ namespace Primary.Data
 
     public class EntryToStringConverter : EnumToStringConverter<Entry>
     {
-        public EntryToStringConverter()
-        {
-            _enumToString = EntryToString;
-        }
-
-        private static readonly Dictionary<Entry, string> EntryToString = new Dictionary<Entry, string>()
-        {
-            {Entry.Bids, "BI"},
-            {Entry.Offers, "OF"}
-        };
+        protected override Dictionary<Entry, string> EnumToString =>
+            new Dictionary<Entry, string>
+            {
+                {Entry.Bids, "BI"},
+                {Entry.Offers, "OF"}
+            };
     }
 
     #endregion

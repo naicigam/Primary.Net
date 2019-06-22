@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using Primary.Data;
 
 namespace Primary.Serialization
 {
-    public class EnumToStringConverter<T> : EnumConverter
+    public abstract class EnumToStringConverter<T> : EnumConverter
     {
         protected EnumToStringConverter() : base(typeof(T))
         {
@@ -21,7 +19,7 @@ namespace Primary.Serialization
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            return _enumToString.FirstOrDefault(x => x.Value == (string)value).Key;
+            return EnumToString.FirstOrDefault(x => x.Value == (string)value).Key;
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type sourceType)
@@ -31,9 +29,9 @@ namespace Primary.Serialization
 
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            return _enumToString[(T)value];
+            return EnumToString[(T)value];
         }
 
-        protected Dictionary<T, string> _enumToString;
+        protected abstract Dictionary<T, string> EnumToString { get; }
     }
 }

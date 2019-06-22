@@ -14,4 +14,4 @@ En desarrollo.
 - Nuget package.
 - Documentación.
 
-[![Build Status](https://travis-ci.com/naicigam/Primary.svg?branch=master)](https://travis-ci.com/naicigam/Primary)
+[![Build Status](https://travis-ci.com/naicigam/Primary.Net.svg?branch=master)](https://travis-ci.com/naicigam/Primary.Net)

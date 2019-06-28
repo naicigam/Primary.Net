@@ -47,6 +47,7 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Ignore("WIP")]
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
             // Get a dollar future

@@ -6,7 +6,7 @@ using Primary.Data;
 
 namespace Primary.Examples
 {
-    internal class WebSocketExample
+    internal static class WebSocketExample
     {
         private static async Task Main()
         {

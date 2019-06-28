@@ -1,0 +1,21 @@
+
+configuration:
+- Debug
+- Release
+
+image:
+- Visual Studio 2017
+- Ubuntu
+
+platform:
+  - x86
+  - Any CPU
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'

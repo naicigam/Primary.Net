@@ -11,6 +11,9 @@ platform:
   - x86
   - Any CPU
 
+before_build:
+  - dotnet restore
+
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'

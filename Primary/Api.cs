@@ -13,16 +13,18 @@ namespace Primary
         public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
         public static Uri DemoEndpoint => new Uri("http://pbcp-remarket.cloud.primary.com.ar");
         
+        public const string DemoUsername = "naicigam2046";
+        public const string DemoPassword = "nczhmL9@";
+        public const string DemoAccount = "REM2046";
+
         public Api(Uri baseUri)
         {
             _baseUri = baseUri;
         }
 
-        private readonly Uri _baseUri;
-
         #region Login
 
-        public string AccessToken { get; set; }
+        public string AccessToken { get; private set; }
 
         public async Task Login(string username, string password)
         {
@@ -41,8 +43,7 @@ namespace Primary
             );
         }
 
-        public const string DemoUsername = "naicigam2046";
-        public const string DemoPassword = "nczhmL9@";
+        private readonly Uri _baseUri;
 
         #endregion
 
@@ -118,7 +119,18 @@ namespace Primary
 
         #region Orders
 
-        public async Task<uint> SubmitOrder(Order order)
+        private struct SubmitOrderResponse
+        {
+            public struct OrderData
+            {
+                public string clientId;
+            }
+
+            public string status;
+            public OrderData order;
+        }
+
+        public async Task<string> SubmitOrder(Order order)
         {
             var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
 
@@ -129,25 +141,41 @@ namespace Primary
                                     .AddQueryParam("orderQty", order.Quantity)
                                     .AddQueryParam("ordType", order.Type)
                                     .AddQueryParam("side", order.Side)
-                                    .AddQueryParam("timeInForce", order.Price)
-                                    .AddQueryParam("account", order.Price)
-                                    .AddQueryParam("cancelPrevious", order.Price)
-                                    .AddQueryParam("iceberg", order.Price)
-                                    .AddQueryParam("expireDate", order.Price)
-                                    .AddQueryParam("displayQty", order.Price)
+                                    .AddQueryParam("timeInForce", order.Expiration)
+                                    .AddQueryParam("account", order.Account)
+                                    //.AddQueryParam("cancelPrevious", order.Price)
+                                    //.AddQueryParam("iceberg", order.Price)
+                                    //.AddQueryParam("expireDate", order.Price)
+                                    //.AddQueryParam("displayQty", order.Price)
                                     .GetJsonFromUrlAsync( request =>
                                     {
                                         request.Headers.Add("X-Auth-Token", AccessToken);
                                     });
             
-            //var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
-            //return data.Trades;
-            return Task.FromResult(42);
+            var data = JsonConvert.DeserializeObject<SubmitOrderResponse>(response);
+            return data.order.clientId;
         }
         
-        public async Task<Order> GetOrder(uint orderId)
+        private struct GetOrderResponse
         {
-            return Task.FromResult(new Order());
+            public string status;
+            public Order order;
+        }
+
+        public async Task<Order> GetOrder(string clientOrderId)
+        {
+            var uri = new Uri(_baseUri, "/rest/order/id");
+
+            var response = await uri.ToString()
+                                    .AddQueryParam("clOrdId", clientOrderId)
+                                    .AddQueryParam("proprietary", "PBCP")
+                                    .GetJsonFromUrlAsync( request =>
+                                    {
+                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                    });
+            
+            var data = JsonConvert.DeserializeObject<GetOrderResponse>(response);
+            return data.order;
         }
 
         #endregion

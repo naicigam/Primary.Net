@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Primary.Data;
 
@@ -14,14 +15,28 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Ignore("WIP")]
         public async Task OrdersCanBeEnteredAndRetrieved()
         {
-            var order = new Order();
+            var instruments = await _api.GetAllInstruments();
+            var dollarFuture = instruments.First(c => c.Symbol.StartsWith("DO"));
+
+            var order = new Order()
+            {
+                Symbol = dollarFuture.Symbol,
+                Expiration = OrderExpiration.Day,
+                Type = OrderType.Limit,
+                Account = Api.DemoAccount,
+            };
+
             var orderId = await _api.SubmitOrder(order);
             Assert.That(orderId, Is.Not.Null.And.Not.Empty);
 
             var retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder, Is.Not.EqualTo( default(Order) ));
+            Assert.That(retrievedOrder.Symbol, Is.EqualTo(order.Symbol));
+            Assert.That(retrievedOrder.Expiration, Is.EqualTo(order.Expiration));
+            Assert.That(retrievedOrder.Type, Is.EqualTo(order.Type));
+            Assert.That(retrievedOrder.Account, Is.EqualTo(order.Account));
         }
 
         private Api _api;

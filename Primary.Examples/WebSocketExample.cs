@@ -74,13 +74,10 @@ namespace Primary.Examples
                 }
             }
 
-            if(! (bid == default || offer == default ) )
-            {
-                Console.WriteLine($"({marketData.Timestamp}) " +
-                                  $"{marketData.Instrument.Symbol} -> " +
-                                  $"{bid} ({bidSize}) --> ${offer - bid} <-- {offer} ({offerSize})"
-                );
-            }
+            Console.WriteLine($"({marketData.Timestamp}) " +
+                              $"{marketData.Instrument.Symbol} -> " +
+                              $"{bid} ({bidSize}) --> ${offer - bid} <-- {offer} ({offerSize})"
+            );
         }
     }
 }

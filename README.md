@@ -1,5 +1,6 @@
 # Primary
-Primary API de ROFEX para C#.
+> Primary API de ROFEX para C#.
+[![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45/branch/master?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net/branch/master)
 
 En desarrollo.
 

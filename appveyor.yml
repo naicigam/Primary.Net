@@ -8,7 +8,6 @@ image:
 - Ubuntu
 
 platform:
-  - x86
   - Any CPU
 
 before_build:

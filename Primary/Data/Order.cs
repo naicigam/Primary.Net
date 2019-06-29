@@ -32,11 +32,13 @@ namespace Primary.Data
         public string Symbol { get; set; }
         public float Price { get; set; }
         public int Quantity { get; set; }
+
         public OrderType Type { get; set; }
         public OrderSide Side { get; set; }
         public OrderExpiration Expiration { get; set; }
         public bool Iceberg { get; set; }
 
+        public string Account { get; set; }
     }
 
     #region String serialization

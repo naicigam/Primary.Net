@@ -8,6 +8,7 @@ namespace Primary.Data
     [JsonConverter(typeof(OrderTypeJsonSerializer))]
     public enum OrderType
     {
+        None,
         Market,
         Limit
     }

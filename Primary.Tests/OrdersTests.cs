@@ -22,10 +22,12 @@ namespace Primary.Tests
 
             var order = new Order
             {
-                Symbol = instruments.First().Symbol 
+                Symbol = instruments.First().Symbol,
+                Expiration = OrderExpiration.Day,
+                Type = OrderType.Limit
             };
-            var orderId = await _api.SubmitOrder(order);
-            Assert.That(orderId, Is.Not.Null.And.Not.Empty);
+            var orderId = await _api.SubmitOrder(Api.DemoAccount, order);
+            Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
             var retrievedOrder = await _api.GetOrder(orderId);
             Assert.That(retrievedOrder, Is.Not.EqualTo( default(Order) ));
@@ -39,7 +41,7 @@ namespace Primary.Tests
                 Symbol = "invalid_symbol"
             };
 
-            Assert.ThrowsAsync<Exception>( async () => await _api.SubmitOrder(order) );
+            Assert.ThrowsAsync<Exception>( async () => await _api.SubmitOrder(Api.DemoAccount, order) );
         }
 
         private Api _api;

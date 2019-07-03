@@ -43,7 +43,8 @@ namespace Primary
 
         public const string DemoUsername = "naicigam2046";
         public const string DemoPassword = "nczhmL9@";
-
+        public const string DemoAccount = "REM2046";
+        
         #endregion
 
         #region Instruments information
@@ -118,7 +119,7 @@ namespace Primary
 
         #region Orders
 
-        public async Task<uint> SubmitOrder(Order order)
+        public async Task<ulong> SubmitOrder(string account, Order order)
         {
             var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
 
@@ -129,8 +130,8 @@ namespace Primary
                                     .AddQueryParam("orderQty", order.Quantity)
                                     .AddQueryParam("ordType", order.Type)
                                     .AddQueryParam("side", order.Side)
-                                    //.AddQueryParam("timeInForce", order.T)
-                                    //.AddQueryParam("account", order.Price)
+                                    .AddQueryParam("timeInForce", order.Expiration)
+                                    .AddQueryParam("account", account)
                                     //.AddQueryParam("cancelPrevious", order.Price)
                                     //.AddQueryParam("iceberg", order.Price)
                                     //.AddQueryParam("expireDate", order.Price)
@@ -141,16 +142,14 @@ namespace Primary
                                     });
             
             var response = JsonConvert.DeserializeObject<SubmitOrderResponse>(jsonResponse);
-
             if (response.Status == Status.Error)
             {
                 throw new Exception($"{response.Message} ({response.Description})");
             }
-            //return data.Trades;
-            return 42;
+            return response.Order.ClientId;
         }
         
-        public async Task<Order> GetOrder(uint orderId)
+        public async Task<Order> GetOrder(ulong orderId)
         {
             return new Order();
         }
@@ -165,6 +164,18 @@ namespace Primary
 
             [JsonProperty("description")]
             public string Description;
+
+            public struct OrderResponse
+            {
+                [JsonProperty("clientId")]
+                public ulong ClientId;
+
+                [JsonProperty("proprietary")]
+                public string Proprietary;
+            }
+
+            [JsonProperty("order")]
+            public OrderResponse Order;
         }
 
         #endregion

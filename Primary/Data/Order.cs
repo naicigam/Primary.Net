@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using Newtonsoft.Json;
 using Primary.Serialization;
 
 namespace Primary.Data
 {
-    [TypeConverter(typeof(OrderTypeToStringConverter))]
+    [JsonConverter(typeof(OrderTypeJsonSerializer))]
     public enum OrderType
     {
         Market,
         Limit
     }
 
-    [TypeConverter(typeof(OrderSideToStringConverter))]
+    [JsonConverter(typeof(OrderSideJsonSerializer))]
     public enum OrderSide
     {
         Buy,
         Sell
     }
 
-    [TypeConverter(typeof(OrderExpirationToStringConverter))]
+    [JsonConverter(typeof(OrderExpirationJsonSerializer))]
     public enum OrderExpiration
     {
         Day,
@@ -36,12 +37,11 @@ namespace Primary.Data
         public OrderSide Side { get; set; }
         public OrderExpiration Expiration { get; set; }
         public bool Iceberg { get; set; }
-
     }
 
     #region String serialization
 
-    public class OrderTypeToStringConverter : EnumToStringConverter<OrderType>
+    public class OrderTypeJsonSerializer : EnumJsonSerializer<OrderType>
     {
         protected override Dictionary<OrderType, string> EnumToString =>
             new Dictionary<OrderType, string>
@@ -51,7 +51,7 @@ namespace Primary.Data
             };
     }
 
-    public class OrderSideToStringConverter : EnumToStringConverter<OrderSide>
+    public class OrderSideJsonSerializer : EnumJsonSerializer<OrderSide>
     {
         protected override Dictionary<OrderSide, string> EnumToString =>
             new Dictionary<OrderSide, string>
@@ -61,7 +61,7 @@ namespace Primary.Data
             };
     }
 
-    public class OrderExpirationToStringConverter : EnumToStringConverter<OrderExpiration>
+    public class OrderExpirationJsonSerializer : EnumJsonSerializer<OrderExpiration>
     {
         protected override Dictionary<OrderExpiration, string> EnumToString =>
             new Dictionary<OrderExpiration, string>

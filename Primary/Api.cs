@@ -122,32 +122,58 @@ namespace Primary
         {
             var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
 
-            var response = await uri.ToString()
+            var jsonResponse = await uri.ToString()
                                     .AddQueryParam("marketId", "ROFX")
                                     .AddQueryParam("symbol", order.Symbol)
                                     .AddQueryParam("price", order.Price)
                                     .AddQueryParam("orderQty", order.Quantity)
                                     .AddQueryParam("ordType", order.Type)
                                     .AddQueryParam("side", order.Side)
-                                    .AddQueryParam("timeInForce", order.Price)
-                                    .AddQueryParam("account", order.Price)
-                                    .AddQueryParam("cancelPrevious", order.Price)
-                                    .AddQueryParam("iceberg", order.Price)
-                                    .AddQueryParam("expireDate", order.Price)
-                                    .AddQueryParam("displayQty", order.Price)
+                                    //.AddQueryParam("timeInForce", order.T)
+                                    //.AddQueryParam("account", order.Price)
+                                    //.AddQueryParam("cancelPrevious", order.Price)
+                                    //.AddQueryParam("iceberg", order.Price)
+                                    //.AddQueryParam("expireDate", order.Price)
+                                    //.AddQueryParam("displayQty", order.Price)
                                     .GetJsonFromUrlAsync( request =>
                                     {
                                         request.Headers.Add("X-Auth-Token", AccessToken);
                                     });
             
-            //var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
+            var response = JsonConvert.DeserializeObject<SubmitOrderResponse>(jsonResponse);
+
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
             //return data.Trades;
-            return Task.FromResult(42);
+            return 42;
         }
         
         public async Task<Order> GetOrder(uint orderId)
         {
-            return Task.FromResult(new Order());
+            return new Order();
+        }
+
+        private struct SubmitOrderResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+            
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+        }
+
+        #endregion
+
+        #region Constants
+
+        private static class Status
+        {
+            public const string Error = "ERROR";
         }
 
         #endregion

@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Primary.Data;
 
 namespace Primary.Tests
 {
-    class OrdersTests
+    internal class OrdersTests
     {
         [OneTimeSetUp]
         public async Task Login()
@@ -16,12 +18,28 @@ namespace Primary.Tests
         [Test]
         public async Task OrdersCanBeEnteredAndRetrieved()
         {
-            var order = new Order();
+            var instruments = await _api.GetAllInstruments();
+
+            var order = new Order
+            {
+                Symbol = instruments.First().Symbol 
+            };
             var orderId = await _api.SubmitOrder(order);
             Assert.That(orderId, Is.Not.Null.And.Not.Empty);
 
             var retrievedOrder = await _api.GetOrder(orderId);
             Assert.That(retrievedOrder, Is.Not.EqualTo( default(Order) ));
+        }
+
+        [Test]
+        public void SubmittingAndOrderWithInvalidInformationGeneratesAnException()
+        {
+            var order = new Order
+            {
+                Symbol = "invalid_symbol"
+            };
+
+            Assert.ThrowsAsync<Exception>( async () => await _api.SubmitOrder(order) );
         }
 
         private Api _api;

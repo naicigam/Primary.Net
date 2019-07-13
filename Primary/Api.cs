@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Primary.Data;
+using Primary.Data.Orders;
 using ServiceStack;
-using ServiceStack.Text;
 
 namespace Primary
 {
@@ -128,9 +128,9 @@ namespace Primary
                      .AddQueryParam("symbol", order.Symbol)
                      .AddQueryParam("price", order.Price)
                      .AddQueryParam("orderQty", order.Quantity)
-                     .AddQueryParam("ordType", order.Type)
-                     .AddQueryParam("side", order.Side)
-                     .AddQueryParam("timeInForce", order.Expiration)
+                     .AddQueryParam("ordType", order.Type.ToApiString())
+                     .AddQueryParam("side", order.Side.ToApiString())
+                     .AddQueryParam("timeInForce", order.Expiration.ToApiString())
                      .AddQueryParam("account", account)
                      .AddQueryParam("cancelPrevious", order.CancelPrevious)
                      .AddQueryParam("iceberg", order.Iceberg)

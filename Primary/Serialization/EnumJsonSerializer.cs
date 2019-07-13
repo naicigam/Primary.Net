@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Primary.Serialization
@@ -9,13 +7,14 @@ namespace Primary.Serialization
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var valueToWrite = EnumToString[(T)value];
+            var valueToWrite = ToString((T)value);
             writer.WriteValue(valueToWrite);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return EnumToString.FirstOrDefault(x => x.Value == existingValue.ToString()).Key;
+            var stringValue = reader.Value.ToString();
+            return FromString(stringValue);
         }
 
         public override bool CanConvert(Type objectType)
@@ -23,6 +22,7 @@ namespace Primary.Serialization
             return objectType == typeof(string);
         }
         
-        protected abstract Dictionary<T, string> EnumToString { get; }
+        protected abstract string ToString(T enumValue);
+        protected abstract T FromString(string enumString);
     }
 }

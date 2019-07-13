@@ -7,11 +7,11 @@ En desarrollo.
 - Lista de instrumentos a operar.
 - Datos históricos.
 - Datos en tiempo real.
+- Ordenes.
 
 ## Roadmap de corto plazo
-- Ordenes.
-- CI pipeline.
 - Nuget package.
 - Documentación.
+- Performance
 
 [![Build Status](https://travis-ci.com/naicigam/Primary.Net.svg?branch=master)](https://travis-ci.com/naicigam/Primary.Net)

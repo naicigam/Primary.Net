@@ -15,7 +15,7 @@ namespace Primary.Serialization
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return EnumToString.FirstOrDefault(x => x.Value == (string)existingValue).Key;
+            return EnumToString.FirstOrDefault(x => x.Value == existingValue.ToString()).Key;
         }
 
         public override bool CanConvert(Type objectType)

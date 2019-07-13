@@ -30,18 +30,33 @@ namespace Primary.Tests
             Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
             var retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder, Is.Not.EqualTo( default(Order) ));
+            Assert.That(retrievedOrder.Symbol, Is.EqualTo(order.Symbol));
+            Assert.That(retrievedOrder.Expiration, Is.EqualTo(order.Expiration));
+            Assert.That(retrievedOrder.Type, Is.EqualTo(order.Type));
         }
 
         [Test]
-        public void SubmittingAndOrderWithInvalidInformationGeneratesAnException()
+        public void SubmittingAnOrderWithInvalidInformationGeneratesAnException()
         {
-            var order = new Order
+            const string invalidSymbol = "invalid_symbol";
+            var order = new Order { Symbol = invalidSymbol };
+
+            var exception = Assert.ThrowsAsync<Exception>( async () => await _api.SubmitOrder(Api.DemoAccount, order) );
+            Assert.That(exception.Message, Does.Contain(invalidSymbol));
+        }
+
+        [Test]
+        public void GettingAnOrderWithInvalidInformationGeneratesAnException()
+        {
+            var invalidOrderId = new OrderId()
             {
-                Symbol = "invalid_symbol"
+                ClientId = ulong.MaxValue,
+                Proprietary = "invalid_proprietary"
             };
 
-            Assert.ThrowsAsync<Exception>( async () => await _api.SubmitOrder(Api.DemoAccount, order) );
+            var exception = Assert.ThrowsAsync<Exception>( async () => await _api.GetOrder(invalidOrderId) );
+            Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientId.ToString()));
+            Assert.That(exception.Message, Does.Contain(invalidOrderId.Proprietary));
         }
 
         private Api _api;

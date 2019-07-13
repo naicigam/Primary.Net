@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Primary.Data;
 using ServiceStack;
+using ServiceStack.Text;
 
 namespace Primary
 {
@@ -119,39 +120,61 @@ namespace Primary
 
         #region Orders
 
-        public async Task<ulong> SubmitOrder(string account, Order order)
+        public async Task<OrderId> SubmitOrder(string account, Order order)
         {
-            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
+            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder").ToString();
 
-            var jsonResponse = await uri.ToString()
-                                    .AddQueryParam("marketId", "ROFX")
-                                    .AddQueryParam("symbol", order.Symbol)
-                                    .AddQueryParam("price", order.Price)
-                                    .AddQueryParam("orderQty", order.Quantity)
-                                    .AddQueryParam("ordType", order.Type)
-                                    .AddQueryParam("side", order.Side)
-                                    .AddQueryParam("timeInForce", order.Expiration)
-                                    .AddQueryParam("account", account)
-                                    //.AddQueryParam("cancelPrevious", order.Price)
-                                    //.AddQueryParam("iceberg", order.Price)
-                                    //.AddQueryParam("expireDate", order.Price)
-                                    //.AddQueryParam("displayQty", order.Price)
-                                    .GetJsonFromUrlAsync( request =>
-                                    {
-                                        request.Headers.Add("X-Auth-Token", AccessToken);
-                                    });
+            uri = uri.AddQueryParam("marketId", "ROFX")
+                     .AddQueryParam("symbol", order.Symbol)
+                     .AddQueryParam("price", order.Price)
+                     .AddQueryParam("orderQty", order.Quantity)
+                     .AddQueryParam("ordType", order.Type)
+                     .AddQueryParam("side", order.Side)
+                     .AddQueryParam("timeInForce", order.Expiration)
+                     .AddQueryParam("account", account)
+                     .AddQueryParam("cancelPrevious", order.CancelPrevious)
+                     .AddQueryParam("iceberg", order.Iceberg)
+                     .AddQueryParam("expireDate", order.ExpirationDate.ToString("yyyyMMdd"));
+
+            if (order.Iceberg)
+            {
+                uri = uri.AddQueryParam("displayQty", order.DisplayQuantity);
+            }
+            
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
             
             var response = JsonConvert.DeserializeObject<SubmitOrderResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
                 throw new Exception($"{response.Message} ({response.Description})");
             }
-            return response.Order.ClientId;
+            return response.Order;
         }
         
-        public async Task<Order> GetOrder(ulong orderId)
+        public async Task<Order> GetOrder(OrderId orderId)
         {
-            return new Order();
+            var uri = new Uri(_baseUri, "/rest/order/id").ToString();
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
+                     .AddQueryParam("proprietary", orderId.Proprietary);
+
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
+            var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+
+            return response.Order;
         }
 
         private struct SubmitOrderResponse
@@ -164,18 +187,24 @@ namespace Primary
 
             [JsonProperty("description")]
             public string Description;
+            
+            [JsonProperty("order")]
+            public OrderId Order;
+        }
 
-            public struct OrderResponse
-            {
-                [JsonProperty("clientId")]
-                public ulong ClientId;
+        private struct GetOrderResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+            
+            [JsonProperty("message")]
+            public string Message;
 
-                [JsonProperty("proprietary")]
-                public string Proprietary;
-            }
+            [JsonProperty("description")]
+            public string Description;
 
             [JsonProperty("order")]
-            public OrderResponse Order;
+            public Order Order;
         }
 
         #endregion

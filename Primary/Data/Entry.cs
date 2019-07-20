@@ -70,7 +70,7 @@ namespace Primary.Data
 
     #endregion
 
-    #region JSON serialization
+    #region JSON Serialization
 
     public class EntryJsonSerializer : EnumJsonSerializer<Entry>
     {
@@ -84,7 +84,6 @@ namespace Primary.Data
             return EnumsToApiStrings.EntryFromApiString(enumString);
         }
     }
-
 
     #endregion
 }

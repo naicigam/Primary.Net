@@ -12,6 +12,6 @@ En desarrollo.
 ## Roadmap de corto plazo
 - Nuget package.
 - Documentación.
-- Performance
+- Performance.
 
-[![Build Status](https://travis-ci.com/naicigam/Primary.Net.svg?branch=master)](https://travis-ci.com/naicigam/Primary.Net)
+[![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)

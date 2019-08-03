@@ -2,7 +2,8 @@
 > C# bindings for [Primary.API](http://api.primary.com.ar).
 
 Provides a .NET friendly interface to interact with the Primary API. 
-*NOTE: This project is still under development.*
+
+**This project is still under development.**
 
 [![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
 

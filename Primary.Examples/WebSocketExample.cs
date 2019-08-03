@@ -6,7 +6,7 @@ using Primary.Data;
 
 namespace Primary.Examples
 {
-    internal class WebSocketExample
+    internal static class WebSocketExample
     {
         private static async Task Main()
         {
@@ -74,13 +74,10 @@ namespace Primary.Examples
                 }
             }
 
-            if(! (bid == default || offer == default ) )
-            {
-                Console.WriteLine($"({marketData.Timestamp}) " +
-                                  $"{marketData.Instrument.Symbol} -> " +
-                                  $"{bid} ({bidSize}) --> ${offer - bid} <-- {offer} ({offerSize})"
-                );
-            }
+            Console.WriteLine($"({marketData.Timestamp}) " +
+                              $"{marketData.Instrument.Symbol} -> " +
+                              $"{bid} ({bidSize}) --> ${offer - bid} <-- {offer} ({offerSize})"
+            );
         }
     }
 }

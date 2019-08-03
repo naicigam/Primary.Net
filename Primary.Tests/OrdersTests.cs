@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Primary.Data;
@@ -20,16 +19,7 @@ namespace Primary.Tests
         public async Task OrdersCanBeEnteredAndRetrieved()
         {
             // Submit an order
-            var instruments = await _api.GetAllInstruments();
-            
-            var order = new Order
-            {
-                Instrument = instruments.First(),
-                Expiration = OrderExpiration.ImmediateOrCancel,
-                Type = OrderType.Limit,
-                Quantity = 1000,
-                Price = 3
-            };
+            Order order = Build.AnOrder(_api);
             var orderId = await _api.SubmitOrder(Api.DemoAccount, order);
             Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
@@ -41,6 +31,21 @@ namespace Primary.Tests
             Assert.That(retrievedOrder.Type, Is.EqualTo(order.Type));
             Assert.That(retrievedOrder.Quantity, Is.EqualTo(order.Quantity));
             Assert.That(retrievedOrder.Price, Is.EqualTo(order.Price));
+        }
+
+        [Test]
+        public async Task OrdersCanBeCancelled()
+        {
+            Order order = Build.AnOrder(_api);
+            var orderId = await _api.SubmitOrder(Api.DemoAccount, order);
+
+            var retrievedOrder = await _api.GetOrder(orderId);
+            Assert.That(retrievedOrder.Status, Is.Not.EqualTo(OrderStatus.Cancelled));
+
+            await _api.CancelOrder(orderId);
+
+            retrievedOrder = await _api.GetOrder(orderId);
+            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled));
         }
 
         [Test]

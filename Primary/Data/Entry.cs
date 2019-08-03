@@ -1,41 +1,88 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Newtonsoft.Json;
 using Primary.Serialization;
 
 namespace Primary.Data
 {
-    [TypeConverter(typeof(EntryToStringConverter))]
-    public class Entry : ValueType
+    [JsonConverter(typeof(EntryJsonSerializer))]
+    public enum Entry
     {
-        public static Entry Bids = new Entry("Bids");
-        public static Entry Offers = new Entry("Offers");
-        //public static Entry Last,
-        //public static Entry Open,
-        //public static Entry Close,
-        //public static Entry SettlementPrice,
-        //public static Entry SessionHighPrice,
-        //public static Entry SessionLowPrice,
-        //public static Entry Volume,
-        //public static Entry OpenInterest,
-        //public static Entry IndexValue,
-        //public static Entry EffectiveVolume,
-        //public static Entry NominalVolume
-
-        public Entry(string value) : base(value)
-        {
-        }
+        Bids, 
+        Offers,
+        Last,
+        Open,
+        Close,
+        SettlementPrice,
+        SessionHighPrice,
+        SessionLowPrice,
+        Volume,
+        OpenInterest,
+        IndexValue,
+        EffectiveVolume,
+        NominalVolume
     } 
 
     #region String serialization
 
-    public class EntryToStringConverter : EnumToStringConverter<Entry>
+    internal static class EnumsToApiStrings
     {
-        protected override Dictionary<Entry, string> EnumToString =>
-            new Dictionary<Entry, string>
+        public static string ToApiString(this Entry value)
+        {
+            switch (value)
             {
-                {Entry.Bids, "BI"},
-                {Entry.Offers, "OF"}
-            };
+                case Entry.Bids: return "BI";
+                case Entry.Offers: return "OF";
+                case Entry.Last: return "LA";
+                case Entry.Open: return "OP";
+                case Entry.Close: return "CL";
+                case Entry.SettlementPrice: return "SE";
+                case Entry.SessionHighPrice: return "HI";
+                case Entry.SessionLowPrice: return "LO";
+                case Entry.Volume: return "TV";
+                case Entry.OpenInterest: return "OI";
+                case Entry.IndexValue: return "IV";
+                case Entry.EffectiveVolume: return "EV";
+                case Entry.NominalVolume: return "NV";
+                default: throw new InvalidEnumStringException();
+            }
+        }
+
+        public static Entry EntryFromApiString(string value)
+        {
+            switch (value)
+            {
+                case "BI": return Entry.Bids;
+                case "OF": return Entry.Offers;
+                case "LA": return Entry.Last;
+                case "OP": return Entry.Open;
+                case "CL": return Entry.Close;
+                case "SE": return Entry.SettlementPrice;
+                case "HI": return Entry.SessionHighPrice;
+                case "LO": return Entry.SessionLowPrice;
+                case "TV": return Entry.Volume;
+                case "OI": return Entry.OpenInterest;
+                case "IV": return Entry.IndexValue;
+                case "EV": return Entry.EffectiveVolume;
+                case "NV": return Entry.NominalVolume;
+                default: throw new InvalidEnumStringException();
+            }
+        }
+    }
+
+    #endregion
+
+    #region JSON Serialization
+
+    public class EntryJsonSerializer : EnumJsonSerializer<Entry>
+    {
+        protected override string ToString(Entry enumValue)
+        {
+            return enumValue.ToApiString();
+        }
+
+        protected override Entry FromString(string enumString)
+        {
+            return EnumsToApiStrings.EntryFromApiString(enumString);
+        }
     }
 
     #endregion

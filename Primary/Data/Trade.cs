@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Primary.Serialization;
 
 namespace Primary.Data
 {
@@ -28,6 +29,7 @@ namespace Primary.Data
         public Instrument Instrument { get; set; }
 
         [JsonProperty("marketData")]
+        [JsonConverter( typeof( DictionaryJsonSerializer< Entry, IEnumerable<Trade> >) )]
         public Dictionary<Entry, IEnumerable<Trade>> Data { get; set; }
     }
 }

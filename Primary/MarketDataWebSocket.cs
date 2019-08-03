@@ -64,12 +64,13 @@ namespace Primary
                         // Decode the message
                         var messageJson = (new UTF8Encoding()).GetString(buffer)
                             .Substring(0, receivedMessage.Count);
+
                         var data = JsonConvert.DeserializeObject<MarketData>(messageJson);
                         receivedMessage.Clear();
-
-                        // Notify subscriber (TODO: notify in another thread).
+                        
+                        // Notify subscriber
                         OnMarketData(data);
-                    }
+                        }
 
                     IsRunning = false;
                 },

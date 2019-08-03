@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Primary.Data;
+using Primary.Data.Orders;
 using ServiceStack;
 
 namespace Primary
@@ -13,18 +14,16 @@ namespace Primary
         public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
         public static Uri DemoEndpoint => new Uri("http://pbcp-remarket.cloud.primary.com.ar");
         
-        public const string DemoUsername = "naicigam2046";
-        public const string DemoPassword = "nczhmL9@";
-        public const string DemoAccount = "REM2046";
-
         public Api(Uri baseUri)
         {
             _baseUri = baseUri;
         }
 
+        private readonly Uri _baseUri;
+
         #region Login
 
-        public string AccessToken { get; private set; }
+        public string AccessToken { get; set; }
 
         public async Task Login(string username, string password)
         {
@@ -43,8 +42,10 @@ namespace Primary
             );
         }
 
-        private readonly Uri _baseUri;
-
+        public const string DemoUsername = "naicigam2046";
+        public const string DemoPassword = "nczhmL9@";
+        public const string DemoAccount = "REM2046";
+        
         #endregion
 
         #region Instruments information
@@ -119,63 +120,100 @@ namespace Primary
 
         #region Orders
 
-        private struct SubmitOrderResponse
+        public async Task<OrderId> SubmitOrder(string account, Order order)
         {
-            public struct OrderData
+            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder").ToString();
+
+            uri = uri.AddQueryParam("marketId", "ROFX")
+                     .AddQueryParam("symbol", order.Symbol)
+                     .AddQueryParam("price", order.Price)
+                     .AddQueryParam("orderQty", order.Quantity)
+                     .AddQueryParam("ordType", order.Type.ToApiString())
+                     .AddQueryParam("side", order.Side.ToApiString())
+                     .AddQueryParam("timeInForce", order.Expiration.ToApiString())
+                     .AddQueryParam("account", account)
+                     .AddQueryParam("cancelPrevious", order.CancelPrevious)
+                     .AddQueryParam("iceberg", order.Iceberg)
+                     .AddQueryParam("expireDate", order.ExpirationDate.ToString("yyyyMMdd"));
+
+            if (order.Iceberg)
             {
-                public string clientId;
+                uri = uri.AddQueryParam("displayQty", order.DisplayQuantity);
             }
-
-            public string status;
-            public OrderData order;
-        }
-
-        public async Task<string> SubmitOrder(Order order)
-        {
-            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder");
-
-            var response = await uri.ToString()
-                                    .AddQueryParam("marketId", "ROFX")
-                                    .AddQueryParam("symbol", order.Symbol)
-                                    .AddQueryParam("price", order.Price)
-                                    .AddQueryParam("orderQty", order.Quantity)
-                                    .AddQueryParam("ordType", order.Type)
-                                    .AddQueryParam("side", order.Side)
-                                    .AddQueryParam("timeInForce", order.Expiration)
-                                    .AddQueryParam("account", order.Account)
-                                    //.AddQueryParam("cancelPrevious", order.Price)
-                                    //.AddQueryParam("iceberg", order.Price)
-                                    //.AddQueryParam("expireDate", order.Price)
-                                    //.AddQueryParam("displayQty", order.Price)
-                                    .GetJsonFromUrlAsync( request =>
-                                    {
-                                        request.Headers.Add("X-Auth-Token", AccessToken);
-                                    });
             
-            var data = JsonConvert.DeserializeObject<SubmitOrderResponse>(response);
-            return data.order.clientId;
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
+            
+            var response = JsonConvert.DeserializeObject<SubmitOrderResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            return response.Order;
         }
         
-        private struct GetOrderResponse
+        public async Task<Order> GetOrder(OrderId orderId)
         {
-            public string status;
-            public Order order;
+            var uri = new Uri(_baseUri, "/rest/order/id").ToString();
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
+                     .AddQueryParam("proprietary", orderId.Proprietary);
+
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
+            var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+
+            return response.Order;
         }
 
-        public async Task<Order> GetOrder(string clientOrderId)
+        private struct SubmitOrderResponse
         {
-            var uri = new Uri(_baseUri, "/rest/order/id");
-
-            var response = await uri.ToString()
-                                    .AddQueryParam("clOrdId", clientOrderId)
-                                    .AddQueryParam("proprietary", "PBCP")
-                                    .GetJsonFromUrlAsync( request =>
-                                    {
-                                        request.Headers.Add("X-Auth-Token", AccessToken);
-                                    });
+            [JsonProperty("status")]
+            public string Status;
             
-            var data = JsonConvert.DeserializeObject<GetOrderResponse>(response);
-            return data.order;
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+            
+            [JsonProperty("order")]
+            public OrderId Order;
+        }
+
+        private struct GetOrderResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+            
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+
+            [JsonProperty("order")]
+            public Order Order;
+        }
+
+        #endregion
+
+        #region Constants
+
+        private static class Status
+        {
+            public const string Error = "ERROR";
         }
 
         #endregion

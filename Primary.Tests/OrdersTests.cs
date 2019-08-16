@@ -34,6 +34,7 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Ignore("WIP")]
         public async Task OrdersCanBeCancelled()
         {
             Order order = Build.AnOrder(_api);

@@ -30,6 +30,7 @@ namespace Primary.Data.Orders
     public enum OrderStatus
     {
         New,
+        PendingNew,
         Rejected,
         Cancelled,
         Filled
@@ -47,7 +48,7 @@ namespace Primary.Data.Orders
             {
                 case OrderType.Market: return "Market";
                 case OrderType.Limit: return "Limit";
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException( value.ToString() );
             }
         }
 
@@ -57,7 +58,7 @@ namespace Primary.Data.Orders
             {
                 case "MARKET": return OrderType.Market;
                 case "LIMIT": return OrderType.Limit;
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException(value);
             }
         }
 
@@ -71,7 +72,7 @@ namespace Primary.Data.Orders
             {
                 case OrderSide.Buy: return "Sell";
                 case OrderSide.Sell: return "Buy";
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException( value.ToString() );
             }
         }
 
@@ -81,7 +82,7 @@ namespace Primary.Data.Orders
             {
                 case "SELL": return OrderSide.Sell;
                 case "BUY": return OrderSide.Buy;
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException(value);
             }
         }
 
@@ -95,7 +96,7 @@ namespace Primary.Data.Orders
                 case OrderExpiration.FillOrKill: return "FOK";
                 case OrderExpiration.GoodTillDate: return "GTD";
                 case OrderExpiration.ImmediateOrCancel: return "IOC";
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException( value.ToString() );
             }
         }
 
@@ -107,7 +108,7 @@ namespace Primary.Data.Orders
                 case "FOK": return OrderExpiration.FillOrKill;
                 case "GTD": return OrderExpiration.GoodTillDate;
                 case "IOC": return OrderExpiration.ImmediateOrCancel;
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException(value);
             }
         }
 
@@ -123,19 +124,20 @@ namespace Primary.Data.Orders
                 case OrderStatus.Rejected: return "REJECTED";
                 case OrderStatus.Cancelled: return "CANCELLED";
                 case OrderStatus.Filled: return "FILLED";
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException( value.ToString() );
             }
         }
 
         public static OrderStatus StatusFromApiString(string value)
         {
-            switch (value.ToUpper())
+            switch (value)
             {
                 case "NEW": return OrderStatus.New;
+                case "PENDING_NEW": return OrderStatus.PendingNew;
                 case "REJECTED": return OrderStatus.Rejected;
                 case "CANCELLED": return OrderStatus.Cancelled;
                 case "FILLED": return OrderStatus.Filled;
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException(value);
             }
         }
 

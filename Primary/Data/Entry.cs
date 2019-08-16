@@ -42,7 +42,7 @@ namespace Primary.Data
                 case Entry.IndexValue: return "IV";
                 case Entry.EffectiveVolume: return "EV";
                 case Entry.NominalVolume: return "NV";
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException( value.ToString() );
             }
         }
 
@@ -63,7 +63,7 @@ namespace Primary.Data
                 case "IV": return Entry.IndexValue;
                 case "EV": return Entry.EffectiveVolume;
                 case "NV": return Entry.NominalVolume;
-                default: throw new InvalidEnumStringException();
+                default: throw new InvalidEnumStringException(value);
             }
         }
     }

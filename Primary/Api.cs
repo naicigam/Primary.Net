@@ -12,7 +12,7 @@ namespace Primary
     public class Api
     {
         public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
-        public static Uri DemoEndpoint => new Uri("http://pbcp-remarket.cloud.primary.com.ar");
+        public static Uri DemoEndpoint => new Uri("http://api.remarkets.primary.com.ar");
         
         public Api(Uri baseUri)
         {
@@ -175,6 +175,25 @@ namespace Primary
             }
 
             return response.Order;
+        }
+
+        public async Task CancelOrder(OrderId orderId)
+        {
+            var uri = new Uri(_baseUri, "/rest/order/cancelById").ToString();
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
+                     .AddQueryParam("proprietary", orderId.Proprietary);
+
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
+            var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
+            //if (response.Status == Status.Error)
+            //{
+            //    throw new Exception($"{response.Message} ({response.Description})");
+            //}
         }
 
         private struct SubmitOrderResponse

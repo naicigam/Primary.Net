@@ -6,7 +6,10 @@ namespace Primary.Data.Orders
     [JsonConverter(typeof(OrderTypeJsonSerializer))]
     public enum OrderType
     {
-        Market,
+        /// <summary>Market order.</summary>
+        Market, 
+
+        /// <summary>Limit order.</summary>
         Limit
     }
 
@@ -20,19 +23,35 @@ namespace Primary.Data.Orders
     [JsonConverter(typeof(OrderExpirationJsonSerializer))]
     public enum OrderExpiration
     {
+        /// <summary>Order valid during the day. It will expires when the market closes.</summary>
         Day,
+
+        /// <summary>Immediate or cancel.</summary>
         ImmediateOrCancel,
+
+        /// <summary>Fill or kill.</summary>
         FillOrKill,
+
+        /// <summary>Good Till Date (Must send ExpirationDate field in the Order).</summary>
         GoodTillDate
     }
 
     [JsonConverter(typeof(OrderStatusJsonSerializer))]
     public enum OrderStatus
     {
+        /// <summary>The order was successfully submitted.</summary>
         New,
+        
+        /// <summary>The order was submitted but it is still being processed.</summary>
         PendingNew,
+        
+        /// <summary>The order was rejected.</summary>
         Rejected,
+        
+        /// <summary>The order was cancelled.</summary>
         Cancelled,
+        
+        /// <summary>The order was filled.</summary>
         Filled
     }
 
@@ -87,6 +106,8 @@ namespace Primary.Data.Orders
         }
 
         #endregion
+
+        #region OrderExpiration
 
         public static string ToApiString(this OrderExpiration value)
         {
@@ -143,6 +164,8 @@ namespace Primary.Data.Orders
 
         #endregion
     }
+
+    #endregion
 
     #region JSON serialization
 

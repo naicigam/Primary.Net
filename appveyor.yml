@@ -23,6 +23,7 @@ dotnet_csproj:
     informational_version: '{version}'
 
 # Documentation
+for:
 -
     branches:
         only:

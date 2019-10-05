@@ -25,6 +25,7 @@ namespace Primary.Tests.Builders
         #endregion
 
         [Test]
+        [Ignore("Testing doc generation")]
         public async Task OrderCanBeBuildReadyToBeSubmitted()
         {
             // Submit an order

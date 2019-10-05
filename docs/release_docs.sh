@@ -4,7 +4,7 @@ set -e
 export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
 export VisualStudioVersion="15.0"
 
-docfx ./docs/docfx.json
+docfx $SOURCE_DIR/docs/docfx.json
 
 SOURCE_DIR=$PWD
 TEMP_REPO_DIR=$PWD/../primary-net-gh-pages

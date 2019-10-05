@@ -25,11 +25,12 @@ dotnet_csproj:
 # Documentation
 for:
 -
-    branches:
-        only:
-            - master
+    #branches:
+    #    only:
+    #        - master
     
     configuration: Release
+    image: Ubuntu
 
     environment:
         github_access_token:

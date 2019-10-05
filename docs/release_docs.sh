@@ -4,8 +4,7 @@ set -e
 export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
 export VisualStudioVersion="15.0"
 
-echo Restoring based on https://github.com/dotnet/docfx/issues/3177
-nuget restore
+nuget install docfx.console
 
 docfx ./docs/docfx.json
 

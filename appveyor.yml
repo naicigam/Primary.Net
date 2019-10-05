@@ -39,7 +39,7 @@ for:
             secure: YgRowyrTWD474co1vP2R/BJEL5MzbybUWZK/81N9MZU=
 
     install:
-    - cinst docfx
+    - cinst docfx --version 2.44.0
 
     deploy_script:
     - git config --global credential.helper store

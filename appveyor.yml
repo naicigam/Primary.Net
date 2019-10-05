@@ -30,7 +30,7 @@ for:
     #        - master
     
     configuration: Release
-    image: Ubuntu
+    image: Visual Studio 2017
 
     environment:
         github_access_token:

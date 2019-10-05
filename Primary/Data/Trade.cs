@@ -8,10 +8,10 @@ namespace Primary.Data
     public class Trade
     {
         [JsonProperty("price")]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
 
         [JsonProperty("size")]
-        public float Size { get; set; }
+        public decimal Size { get; set; }
 
         [JsonProperty("datetime")]
         public DateTime DateTime { get; set; }

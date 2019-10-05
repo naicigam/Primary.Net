@@ -4,11 +4,11 @@ set -e
 export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community"
 export VisualStudioVersion="15.0"
 
-nuget install docfx -Version 2.44.0
-nuget install docfx.console -Version 2.44.0
+#nuget install docfx -Version 2.44.0
+#nuget install docfx.console -Version 2.44.0
 
 # https://github.com/dotnet/docfx/issues/3177
-nuget restore 
+#nuget restore 
 
 docfx ./docs/docfx.json
 

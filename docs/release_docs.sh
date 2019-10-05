@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
+export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community"
 export VisualStudioVersion="15.0"
 
 nuget install docfx -Version 2.44.0

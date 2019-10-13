@@ -10,7 +10,8 @@ export VisualStudioVersion="15.0"
 # https://github.com/dotnet/docfx/issues/3177
 #nuget restore 
 
-docfx ./docs/docfx.json
+docfx metadata ./docs/docfx.json
+docfx build ./docs/docfx.json
 
 SOURCE_DIR=$PWD
 TEMP_REPO_DIR=$PWD/../primary-net-gh-pages

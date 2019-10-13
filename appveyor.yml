@@ -40,7 +40,6 @@ for:
 
     install:
     - cinst docfx
-    - cinst docfx-console
 
     deploy_script:
     - git config --global credential.helper store

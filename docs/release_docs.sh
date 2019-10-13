@@ -1,17 +1,7 @@
 #!/bin/sh
 set -e
 
-#export VSINSTALLDIR="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community"
-#export VisualStudioVersion="15.0"
-
-#nuget install docfx
-#nuget install docfx.console
-
-# https://github.com/dotnet/docfx/issues/3177
-#nuget restore 
-
-docfx metadata ./docs/docfx.json
-docfx build ./docs/docfx.json
+docfx ./docs/docfx.json
 
 SOURCE_DIR=$PWD
 TEMP_REPO_DIR=$PWD/../primary-net-gh-pages

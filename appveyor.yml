@@ -4,7 +4,7 @@ configuration:
 - Release
 
 image:
-- Visual Studio 2019
+- Visual Studio 2017
 - Ubuntu
 
 platform:
@@ -30,7 +30,7 @@ for:
     #        - master
     
     configuration: Release
-    image: Visual Studio 2019
+    image: Visual Studio 2017
 
     environment:
         github_access_token:
@@ -40,7 +40,6 @@ for:
 
     install:
     - cinst docfx
-    - cinst nuget
 
     deploy_script:
     - git config --global credential.helper store

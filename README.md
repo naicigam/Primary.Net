@@ -6,6 +6,7 @@ Provides a .NET friendly interface to interact with the Primary API.
 **This project is still under development.**
 
 [![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
+Documentation: https://primary.naicigam.dev
 
 ## Supported API features
 - Currently traded assets list.
@@ -13,11 +14,11 @@ Provides a .NET friendly interface to interact with the Primary API.
 - Real-time market data.
 - Submit and cancel orders.
 
-## Short-term roadmap
+# Short-term roadmap
 - Nuget package.
 - Performance improvements.
 
-### Building
+## Building
 
 This project targets .NET Core 2.2. 
 

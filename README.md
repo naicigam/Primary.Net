@@ -6,19 +6,19 @@ Provides a .NET friendly interface to interact with the Primary API.
 **This project is still under development.**
 
 [![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
+Documentation: https://primary.naicigam.dev
 
-## Features
-- Supported assets list.
+## Supported API features
+- Currently traded assets list.
 - Historical market data.
 - Real-time market data.
 - Submit and cancel orders.
 
-## Short-term roadmap
+# Short-term roadmap
 - Nuget package.
-- Documentation.
 - Performance improvements.
 
-### Building
+## Building
 
 This project targets .NET Core 2.2. 
 
@@ -36,7 +36,8 @@ Relevant test cases must be included in the PR.
 
 ## Aknowledgements
 - The API is developed and maintained by [Primary](http://www.primary.com.ar).
-- CI provided by [AppVeyor](https://www.appveyor.com/).
+- CI is provided by [AppVeyor](https://www.appveyor.com/).
+- The documentation is generated with [DocFX](https://dotnet.github.io/docfx/) and was deployed using [this tutorial](https://blog.markvincze.com/build-and-publish-documentation-and-api-reference-with-docfx-for-net-core-projects/).
 - This README was based on this [README template](https://github.com/jehna/readme-best-practices).
 
 ## Licensing

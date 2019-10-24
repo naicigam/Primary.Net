@@ -20,6 +20,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Primary.Tests", "Primary.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Primary.Examples", "Primary.Examples\Primary.Examples.csproj", "{C8889C29-F0B1-4629-88EE-9FF6EC1D4B9A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E9E4045D-768D-420D-B55E-3BDE2D27FECE}"
+	ProjectSection(SolutionItems) = preProject
+		docs\docfx.json = docs\docfx.json
+		docs\filterConfig.yml = docs\filterConfig.yml
+		docs\index.md = docs\index.md
+		docs\release_docs.sh = docs\release_docs.sh
+		docs\toc.yml = docs\toc.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

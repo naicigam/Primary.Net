@@ -6,18 +6,43 @@ namespace Primary.Data
     [JsonConverter(typeof(EntryJsonSerializer))]
     public enum Entry
     {
+        /// <summary>Best buy offer in the Market Book.</summary>
         Bids, 
+        
+        /// <summary>Best sell offer in the Market Book.</summary>
         Offers,
+
+        /// <summary>Last price traded in the Market Book.</summary>
         Last,
+
+        /// <summary>Opening price in the Market Book.</summary>
         Open,
+
+        /// <summary>Closing price in the Market Book.</summary>
         Close,
+
+        /// <summary>Settlement price (only for futures).</summary>
         SettlementPrice,
+        
+        /// <summary>Highest price traded.</summary>
         SessionHighPrice,
+        
+        /// <summary>Lowest price traded.</summary>
         SessionLowPrice,
+        
+        /// <summary>Traded volume in contracts/nominal.</summary>
         Volume,
+        
+        /// <summary>Open interest in contracts (only for futures).</summary>
         OpenInterest,
+        
+        /// <summary>Calculated index value (only for indices).</summary>
         IndexValue,
+        
+        /// <summary>Effective traded volume.</summary>
         EffectiveVolume,
+        
+        /// <summary>Nominal traded volume.</summary>
         NominalVolume
     } 
 
@@ -72,7 +97,7 @@ namespace Primary.Data
 
     #region JSON Serialization
 
-    public class EntryJsonSerializer : EnumJsonSerializer<Entry>
+    internal class EntryJsonSerializer : EnumJsonSerializer<Entry>
     {
         protected override string ToString(Entry enumValue)
         {

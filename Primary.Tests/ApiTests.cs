@@ -35,7 +35,7 @@ namespace Primary.Tests
         {
             var instruments = await _api.GetAllInstruments();
             
-            var dollarFuture = instruments.First(c => c.Symbol.StartsWith("DO"));
+            var dollarFuture = instruments.First( c => c.Symbol.StartsWith("DO") && !c.Symbol.StartsWith("DOP ") );
             var dateFrom = DateTime.Today.AddDays(-20);
             var dateTo = DateTime.Today;
 

@@ -2,18 +2,12 @@
 
 namespace Primary.Data.Orders
 {
-    internal interface IOrderId
+    public class OrderId
     {
         [JsonProperty("clientId")]
-        ulong ClientId { get; set; }
-
-        [JsonProperty("proprietary")]
-        string Proprietary { get; set; }
-    }
-
-    public class OrderId : IOrderId
-    {
         public ulong ClientId { get; set; }
+        
+        [JsonProperty("proprietary")]
         public string Proprietary { get; set; }
     }
 }

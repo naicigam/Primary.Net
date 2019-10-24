@@ -51,11 +51,11 @@ namespace Primary.Examples
 
         private static void OnMarketData(MarketData marketData)
         {
-            var bid = default(float);
-            var offer = default(float);
+            var bid = default(decimal);
+            var offer = default(decimal);
 
-            var bidSize = default(float);
-            var offerSize = default(float);
+            var bidSize = default(decimal);
+            var offerSize = default(decimal);
 
             foreach (var (entry, trades) in marketData.Data)
             {

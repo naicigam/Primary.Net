@@ -25,7 +25,6 @@ namespace Primary.Tests.Builders
         #endregion
 
         [Test]
-        [Ignore("Testing doc generation")]
         public async Task OrderCanBeBuildReadyToBeSubmitted()
         {
             // Submit an order
@@ -36,7 +35,7 @@ namespace Primary.Tests.Builders
             // Retrieve the order
             var retrievedOrder = await _api.GetOrder(orderId);
 
-            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.PendingNew));
+            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.New));
         }
 
         private Api _api;

@@ -16,7 +16,6 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Ignore("Testing doc generation")]
         public async Task OrdersCanBeEnteredAndRetrieved()
         {
             // Submit an order
@@ -35,7 +34,6 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Ignore("WIP")]
         public async Task OrdersCanBeCancelled()
         {
             Order order = Build.AnOrder(_api);

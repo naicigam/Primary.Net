@@ -58,30 +58,33 @@ namespace Primary.Tests
             var entries = new[] { Entry.Bids, Entry.Offers };
 
             // Used to cancel the task
-            using var cancellationSource = new CancellationTokenSource();
-
-            // Create and start the web socket
-            using var socket = _api.CreateSocket(new[] { instrument }, entries, 1, 1, cancellationSource.Token);
-            Assert.That(!socket.IsRunning);
-
-            var socketTask = await socket.Start();
-
-            // Wait until it is running
-            while (!socket.IsRunning)
+            using (var cancellationSource = new CancellationTokenSource())
             {
-                Thread.Sleep(10);
-            }
+                // Create and start the web socket
+                using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
+                {
+                    Assert.That(!socket.IsRunning);
 
-            cancellationSource.Cancel();
+                    var socketTask = await socket.Start();
 
-            try
-            {
-                await socketTask;
-                Assert.Fail();
-            }
-            catch (OperationCanceledException)
-            {
-                Assert.That(!socket.IsRunning);
+                    // Wait until it is running
+                    while (!socket.IsRunning)
+                    {
+                        Thread.Sleep(10);
+                    }
+
+                    cancellationSource.Cancel();
+
+                    try
+                    {
+                        await socketTask;
+                        Assert.Fail();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Assert.That(!socket.IsRunning);
+                    }
+                }
             }
         }
     }

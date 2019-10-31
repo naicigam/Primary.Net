@@ -23,7 +23,8 @@ namespace Primary.Tests.Builders
                                                    !i.Symbol.StartsWith("DOP "));
 
             // Get a valid price
-            var prices = _api.GetHistoricalTrades(instrument, DateTime.Today, DateTime.Today).Result;
+            var yesterday = DateTime.Today.AddDays(-1);
+            var prices = _api.GetHistoricalTrades(instrument, yesterday, yesterday).Result;
 
             return new Order
             {

@@ -32,13 +32,15 @@ namespace Primary.Examples
             var entries = new[] { Entry.Bids, Entry.Offers };
 
             Console.WriteLine("Connecting to market data...");
-            
-            using var socket = api.CreateSocket(dollarFuture, entries, 1, 1);
-            socket.OnMarketData = OnMarketData;
 
-            var socketTask = await socket.Start();
-            socketTask.Wait();
-            await socketTask;
+            using (var socket = api.CreateSocket(dollarFuture, entries, 1, 1))
+            {
+                socket.OnMarketData = OnMarketData;
+
+                var socketTask = await socket.Start();
+                socketTask.Wait();
+                await socketTask;
+            }
         }
 
         private static void OnMarketData(MarketData marketData)

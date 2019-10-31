@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Primary.Data;
 using Primary.Data.Orders;
 
@@ -17,13 +18,21 @@ namespace Primary.Tests.Builders
         {
             var instruments = _api.GetAllInstruments().Result;
 
+            // Get a dollar future symbol
+            var instrument = instruments.Last(i => i.Symbol.StartsWith("DO") &&
+                                                   !i.Symbol.StartsWith("DOP "));
+
+            // Get a valid price
+            var yesterday = DateTime.Today.AddDays(-1);
+            var prices = _api.GetHistoricalTrades(instrument, yesterday, yesterday).Result;
+
             return new Order
             {
-                Instrument = instruments.First(),
-                Expiration = OrderExpiration.ImmediateOrCancel,
+                Instrument = instrument,
+                Expiration = OrderExpiration.Day,
                 Type = OrderType.Limit,
-                Quantity = 1000,
-                Price = 3
+                Quantity = 100,
+                Price = prices.Last().Price
             };
         }
 

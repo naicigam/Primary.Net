@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Primary.Data;
@@ -143,11 +144,31 @@ namespace Primary
                                                 uint level, uint depth
         )
         {
+            return CreateSocket( instruments, entries, level, depth, new CancellationToken() );
+        }
+
+        /// <summary>
+        /// Create a Market Data web socket to receive real-time market data.
+        /// </summary>
+        /// <param name="instruments">Instruments to watch.</param>
+        /// <param name="entries">Market data entries to watch.</param>
+        /// <param name="level"></param>
+        /// <param name="depth">Depth of the book.</param>
+        /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
+        /// <returns></returns>
+        public MarketDataWebSocket CreateSocket(IEnumerable<Instrument> instruments, 
+                                                IEnumerable<Entry> entries,
+                                                uint level, uint depth,
+                                                CancellationToken cancellationToken
+        )
+        {
             var url = new UriBuilder(_baseUri)
             {
                 Scheme = "ws"
             };
-            return new MarketDataWebSocket(instruments, entries, level, depth, url.Uri, AccessToken);
+            return new MarketDataWebSocket(instruments, entries, level, depth, url.Uri, AccessToken,
+                                           cancellationToken
+            );
         }
 
         #region Orders

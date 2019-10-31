@@ -29,7 +29,7 @@ namespace Primary.Data
         public Instrument Instrument { get; set; }
 
         [JsonProperty("price")]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         
         [JsonProperty("orderQty")]
         public int Quantity { get; set; }

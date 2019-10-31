@@ -113,7 +113,7 @@ namespace Primary.Data.Orders
         {
             switch (value)
             {
-                case OrderExpiration.Day: return "Day";
+                case OrderExpiration.Day: return "DAY";
                 case OrderExpiration.FillOrKill: return "FOK";
                 case OrderExpiration.GoodTillDate: return "GTD";
                 case OrderExpiration.ImmediateOrCancel: return "IOC";
@@ -125,7 +125,7 @@ namespace Primary.Data.Orders
         {
             switch (value)
             {
-                case "Day": return OrderExpiration.Day;
+                case "DAY": return OrderExpiration.Day;
                 case "FOK": return OrderExpiration.FillOrKill;
                 case "GTD": return OrderExpiration.GoodTillDate;
                 case "IOC": return OrderExpiration.ImmediateOrCancel;

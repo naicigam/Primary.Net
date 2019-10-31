@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -47,7 +48,6 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Ignore("WIP")]
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
             // Get a dollar future
@@ -57,22 +57,34 @@ namespace Primary.Tests
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
 
-            using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1))
+            // Used to cancel the task
+            using (var cancellationSource = new CancellationTokenSource())
             {
-                Assert.That(!socket.IsRunning);
-
-                var socketTask = socket.Start();
-
-                // Wait until it is running
-                while (!socket.IsRunning)
+                // Create and start the web socket
+                using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
                 {
-                    Thread.Sleep(10);
+                    Assert.That(!socket.IsRunning);
+
+                    var socketTask = await socket.Start();
+
+                    // Wait until it is running
+                    while (!socket.IsRunning)
+                    {
+                        Thread.Sleep(10);
+                    }
+
+                    cancellationSource.Cancel();
+
+                    try
+                    {
+                        await socketTask;
+                        Assert.Fail();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Assert.That(!socket.IsRunning);
+                    }
                 }
-
-                socket.Cancel();
-                socketTask.Wait();
-
-                Assert.That(!socket.IsRunning);
             }
         }
     }

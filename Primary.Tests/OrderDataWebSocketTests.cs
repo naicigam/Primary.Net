@@ -21,6 +21,7 @@ namespace Primary.Tests
         private Api _api;
 
         [Test]
+        [Timeout(10000)]
         public async Task SubscriptionToOrdersDataCanBeCreated()
         {
             // Subscribe to demo account
@@ -48,6 +49,7 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Timeout(10000)]
         public async Task SubscriptionToOrdersDataCanBeCancelled()
         {
             // Used to cancel the task

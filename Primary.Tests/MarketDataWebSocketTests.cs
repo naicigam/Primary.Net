@@ -20,6 +20,7 @@ namespace Primary.Tests
         private Api _api;
 
         [Test]
+        [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCreated()
         {
             // Get a dollar future
@@ -48,6 +49,7 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
             // Get a dollar future

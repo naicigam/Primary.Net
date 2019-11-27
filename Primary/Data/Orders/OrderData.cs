@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 using Primary.Serialization;
 
@@ -26,9 +24,9 @@ namespace Primary.Data.Orders
         [JsonProperty("execId")]
         public string ExecutionId { get; set; }
 
-        //[JsonProperty("transactTime")]
-        //[JsonConverter(typeof(DateTimeJsonDeserializer))]
-        //public DateTime TransactionTime { get; set; }
+        [JsonProperty("transactTime")]
+        [JsonConverter(typeof(DateTimeJsonDeserializer))]
+        public DateTime TransactionTime { get; set; }
         
         [JsonProperty("avgPx")]
         public decimal AveragePrice { get; set; }

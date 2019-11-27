@@ -6,7 +6,7 @@ namespace Primary.Data
     public class Instrument
     {
         /// <summary>Market where the instruments belongs to.</summary>
-        /// <remarks>Only accepted values is    **ROFX**.</remarks>
+        /// <remarks>Only accepted value is **ROFX**.</remarks>
         [JsonProperty("marketId")]
         public string Market { get; set; }
 

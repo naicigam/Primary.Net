@@ -29,7 +29,7 @@ namespace Primary.Tests
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
 
-            using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1))
+            using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1))
             {
                 MarketData retrievedData = null;
                 socket.OnMarketData = (marketData => retrievedData = marketData);
@@ -61,7 +61,7 @@ namespace Primary.Tests
             using (var cancellationSource = new CancellationTokenSource())
             {
                 // Create and start the web socket
-                using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
+                using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
                 {
                     Assert.That(!socket.IsRunning);
 

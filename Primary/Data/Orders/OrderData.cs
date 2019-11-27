@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
+using Primary.Serialization;
+
+namespace Primary.Data.Orders
+{
+    public class OrderData : Order
+    {
+        //"accountId":{
+        //    "id":"30"
+        //}
+
+        [JsonProperty("orderId")]
+        public string OrderId { get; set; }
+
+        [JsonProperty("clOrdId")]
+        public string ClientOrderId { get; set; }
+
+        [JsonProperty("execId")]
+        public string ExecutionId { get; set; }
+
+        //[JsonProperty("transactTime")]
+        //[JsonConverter(typeof(DateTimeJsonDeserializer))]
+        //public DateTime TransactionTime { get; set; }
+        
+        [JsonProperty("avgPx")]
+        public decimal AveragePrice { get; set; }
+
+        [JsonProperty("lastPx")]
+        public decimal LastPrice { get; set; }
+
+        [JsonProperty("lastQty")]
+        public decimal LastQuantity { get; set; }
+
+        [JsonProperty("cumQty")]
+        public decimal CumulativeQuantity { get; set; }
+
+        [JsonProperty("leavesQty")]
+        public uint LeavesQuantity { get; set; }
+    }
+}

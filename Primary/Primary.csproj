@@ -3,6 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <Version>0.1.1-alpha</Version>
+    <PackageId>Primary.Net</PackageId>
+    <Authors>Juan Manuel Alvarez</Authors>
+    <Company />
+    <Product>Primary.Net</Product>
+    <Copyright>2019</Copyright>
+    <PackageProjectUrl>https://github.com/naicigam/Primary.Net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/naicigam/Primary.Net/</RepositoryUrl>
+    <RepositoryType>Open source</RepositoryType>
+    <PackageTags>Finance</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>.Net friendly interface to interact with the Primary API.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

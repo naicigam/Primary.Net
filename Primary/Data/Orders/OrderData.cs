@@ -8,9 +8,14 @@ namespace Primary.Data.Orders
 {
     public class OrderData : Order
     {
-        //"accountId":{
-        //    "id":"30"
-        //}
+        public class AccountId
+        {
+            [JsonProperty("id")]
+            public string Id { get; set; }
+        }
+
+        [JsonProperty("accountId")]
+        public AccountId Account { get; set; }
 
         [JsonProperty("orderId")]
         public string OrderId { get; set; }

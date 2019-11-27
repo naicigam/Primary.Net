@@ -40,6 +40,7 @@ namespace Primary.Tests
                     Thread.Sleep(100);
                 }
 
+                Assert.That(retrievedData.Account.Id, Is.EqualTo(Api.DemoAccount));
                 Assert.That(retrievedData.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
                 Assert.That(retrievedData.Instrument.Market, Is.EqualTo(order.Instrument.Market));
                 Assert.That(retrievedData.Price, Is.EqualTo(order.Price));

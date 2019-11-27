@@ -20,6 +20,24 @@ namespace Primary.Data
         public long ServerTime { get; set; }
     }
 
+    public struct MarketDataInfo
+    {
+        [JsonProperty("type")]
+        public string Type;
+            
+        [JsonProperty("level")]
+        public uint Level;
+
+        [JsonProperty("depth")]
+        public uint Depth;
+
+        [JsonProperty("entries")]
+        public Entry[] Entries;
+
+        [JsonProperty("products")]
+        public Instrument[] Products;
+    }
+
     public class MarketData
     {
         [JsonProperty("timestamp")]

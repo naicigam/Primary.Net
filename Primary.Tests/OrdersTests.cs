@@ -45,7 +45,7 @@ namespace Primary.Tests
             await _api.CancelOrder(orderId);
 
             retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled));
+            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled), retrievedOrder.StatusText);
         }
 
         [Test]

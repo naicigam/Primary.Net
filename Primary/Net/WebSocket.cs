@@ -10,8 +10,9 @@ namespace Primary.Net
 {
     public class WebSocket<TRequest, TResponse> : IDisposable
     {
-        internal WebSocket(Uri url, string accessToken, CancellationToken cancelToken)
+        internal WebSocket(TRequest request, Uri url, string accessToken, CancellationToken cancelToken)
         {
+            _request = request;
             _url = url;
             _accessToken = accessToken;
             CancelToken = cancelToken;
@@ -24,7 +25,7 @@ namespace Primary.Net
             await _client.ConnectAsync(_url, CancelToken);
 
             // Send data to request
-            var jsonRequest = JsonConvert.SerializeObject(Request);
+            var jsonRequest = JsonConvert.SerializeObject(_request);
 
             var outputBuffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(jsonRequest));
             await _client.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancelToken);
@@ -100,10 +101,9 @@ namespace Primary.Net
             }
         }
 
-        protected TRequest Request;
-
         private readonly ClientWebSocket _client = new ClientWebSocket();
 
+        private readonly TRequest _request;
         private readonly Uri _url;
         private readonly string _accessToken;
     }

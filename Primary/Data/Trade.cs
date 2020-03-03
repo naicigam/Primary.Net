@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Primary.Serialization;
 
 namespace Primary.Data
 {
@@ -18,36 +16,5 @@ namespace Primary.Data
 
         [JsonProperty("servertime")]
         public long ServerTime { get; set; }
-    }
-
-    public struct MarketDataInfo
-    {
-        [JsonProperty("type")]
-        public string Type;
-            
-        [JsonProperty("level")]
-        public uint Level;
-
-        [JsonProperty("depth")]
-        public uint Depth;
-
-        [JsonProperty("entries")]
-        public Entry[] Entries;
-
-        [JsonProperty("products")]
-        public Instrument[] Products;
-    }
-
-    public class MarketData
-    {
-        [JsonProperty("timestamp")]
-        public long Timestamp { get; set; }
-        
-        [JsonProperty("instrumentId")]
-        public Instrument Instrument { get; set; }
-
-        [JsonProperty("marketData")]
-        [JsonConverter( typeof( DictionaryJsonSerializer< Entry, IEnumerable<Trade> >) )]
-        public Dictionary<Entry, IEnumerable<Trade>> Data { get; set; }
     }
 }

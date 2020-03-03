@@ -16,7 +16,7 @@ namespace Primary
         public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
 
         /// <summary>This is the default demo endpoint.</summary>
-        /// <remarks>You can get a demo username in https://remarkets.primary.ventures.</remarks>
+        /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
         public static Uri DemoEndpoint => new Uri("http://api.remarkets.primary.com.ar");
         
         /// <summary>
@@ -164,13 +164,18 @@ namespace Primary
                                                           CancellationToken cancellationToken
         )
         {
-            var url = new UriBuilder(_baseUri)
+            var wsScheme = (_baseUri.Scheme == "https" ? "wss" : "ws");
+            var url = new UriBuilder(_baseUri) { Scheme = wsScheme };
+
+            var marketDataToRequest = new MarketDataInfo()
             {
-                Scheme = "ws"
+                Depth = depth,
+                Entries = entries.ToArray(),
+                Level = level,
+                Products = instruments.ToArray()
             };
-            return new MarketDataWebSocket(instruments, entries, level, depth, url.Uri, AccessToken,
-                                           cancellationToken
-            );
+
+            return new MarketDataWebSocket(marketDataToRequest, url.Uri, AccessToken, cancellationToken);
         }
 
         #endregion
@@ -197,11 +202,14 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
-            var url = new UriBuilder(_baseUri)
+            var url = new UriBuilder(_baseUri) { Scheme = "ws" };
+
+            var request = new Primary.Request
             {
-                Scheme = "ws"
+                Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a} ).ToArray()
             };
-            return new OrderDataWebSocket(accounts, url.Uri, AccessToken, cancellationToken);
+
+            return new OrderDataWebSocket(request, url.Uri, AccessToken, cancellationToken);
         }
 
         #endregion

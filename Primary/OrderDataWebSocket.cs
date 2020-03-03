@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
 using Primary.Data.Orders;
@@ -10,11 +8,11 @@ namespace Primary
 {
     public struct Request
     {
-        [JsonProperty("type")]
-        public string Type;
+        [JsonProperty("type", Order=-2)]
+        public string Type => "os";
 
         [JsonProperty("accounts")]
-        public string[] Accounts;
+        public OrderData.AccountId[] Accounts;
     }
 
     public struct Response
@@ -25,12 +23,10 @@ namespace Primary
 
     public class OrderDataWebSocket : WebSocket<Request, Response>
     {
-        internal OrderDataWebSocket(IEnumerable<string> accounts, Uri url, string accessToken,
+        internal OrderDataWebSocket(Request orderDataToRequest, Uri url, string accessToken,
                                     CancellationToken cancelToken)
-        : base(url, accessToken, cancelToken)
-        {
-            Request.Type = "os";
-            Request.Accounts = accounts.ToArray();
-        }
+        : 
+        base(orderDataToRequest, url, accessToken, cancelToken)
+        {}
     }
 }

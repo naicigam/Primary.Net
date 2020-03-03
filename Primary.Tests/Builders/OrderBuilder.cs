@@ -17,14 +17,11 @@ namespace Primary.Tests.Builders
         private Order Build()
         {
             var instruments = _api.GetAllInstruments().Result;
-
-            // Get a dollar future symbol
-            var instrument = instruments.Last(i => i.Symbol.StartsWith("DO") &&
-                                                   !i.Symbol.StartsWith("DOP "));
+            var instrument = instruments.Last( i => i.Symbol == Tests.Build.DollarFutureSymbol() );
 
             // Get a valid price
             var yesterday = DateTime.Today.AddDays(-1);
-            var prices = _api.GetHistoricalTrades(instrument, yesterday, yesterday).Result;
+            var prices = _api.GetHistoricalTrades(instrument, yesterday.AddDays(-5), yesterday).Result;
 
             return new Order
             {

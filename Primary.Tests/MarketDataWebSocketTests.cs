@@ -24,8 +24,8 @@ namespace Primary.Tests
         public async Task SubscriptionToMarketDataCanBeCreated()
         {
             // Get a dollar future
-            var allIInstruments = await _api.GetAllInstruments();
-            var instrument = allIInstruments.First(c => c.Symbol.StartsWith("DO"));
+            var instruments = await _api.GetAllInstruments();
+            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
@@ -53,8 +53,8 @@ namespace Primary.Tests
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
             // Get a dollar future
-            var allIInstruments = await _api.GetAllInstruments();
-            var instrument = allIInstruments.First(c => c.Symbol.StartsWith("DO"));
+            var instruments = await _api.GetAllInstruments();
+            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Primary.Data;
 
@@ -8,7 +7,7 @@ namespace Primary.Examples
 {
     internal static class WebSocketExample
     {
-        private static async Task Main()
+        private static async Task RunExample()
         {
             Console.WriteLine("Connecting to ReMarkets...");
 

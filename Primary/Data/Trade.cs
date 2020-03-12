@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace Primary.Data
 {
+    /// <summary>
+    /// Contains the information about a trade.
+    /// </summary>
     public class Trade
     {
         [JsonProperty("price")]

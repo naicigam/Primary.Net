@@ -28,7 +28,7 @@ namespace Primary.Tests.Builders
                 Instrument = instrument,
                 Expiration = OrderExpiration.Day,
                 Type = OrderType.Limit,
-                Quantity = 100,
+                Quantity = 1,
                 Price = prices.Last().Price
             };
         }

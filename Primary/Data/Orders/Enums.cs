@@ -51,6 +51,9 @@ namespace Primary.Data.Orders
         /// <summary>The order was cancelled.</summary>
         Cancelled,
         
+        /// <summary>The order was partially filled.</summary>
+        PartiallyFilled,
+
         /// <summary>The order was filled.</summary>
         Filled
     }
@@ -144,6 +147,7 @@ namespace Primary.Data.Orders
                 case OrderStatus.New: return "NEW";
                 case OrderStatus.Rejected: return "REJECTED";
                 case OrderStatus.Cancelled: return "CANCELLED";
+                case OrderStatus.PartiallyFilled: return "PARTIALLY_FILLED";
                 case OrderStatus.Filled: return "FILLED";
                 default: throw new InvalidEnumStringException( value.ToString() );
             }
@@ -157,6 +161,7 @@ namespace Primary.Data.Orders
                 case "PENDING_NEW": return OrderStatus.PendingNew;
                 case "REJECTED": return OrderStatus.Rejected;
                 case "CANCELLED": return OrderStatus.Cancelled;
+                case "PARTIALLY_FILLED": return OrderStatus.PartiallyFilled;
                 case "FILLED": return OrderStatus.Filled;
                 default: throw new InvalidEnumStringException(value);
             }

@@ -26,7 +26,7 @@ namespace Primary.Tests
             // Retrieve the order
             var retrievedOrder = await _api.GetOrder(orderId);
 
-            Assert.That(retrievedOrder.Symbol, Is.EqualTo(order.Symbol));
+            Assert.That(retrievedOrder.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
             Assert.That(retrievedOrder.Expiration, Is.EqualTo(order.Expiration));
             Assert.That(retrievedOrder.Type, Is.EqualTo(order.Type));
             Assert.That(retrievedOrder.Quantity, Is.EqualTo(order.Quantity));
@@ -45,7 +45,7 @@ namespace Primary.Tests
             await _api.CancelOrder(orderId);
 
             retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled));
+            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled), retrievedOrder.StatusText);
         }
 
         [Test]

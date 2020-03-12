@@ -33,13 +33,14 @@ namespace Primary.Tests
         [Test]
         public async Task HistoricalTradesCanBeRetrievedForAnInstrument()
         {
+            // Get a dollar future
             var instruments = await _api.GetAllInstruments();
-            
-            var dollarFuture = instruments.First( c => c.Symbol.StartsWith("DO") && !c.Symbol.StartsWith("DOP ") );
+            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+
             var dateFrom = DateTime.Today.AddDays(-20);
             var dateTo = DateTime.Today;
 
-            var trades = await _api.GetHistoricalTrades(dollarFuture, dateFrom, dateTo);
+            var trades = await _api.GetHistoricalTrades(instrument, dateFrom, dateTo);
             Assert.That(trades, Is.Not.Empty);
 
             foreach (var trade in trades)

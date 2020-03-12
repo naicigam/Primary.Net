@@ -35,7 +35,10 @@ namespace Primary.Tests.Builders
             // Retrieve the order
             var retrievedOrder = await _api.GetOrder(orderId);
 
-            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.New));
+            Assert.That(retrievedOrder.Status, 
+                        Is.EqualTo(OrderStatus.New).Or.EqualTo(OrderStatus.PendingNew), 
+                        retrievedOrder.StatusText
+            );
         }
 
         private Api _api;

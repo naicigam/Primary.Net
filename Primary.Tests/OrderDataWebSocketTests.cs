@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Primary.Data;
+using Primary.Data.Orders;
 
 namespace Primary.Tests
 {
     [TestFixture]
-    internal class MarketDataWebSocketTests
+    internal class OrderDataWebSocketTests
     {
         [OneTimeSetUp]
         public async Task Login()
@@ -21,49 +21,41 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task SubscriptionToMarketDataCanBeCreated()
+        public async Task SubscriptionToOrdersDataCanBeCreated()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
-
-            // Subscribe to bids and offers
-            var entries = new[] { Entry.Bids, Entry.Offers };
-
-            using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1))
+            // Subscribe to demo account
+            using (var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount }) )
             {
-                MarketData retrievedData = null;
-                socket.OnData = (marketData => retrievedData = marketData);
+                OrderData retrievedData = null;
+                socket.OnData = (orderData => retrievedData = orderData.OrderReport);
                 await socket.Start();
-                
+
+                // Send order
+                Order order = Build.AnOrder(_api);
+                await _api.SubmitOrder(Api.DemoAccount, order);
+
                 // Wait until data arrives
                 while (retrievedData == null)
                 {
                     Thread.Sleep(100);
                 }
 
-                Assert.That(retrievedData.Data, Is.Not.Empty);
-                Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
-                Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+                Assert.That(retrievedData.Account.Id, Is.EqualTo(Api.DemoAccount));
+                Assert.That(retrievedData.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
+                Assert.That(retrievedData.Instrument.Market, Is.EqualTo(order.Instrument.Market));
+                Assert.That(retrievedData.Price, Is.EqualTo(order.Price));
             }
         }
 
         [Test]
         [Timeout(10000)]
-        public async Task SubscriptionToMarketDataCanBeCancelled()
+        public async Task SubscriptionToOrdersDataCanBeCancelled()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
-
-            // Subscribe to bids and offers
-            var entries = new[] { Entry.Bids, Entry.Offers };
-
             // Used to cancel the task
             using (var cancellationSource = new CancellationTokenSource())
             {
                 // Create and start the web socket
-                using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
+                using (var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount }, cancellationSource.Token))
                 {
                     Assert.That(!socket.IsRunning);
 

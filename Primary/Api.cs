@@ -16,7 +16,7 @@ namespace Primary
         public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
 
         /// <summary>This is the default demo endpoint.</summary>
-        /// <remarks>You can get a demo username in https://remarkets.primary.ventures.</remarks>
+        /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
         public static Uri DemoEndpoint => new Uri("http://api.remarkets.primary.com.ar");
         
         /// <summary>
@@ -131,6 +131,8 @@ namespace Primary
 
         #endregion
         
+        #region Market data sockets
+
         /// <summary>
         /// Create a Market Data web socket to receive real-time market data.
         /// </summary>
@@ -138,13 +140,13 @@ namespace Primary
         /// <param name="entries">Market data entries to watch.</param>
         /// <param name="level"></param>
         /// <param name="depth">Depth of the book.</param>
-        /// <returns></returns>
-        public MarketDataWebSocket CreateSocket(IEnumerable<Instrument> instruments, 
-                                                IEnumerable<Entry> entries,
-                                                uint level, uint depth
+        /// <returns>The market data web socket.</returns>
+        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<Instrument> instruments, 
+                                                          IEnumerable<Entry> entries,
+                                                          uint level, uint depth
         )
         {
-            return CreateSocket( instruments, entries, level, depth, new CancellationToken() );
+            return CreateMarketDataSocket( instruments, entries, level, depth, new CancellationToken() );
         }
 
         /// <summary>
@@ -155,21 +157,62 @@ namespace Primary
         /// <param name="level"></param>
         /// <param name="depth">Depth of the book.</param>
         /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
-        /// <returns></returns>
-        public MarketDataWebSocket CreateSocket(IEnumerable<Instrument> instruments, 
-                                                IEnumerable<Entry> entries,
-                                                uint level, uint depth,
-                                                CancellationToken cancellationToken
+        /// <returns>The market data web socket.</returns>
+        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<Instrument> instruments, 
+                                                          IEnumerable<Entry> entries,
+                                                          uint level, uint depth,
+                                                          CancellationToken cancellationToken
         )
         {
-            var url = new UriBuilder(_baseUri)
+            var wsScheme = (_baseUri.Scheme == "https" ? "wss" : "ws");
+            var url = new UriBuilder(_baseUri) { Scheme = wsScheme };
+
+            var marketDataToRequest = new MarketDataInfo()
             {
-                Scheme = "ws"
+                Depth = depth,
+                Entries = entries.ToArray(),
+                Level = level,
+                Products = instruments.ToArray()
             };
-            return new MarketDataWebSocket(instruments, entries, level, depth, url.Uri, AccessToken,
-                                           cancellationToken
-            );
+
+            return new MarketDataWebSocket(marketDataToRequest, url.Uri, AccessToken, cancellationToken);
         }
+
+        #endregion
+
+        #region Order data sockets
+
+        /// <summary>
+        /// Create a Order Data web socket to receive real-time orders data.
+        /// </summary>
+        /// <param name="accounts">Accounts to get order events from.</param>
+        /// <returns>The order data web socket.</returns>
+        public OrderDataWebSocket CreateOrderDataSocket(IEnumerable<string> accounts)
+        {
+            return CreateOrderDataSocket( accounts, new CancellationToken() );
+        }
+
+        /// <summary>
+        /// Create a Market Data web socket to receive real-time market data.
+        /// </summary>
+        /// <param name="accounts">Accounts to get order events from.</param>
+        /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
+        /// <returns>The order data web socket.</returns>
+        public OrderDataWebSocket CreateOrderDataSocket(IEnumerable<string> accounts,
+                                                        CancellationToken cancellationToken
+        )
+        {
+            var url = new UriBuilder(_baseUri) { Scheme = "ws" };
+
+            var request = new Primary.Request
+            {
+                Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a} ).ToArray()
+            };
+
+            return new OrderDataWebSocket(request, url.Uri, AccessToken, cancellationToken);
+        }
+
+        #endregion
 
         #region Orders
 
@@ -184,7 +227,7 @@ namespace Primary
             var uri = new Uri(_baseUri, "/rest/order/newSingleOrder").ToString();
 
             uri = uri.AddQueryParam("marketId", "ROFX")
-                     .AddQueryParam("symbol", order.Symbol)
+                     .AddQueryParam("symbol", order.Instrument.Symbol)
                      .AddQueryParam("price", order.Price)
                      .AddQueryParam("orderQty", order.Quantity)
                      .AddQueryParam("ordType", order.Type.ToApiString())

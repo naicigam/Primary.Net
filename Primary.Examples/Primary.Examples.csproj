@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Primary\Primary.csproj" />
+    <PackageReference Include="Primary.Net" Version="0.1.1-alpha" />
   </ItemGroup>
 
 </Project>

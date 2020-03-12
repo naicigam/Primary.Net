@@ -6,8 +6,6 @@ namespace Primary.Data
 {
     public class Order
     {
-        public string Symbol => Instrument.Symbol;
-
         public bool CancelPrevious { get; set; }
 
         public bool Iceberg { get; set; }

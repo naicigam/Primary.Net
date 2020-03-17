@@ -5,22 +5,25 @@ Provides a .NET friendly interface to interact with the Primary API.
 
 **This project is still under development.**
 
-[![Build status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
+[![Build Status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
+[![NuGet Package](https://buildstats.info/nuget/Primary.Net?includePreReleases=true)](https://www.nuget.org/packages/Primary.Net/)
+
 Documentation: https://primary.naicigam.dev
 
 ## Supported API features
 - Currently traded assets list.
 - Historical market data.
 - Real-time market data.
+- Real-time order data.
 - Submit and cancel orders.
 
 # Short-term roadmap
-- Nuget package.
+- Remove dependencies.
 - Performance improvements.
 
 ## Building
 
-This project targets .NET Core 2.2. 
+This project targets .NET Core 3.1. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

@@ -52,7 +52,27 @@ namespace Primary.Data
 
         /// <summary>Market data grouped by entry.</summary>
         [JsonProperty("marketData")]
-        [JsonConverter( typeof( DictionaryJsonSerializer< Entry, IEnumerable<Trade> >) )]
-        public Dictionary<Entry, IEnumerable<Trade>> Data { get; set; }
+        public Entries Data { get; set; }
+
+        public class Entries
+        {
+            [JsonProperty("BI")] public IEnumerable<Trade> Bids { get; set; }
+            [JsonProperty("OF")] public IEnumerable<Trade> Offers { get; set; }
+
+            [JsonProperty("LA")] public Trade Last { get; set; }
+            [JsonProperty("OP")] public decimal Open { get; set; }
+            [JsonProperty("CL")] public Trade Close { get; set; }
+
+            [JsonProperty("SE")] public Trade SettlementPrice { get; set; }
+            [JsonProperty("OI")] public Trade OpenInterest { get; set; }
+
+            [JsonProperty("HI")] public decimal SessionHighPrice { get; set; }
+            [JsonProperty("LO")] public decimal SessionLowPrice { get; set; }
+            [JsonProperty("IV")] public decimal? IndexValue { get; set; }
+
+            [JsonProperty("TV")] public decimal Volume { get; set; }
+            [JsonProperty("NV")] public decimal NominalVolume { get; set; }
+            [JsonProperty("EV")] public decimal EffectiveVolume { get; set; }
+        }                        
     }
 }

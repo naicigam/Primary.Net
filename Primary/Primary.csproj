@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.1-alpha</Version>
+    <Version>0.2.2-alpha</Version>
     <PackageId>Primary.Net</PackageId>
     <Authors>Juan Manuel Alvarez</Authors>
     <Company />
     <Product>Primary.Net</Product>
-    <Copyright>2019</Copyright>
+    <Copyright>2020</Copyright>
     <PackageProjectUrl>https://github.com/naicigam/Primary.Net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/naicigam/Primary.Net/</RepositoryUrl>
     <RepositoryType>Open source</RepositoryType>

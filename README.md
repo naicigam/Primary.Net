@@ -23,7 +23,7 @@ Documentation: https://primary.naicigam.dev
 
 ## Building
 
-This project targets .NET Core 2.2. 
+This project targets .NET Core 3.1. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

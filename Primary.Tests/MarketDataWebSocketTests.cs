@@ -39,10 +39,7 @@ namespace Primary.Tests
                 {
                     Thread.Sleep(100);
                 }
-
-                Assert.That(retrievedData.Data.Bids, Is.Not.Empty);
-                Assert.That(retrievedData.Data.Offers, Is.Not.Empty);
-
+                
                 Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
                 Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
             }
@@ -111,9 +108,7 @@ namespace Primary.Tests
                 {
                     Thread.Sleep(100);
                 }
-
-                Assert.That(retrievedData.Data.IndexValue, Is.Not.Null);
-
+                
                 Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
                 Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
             }

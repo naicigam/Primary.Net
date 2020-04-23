@@ -46,6 +46,10 @@ namespace Primary.Data
     /// </summary>
     public class MarketData
     {
+        /// <summary>Server time in epoch format.</summary>
+        [JsonProperty("timestamp")]
+        public long Timestamp { get; set; }
+
         /// <summary>Instrument id.</summary>
         [JsonProperty("instrumentId")]
         public Instrument Instrument { get; set; }
@@ -60,14 +64,14 @@ namespace Primary.Data
             [JsonProperty("OF")] public IEnumerable<Trade> Offers { get; set; }
 
             [JsonProperty("LA")] public Trade Last { get; set; }
-            [JsonProperty("OP")] public decimal Open { get; set; }
+            [JsonProperty("OP")] public decimal? Open { get; set; }
             [JsonProperty("CL")] public Trade Close { get; set; }
 
             [JsonProperty("SE")] public Trade SettlementPrice { get; set; }
             [JsonProperty("OI")] public Trade OpenInterest { get; set; }
 
-            [JsonProperty("HI")] public decimal SessionHighPrice { get; set; }
-            [JsonProperty("LO")] public decimal SessionLowPrice { get; set; }
+            [JsonProperty("HI")] public decimal? SessionHighPrice { get; set; }
+            [JsonProperty("LO")] public decimal? SessionLowPrice { get; set; }
             [JsonProperty("IV")] public decimal? IndexValue { get; set; }
 
             [JsonProperty("TV")] public decimal Volume { get; set; }

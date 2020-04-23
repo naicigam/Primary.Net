@@ -44,6 +44,7 @@ namespace Primary.Tests
                 Assert.That(retrievedData.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
                 Assert.That(retrievedData.Instrument.Market, Is.EqualTo(order.Instrument.Market));
                 Assert.That(retrievedData.Price, Is.EqualTo(order.Price));
+                Assert.That(retrievedData.TransactionTime, Is.Not.EqualTo( default(long) ));
             }
         }
 

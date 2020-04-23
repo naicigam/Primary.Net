@@ -42,6 +42,7 @@ namespace Primary.Tests
                 
                 Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
                 Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+                Assert.That(retrievedData.Timestamp, Is.Not.EqualTo( default(long) ));
             }
         }
 

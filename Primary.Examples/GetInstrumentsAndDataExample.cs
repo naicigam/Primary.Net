@@ -6,7 +6,7 @@ namespace Primary.Examples
 {
     internal static class GetInstrumentsAndDataExample
     {
-        private static async Task Main()
+        private static async Task RunExample()
         {
             Console.WriteLine("Connecting to ReMarkets...");
             

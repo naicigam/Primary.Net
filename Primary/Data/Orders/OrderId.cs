@@ -9,5 +9,11 @@ namespace Primary.Data.Orders
         
         [JsonProperty("proprietary")]
         public string Proprietary { get; set; }
+
+        [JsonProperty("orderId")]
+        public string Id { get; set; }
+
+        [JsonProperty("clOrdId")]
+        public ulong ClientOrderId { get; set; }
     }
 }

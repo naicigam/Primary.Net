@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Primary.Data.Orders;
 
 namespace Primary.Data
 {
-    public class Order
+    public class Order : OrderId
     {
         /// <summary>Cancel previous order to the instrument.</summary>
-        /// <remarks>
-        ///     Only works when submitting an order. Will always have default value when retrieving
-        ///     an order information.
-        /// </remarks>
+        [JsonProperty("cancelPrevious")]
         public bool CancelPrevious { get; set; }
 
         /// <summary>Is this an iceberg order?</summary>
@@ -21,26 +17,6 @@ namespace Primary.Data
         /// <summary>How much of the order quantity is shown.</summary>
         [JsonProperty("displayQty")]
         public uint DisplayQuantity { get; set; }
-
-        /// <summary>Quantity affected in the last operation.</summary>
-        [JsonProperty("lastQty")]
-        public uint LastQuantity { get; set; }
-
-        /// <summary>Total quantity affected on the order.</summary>
-        [JsonProperty("cumQty")]
-        public uint CumulativeQuantity { get; set; }
-
-        /// <summary>How much quantity is left on the order.</summary>
-        [JsonProperty("leavesQty")]
-        public uint LeavesQuantity { get; set; }
-
-        /// <summary>Client id.</summary>
-        [JsonProperty("clientId")]
-        public ulong ClientId { get; set; }
-        
-        /// <summary>Client proprietary.</summary>
-        [JsonProperty("proprietary")]
-        public string Proprietary { get; set; }
 
         /// <summary>Order status.</summary>
         [JsonProperty("status")] 

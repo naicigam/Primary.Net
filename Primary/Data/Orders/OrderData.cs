@@ -15,12 +15,6 @@ namespace Primary.Data.Orders
         [JsonProperty("accountId")]
         public AccountId Account { get; set; }
 
-        [JsonProperty("orderId")]
-        public string OrderId { get; set; }
-
-        [JsonProperty("clOrdId")]
-        public string ClientOrderId { get; set; }
-
         [JsonProperty("execId")]
         public string ExecutionId { get; set; }
 
@@ -34,12 +28,15 @@ namespace Primary.Data.Orders
         [JsonProperty("lastPx")]
         public decimal LastPrice { get; set; }
 
+        /// <summary>Quantity affected in the last operation.</summary>
         [JsonProperty("lastQty")]
-        public decimal LastQuantity { get; set; }
+        public uint LastQuantity { get; set; }
 
+        /// <summary>Total quantity affected on the order.</summary>
         [JsonProperty("cumQty")]
-        public decimal CumulativeQuantity { get; set; }
+        public uint CumulativeQuantity { get; set; }
 
+        /// <summary>How much quantity is left on the order.</summary>
         [JsonProperty("leavesQty")]
         public uint LeavesQuantity { get; set; }
     }

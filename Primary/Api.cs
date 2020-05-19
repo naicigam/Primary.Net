@@ -17,7 +17,7 @@ namespace Primary
 
         /// <summary>This is the default demo endpoint.</summary>
         /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
-        public static Uri DemoEndpoint => new Uri("http://api.remarkets.primary.com.ar");
+        public static Uri DemoEndpoint => new Uri("https://api.remarkets.primary.com.ar");
         
         /// <summary>
         /// Build a new API object.
@@ -204,7 +204,7 @@ namespace Primary
         {
             var url = new UriBuilder(_baseUri) { Scheme = "ws" };
 
-            var request = new Primary.Request
+            var request = new Request
             {
                 Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a} ).ToArray()
             };

@@ -20,14 +20,15 @@ namespace Primary.Tests.Builders
             var instrument = instruments.Last( i => i.Symbol == Tests.Build.DollarFutureSymbol() );
 
             // Get a valid price
-            var yesterday = DateTime.Today.AddDays(-1);
-            var prices = _api.GetHistoricalTrades(instrument, yesterday.AddDays(-5), yesterday).Result;
+            var today = DateTime.Today;
+            var prices = _api.GetHistoricalTrades(instrument, today.AddDays(-5), today).Result;
 
             return new Order
             {
                 Instrument = instrument,
                 Expiration = OrderExpiration.Day,
                 Type = OrderType.Limit,
+                Side = OrderSide.Sell,
                 Quantity = 100,
                 Price = prices.Last().Price
             };

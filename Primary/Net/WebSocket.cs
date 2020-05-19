@@ -84,7 +84,7 @@ namespace Primary.Net
                     } while (!response.EndOfMessage);
 
                     // Decode the message
-                    var messageJson = (new UTF8Encoding()).GetString(buffer).Substring(0, receivedMessage.Count);
+                    var messageJson = (new ASCIIEncoding()).GetString(buffer).Substring(0, receivedMessage.Count);
                     var data = JsonConvert.DeserializeObject<TResponse>(messageJson);
                     receivedMessage.Clear();
 

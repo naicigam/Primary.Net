@@ -7,7 +7,7 @@ namespace Primary.Examples
 {
     internal static class WebSocketExample
     {
-        private static async Task Main()
+        private static async Task Main2()
         {
             Console.WriteLine("Connecting to ReMarkets...");
 
@@ -32,14 +32,12 @@ namespace Primary.Examples
 
             Console.WriteLine("Connecting to market data...");
 
-            using (var socket = api.CreateMarketDataSocket(dollarFuture, entries, 1, 1))
-            {
-                socket.OnData = OnMarketData;
+            using var socket = api.CreateMarketDataSocket(dollarFuture, entries, 1, 1);
+            socket.OnData = OnMarketData;
 
-                var socketTask = await socket.Start();
-                socketTask.Wait();
-                await socketTask;
-            }
+            var socketTask = await socket.Start();
+            socketTask.Wait();
+            await socketTask;
         }
 
         private static void OnMarketData(MarketData marketData)

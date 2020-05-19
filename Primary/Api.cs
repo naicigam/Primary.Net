@@ -17,7 +17,7 @@ namespace Primary
 
         /// <summary>This is the default demo endpoint.</summary>
         /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
-        public static Uri DemoEndpoint => new Uri("http://api.remarkets.primary.com.ar");
+        public static Uri DemoEndpoint => new Uri("https://api.remarkets.primary.com.ar");
         
         /// <summary>
         /// Build a new API object.
@@ -202,11 +202,12 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
-            var url = new UriBuilder(_baseUri) { Scheme = "ws" };
+            var wsScheme = (_baseUri.Scheme == "https" ? "wss" : "ws");
+            var url = new UriBuilder(_baseUri) { Scheme = wsScheme };
 
-            var request = new Primary.Request
+            var request = new Request
             {
-                Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a} ).ToArray()
+                Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a } ).ToArray()
             };
 
             return new OrderDataWebSocket(request, url.Uri, AccessToken, cancellationToken);
@@ -263,7 +264,7 @@ namespace Primary
         /// </summary>
         /// <param name="orderId">Order identifier.</param>
         /// <returns>Order information.</returns>
-        public async Task<Order> GetOrder(OrderId orderId)
+        public async Task<OrderData> GetOrder(OrderId orderId)
         {
             var uri = new Uri(_baseUri, "/rest/order/id").ToString();
             uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
@@ -275,6 +276,7 @@ namespace Primary
                                                         request.Headers.Add("X-Auth-Token", AccessToken);
                                                     }
             );
+
             var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
@@ -334,7 +336,7 @@ namespace Primary
             public string Description;
 
             [JsonProperty("order")]
-            public Order Order;
+            public OrderData Order;
         }
 
         #endregion

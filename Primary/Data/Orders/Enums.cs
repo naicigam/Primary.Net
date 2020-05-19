@@ -63,22 +63,22 @@ namespace Primary.Data.Orders
 
         public static string ToApiString(this OrderType value)
         {
-            switch (value)
+            return value switch
             {
-                case OrderType.Market: return "Market";
-                case OrderType.Limit: return "Limit";
-                default: throw new InvalidEnumStringException( value.ToString() );
-            }
+                OrderType.Market => "Market",
+                OrderType.Limit => "Limit",
+                _ => throw new InvalidEnumStringException(value.ToString()),
+            };
         }
 
         public static OrderType TypeFromApiString(string value)
         {
-            switch (value.ToUpper())
+            return (value.ToUpper()) switch
             {
-                case "MARKET": return OrderType.Market;
-                case "LIMIT": return OrderType.Limit;
-                default: throw new InvalidEnumStringException(value);
-            }
+                "MARKET" => OrderType.Market,
+                "LIMIT" => OrderType.Limit,
+                _ => throw new InvalidEnumStringException(value),
+            };
         }
 
         #endregion
@@ -87,22 +87,22 @@ namespace Primary.Data.Orders
 
         public static string ToApiString(this OrderSide value)
         {
-            switch (value)
+            return value switch
             {
-                case OrderSide.Buy: return "Sell";
-                case OrderSide.Sell: return "Buy";
-                default: throw new InvalidEnumStringException( value.ToString() );
-            }
+                OrderSide.Buy => "Sell",
+                OrderSide.Sell => "Buy",
+                _ => throw new InvalidEnumStringException(value.ToString()),
+            };
         }
 
         public static OrderSide SideFromApiString(string value)
         {
-            switch (value.ToUpper())
+            return (value.ToUpper()) switch
             {
-                case "SELL": return OrderSide.Sell;
-                case "BUY": return OrderSide.Buy;
-                default: throw new InvalidEnumStringException(value);
-            }
+                "SELL" => OrderSide.Sell,
+                "BUY" => OrderSide.Buy,
+                _ => throw new InvalidEnumStringException(value),
+            };
         }
 
         #endregion
@@ -111,26 +111,26 @@ namespace Primary.Data.Orders
 
         public static string ToApiString(this OrderExpiration value)
         {
-            switch (value)
+            return value switch
             {
-                case OrderExpiration.Day: return "DAY";
-                case OrderExpiration.FillOrKill: return "FOK";
-                case OrderExpiration.GoodTillDate: return "GTD";
-                case OrderExpiration.ImmediateOrCancel: return "IOC";
-                default: throw new InvalidEnumStringException( value.ToString() );
-            }
+                OrderExpiration.Day => "DAY",
+                OrderExpiration.FillOrKill => "FOK",
+                OrderExpiration.GoodTillDate => "GTD",
+                OrderExpiration.ImmediateOrCancel => "IOC",
+                _ => throw new InvalidEnumStringException(value.ToString()),
+            };
         }
 
         public static OrderExpiration ExpirationFromApiString(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "DAY": return OrderExpiration.Day;
-                case "FOK": return OrderExpiration.FillOrKill;
-                case "GTD": return OrderExpiration.GoodTillDate;
-                case "IOC": return OrderExpiration.ImmediateOrCancel;
-                default: throw new InvalidEnumStringException(value);
-            }
+                "DAY" => OrderExpiration.Day,
+                "FOK" => OrderExpiration.FillOrKill,
+                "GTD" => OrderExpiration.GoodTillDate,
+                "IOC" => OrderExpiration.ImmediateOrCancel,
+                _ => throw new InvalidEnumStringException(value),
+            };
         }
 
         #endregion
@@ -139,29 +139,30 @@ namespace Primary.Data.Orders
 
         public static string ToApiString(this OrderStatus value)
         {
-            switch (value)
+            return value switch
             {
-                case OrderStatus.New: return "NEW";
-                case OrderStatus.Rejected: return "REJECTED";
-                case OrderStatus.Cancelled: return "CANCELLED";
-                case OrderStatus.PartiallyFilled: return "PARTIALLY_FILLED";
-                case OrderStatus.Filled: return "FILLED";
-                default: throw new InvalidEnumStringException( value.ToString() );
-            }
+                OrderStatus.New => "NEW",
+                OrderStatus.PendingNew => "PENDING_NEW",
+                OrderStatus.Rejected => "REJECTED",
+                OrderStatus.Cancelled => "CANCELLED",
+                OrderStatus.PartiallyFilled => "PARTIALLY_FILLED",
+                OrderStatus.Filled => "FILLED",
+                _ => throw new InvalidEnumStringException(value.ToString()),
+            };
         }
 
         public static OrderStatus StatusFromApiString(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "NEW": return OrderStatus.New;
-                case "PENDING_NEW": return OrderStatus.PendingNew;
-                case "REJECTED": return OrderStatus.Rejected;
-                case "CANCELLED": return OrderStatus.Cancelled;
-                case "PARTIALLY_FILLED": return OrderStatus.PartiallyFilled;
-                case "FILLED": return OrderStatus.Filled;
-                default: throw new InvalidEnumStringException(value);
-            }
+                "NEW" => OrderStatus.New,
+                "PENDING_NEW" => OrderStatus.PendingNew,
+                "REJECTED" => OrderStatus.Rejected,
+                "CANCELLED" => OrderStatus.Cancelled,
+                "PARTIALLY_FILLED" => OrderStatus.PartiallyFilled,
+                "FILLED" => OrderStatus.Filled,
+                _ => throw new InvalidEnumStringException(value),
+            };
         }
 
         #endregion

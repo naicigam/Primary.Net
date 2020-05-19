@@ -28,22 +28,21 @@ namespace Primary.Tests
             var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
 
             // Subscribe to all entries
-            using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, AllEntries, 1, 1))
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, AllEntries, 1, 1);
+            
+            MarketData retrievedData = null;
+            socket.OnData = (marketData => retrievedData = marketData);
+            await socket.Start();
+
+            // Wait until data arrives
+            while (retrievedData == null)
             {
-                MarketData retrievedData = null;
-                socket.OnData = (marketData => retrievedData = marketData);
-                await socket.Start();
-                
-                // Wait until data arrives
-                while (retrievedData == null)
-                {
-                    Thread.Sleep(100);
-                }
-                
-                Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
-                Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
-                Assert.That(retrievedData.Timestamp, Is.Not.EqualTo( default(long) ));
+                Thread.Sleep(100);
             }
+
+            Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
         }
 
         [Test]
@@ -58,33 +57,30 @@ namespace Primary.Tests
             var entries = new[] { Entry.Bids, Entry.Offers };
 
             // Used to cancel the task
-            using (var cancellationSource = new CancellationTokenSource())
+            using var cancellationSource = new CancellationTokenSource();
+
+            // Create and start the web socket
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1, cancellationSource.Token);
+            Assert.That(!socket.IsRunning);
+
+            var socketTask = await socket.Start();
+
+            // Wait until it is running
+            while (!socket.IsRunning)
             {
-                // Create and start the web socket
-                using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1, cancellationSource.Token))
-                {
-                    Assert.That(!socket.IsRunning);
+                Thread.Sleep(10);
+            }
 
-                    var socketTask = await socket.Start();
+            cancellationSource.Cancel();
 
-                    // Wait until it is running
-                    while (!socket.IsRunning)
-                    {
-                        Thread.Sleep(10);
-                    }
-
-                    cancellationSource.Cancel();
-
-                    try
-                    {
-                        await socketTask;
-                        Assert.Fail();
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Assert.That(!socket.IsRunning);
-                    }
-                }
+            try
+            {
+                await socketTask;
+                Assert.Fail();
+            }
+            catch (OperationCanceledException)
+            {
+                Assert.That(!socket.IsRunning);
             }
         }
 
@@ -98,21 +94,20 @@ namespace Primary.Tests
 
             // Subscribe to all entries
             var entries = new[] { Entry.IndexValue };
-            using (var socket = _api.CreateMarketDataSocket(new[] {instrument}, entries, 1, 1))
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
+            
+            MarketData retrievedData = null;
+            socket.OnData = (marketData => retrievedData = marketData);
+            await socket.Start();
+
+            // Wait until data arrives
+            while (retrievedData == null)
             {
-                MarketData retrievedData = null;
-                socket.OnData = (marketData => retrievedData = marketData);
-                await socket.Start();
-                
-                // Wait until data arrives
-                while (retrievedData == null)
-                {
-                    Thread.Sleep(100);
-                }
-                
-                Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
-                Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+                Thread.Sleep(100);
             }
+
+            Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
         }
 
         public static Entry[] AllEntries = { 

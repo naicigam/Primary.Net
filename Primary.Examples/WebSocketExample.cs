@@ -7,7 +7,7 @@ namespace Primary.Examples
 {
     internal static class WebSocketExample
     {
-        private static async Task Main()
+        private static async Task Main2()
         {
             Console.WriteLine("Connecting to ReMarkets...");
 

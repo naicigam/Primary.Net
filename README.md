@@ -8,7 +8,7 @@ Provides a .NET friendly interface to interact with the Primary API.
 [![Build Status](https://ci.appveyor.com/api/projects/status/pm7payoayg80hr45?svg=true)](https://ci.appveyor.com/project/naicigam/primary-net)
 [![NuGet Package](https://buildstats.info/nuget/Primary.Net?includePreReleases=true)](https://www.nuget.org/packages/Primary.Net/)
 
-Documentation: https://primary.naicigam.dev
+Documentation: https://finanzascodificadas.com/Primary.Net/
 
 ## Supported API features
 - Currently traded assets list.

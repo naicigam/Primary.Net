@@ -12,13 +12,13 @@ namespace Primary
         public string Type => "os";
 
         [JsonProperty("accounts")]
-        public OrderData.AccountId[] Accounts;
+        public OrderStatus.AccountId[] Accounts;
     }
 
     public struct Response
     {
         [JsonProperty("orderReport")]
-        public OrderData OrderReport;
+        public OrderStatus OrderReport;
     }
 
     public class OrderDataWebSocket : WebSocket<Request, Response>

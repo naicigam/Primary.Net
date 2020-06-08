@@ -26,7 +26,7 @@ namespace Primary.Tests
             // Subscribe to demo account
             using var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount });
             
-            OrderData retrievedData = null;
+            OrderStatus retrievedData = null;
             socket.OnData = (orderData => retrievedData = orderData.OrderReport);
             await socket.Start();
 

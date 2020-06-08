@@ -33,10 +33,10 @@ namespace Primary.Tests.Builders
             Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
             // Retrieve the order
-            var retrievedOrder = await _api.GetOrder(orderId);
+            var retrievedOrder = await _api.GetOrderStatus(orderId);
 
             Assert.That(retrievedOrder.Status, 
-                        Is.EqualTo(OrderStatus.New).Or.EqualTo(OrderStatus.PendingNew), 
+                        Is.EqualTo(Status.New).Or.EqualTo(Status.PendingNew), 
                         retrievedOrder.StatusText
             );
         }

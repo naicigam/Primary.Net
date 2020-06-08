@@ -3,22 +3,22 @@ using Primary.Serialization;
 
 namespace Primary.Data.Orders
 {
-    [JsonConverter(typeof(OrderTypeJsonSerializer))]
-    public enum OrderType
+    [JsonConverter(typeof(TypeJsonSerializer))]
+    public enum Type
     {
         Market, 
         Limit
     }
 
-    [JsonConverter(typeof(OrderSideJsonSerializer))]
-    public enum OrderSide
+    [JsonConverter(typeof(SideJsonSerializer))]
+    public enum Side
     {
         Buy,
         Sell
     }
 
-    [JsonConverter(typeof(OrderExpirationJsonSerializer))]
-    public enum OrderExpiration
+    [JsonConverter(typeof(ExpirationJsonSerializer))]
+    public enum Expiration
     {
         /// <summary>Order valid during the day. It will expires when the market closes.</summary>
         Day,
@@ -33,8 +33,8 @@ namespace Primary.Data.Orders
         GoodTillDate
     }
 
-    [JsonConverter(typeof(OrderStatusJsonSerializer))]
-    public enum OrderStatus
+    [JsonConverter(typeof(StatusJsonSerializer))]
+    public enum Status
     {
         /// <summary>The order was successfully submitted.</summary>
         New,
@@ -62,110 +62,110 @@ namespace Primary.Data.Orders
 
     internal static class EnumsToApiStrings
     {
-        #region OrderType
+        #region Type
 
-        public static string ToApiString(this OrderType value)
+        public static string ToApiString(this Type value)
         {
             return value switch
             {
-                OrderType.Market => "Market",
-                OrderType.Limit => "Limit",
+                Type.Market => "Market",
+                Type.Limit => "Limit",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
 
-        public static OrderType TypeFromApiString(string value)
+        public static Type TypeFromApiString(string value)
         {
             return (value.ToUpper()) switch
             {
-                "MARKET" => OrderType.Market,
-                "LIMIT" => OrderType.Limit,
+                "MARKET" => Type.Market,
+                "LIMIT" => Type.Limit,
                 _ => throw new InvalidEnumStringException(value),
             };
         }
 
         #endregion
         
-        #region OrderSide
+        #region Side
 
-        public static string ToApiString(this OrderSide value)
+        public static string ToApiString(this Side value)
         {
             return value switch
             {
-                OrderSide.Buy => "Sell",
-                OrderSide.Sell => "Buy",
+                Side.Buy => "Sell",
+                Side.Sell => "Buy",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
 
-        public static OrderSide SideFromApiString(string value)
+        public static Side SideFromApiString(string value)
         {
             return (value.ToUpper()) switch
             {
-                "SELL" => OrderSide.Sell,
-                "BUY" => OrderSide.Buy,
+                "SELL" => Side.Sell,
+                "BUY" => Side.Buy,
                 _ => throw new InvalidEnumStringException(value),
             };
         }
 
         #endregion
 
-        #region OrderExpiration
+        #region Expiration
 
-        public static string ToApiString(this OrderExpiration value)
+        public static string ToApiString(this Expiration value)
         {
             return value switch
             {
-                OrderExpiration.Day => "DAY",
-                OrderExpiration.FillOrKill => "FOK",
-                OrderExpiration.GoodTillDate => "GTD",
-                OrderExpiration.ImmediateOrCancel => "IOC",
+                Expiration.Day => "DAY",
+                Expiration.FillOrKill => "FOK",
+                Expiration.GoodTillDate => "GTD",
+                Expiration.ImmediateOrCancel => "IOC",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
 
-        public static OrderExpiration ExpirationFromApiString(string value)
+        public static Expiration ExpirationFromApiString(string value)
         {
             return value switch
             {
-                "DAY" => OrderExpiration.Day,
-                "FOK" => OrderExpiration.FillOrKill,
-                "GTD" => OrderExpiration.GoodTillDate,
-                "IOC" => OrderExpiration.ImmediateOrCancel,
+                "DAY" => Expiration.Day,
+                "FOK" => Expiration.FillOrKill,
+                "GTD" => Expiration.GoodTillDate,
+                "IOC" => Expiration.ImmediateOrCancel,
                 _ => throw new InvalidEnumStringException(value),
             };
         }
 
         #endregion
 
-        #region OrderStatus
+        #region Status
 
-        public static string ToApiString(this OrderStatus value)
+        public static string ToApiString(this Status value)
         {
             return value switch
             {
-                OrderStatus.New => "NEW",
-                OrderStatus.PendingNew => "PENDING_NEW",
-                OrderStatus.Rejected => "REJECTED",
-                OrderStatus.Cancelled => "CANCELLED",
-                OrderStatus.PendingCancel => "PENDING_CANCEL",
-                OrderStatus.PartiallyFilled => "PARTIALLY_FILLED",
-                OrderStatus.Filled => "FILLED",
+                Status.New => "NEW",
+                Status.PendingNew => "PENDING_NEW",
+                Status.Rejected => "REJECTED",
+                Status.Cancelled => "CANCELLED",
+                Status.PendingCancel => "PENDING_CANCEL",
+                Status.PartiallyFilled => "PARTIALLY_FILLED",
+                Status.Filled => "FILLED",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
 
-        public static OrderStatus StatusFromApiString(string value)
+        public static Status StatusFromApiString(string value)
         {
             return value switch
             {
-                "NEW" => OrderStatus.New,
-                "PENDING_NEW" => OrderStatus.PendingNew,
-                "REJECTED" => OrderStatus.Rejected,
-                "CANCELLED" => OrderStatus.Cancelled,
-                "PENDING_CANCEL" => OrderStatus.PendingCancel,
-                "PARTIALLY_FILLED" => OrderStatus.PartiallyFilled,
-                "FILLED" => OrderStatus.Filled,
+                "NEW" => Status.New,
+                "PENDING_NEW" => Status.PendingNew,
+                "REJECTED" => Status.Rejected,
+                "CANCELLED" => Status.Cancelled,
+                "PENDING_CANCEL" => Status.PendingCancel,
+                "PARTIALLY_FILLED" => Status.PartiallyFilled,
+                "FILLED" => Status.Filled,
                 _ => throw new InvalidEnumStringException(value),
             };
         }
@@ -177,53 +177,53 @@ namespace Primary.Data.Orders
 
     #region JSON serialization
 
-    internal class OrderTypeJsonSerializer : EnumJsonSerializer<OrderType>
+    internal class TypeJsonSerializer : EnumJsonSerializer<Type>
     {
-        protected override string ToString(OrderType enumValue)
+        protected override string ToString(Type enumValue)
         {
             return enumValue.ToApiString();
         }
 
-        protected override OrderType FromString(string enumString)
+        protected override Type FromString(string enumString)
         {
             return EnumsToApiStrings.TypeFromApiString(enumString);
         }
     }
 
-    internal class OrderSideJsonSerializer : EnumJsonSerializer<OrderSide>
+    internal class SideJsonSerializer : EnumJsonSerializer<Side>
     {
-        protected override string ToString(OrderSide enumValue)
+        protected override string ToString(Side enumValue)
         {
             return enumValue.ToApiString();
         }
 
-        protected override OrderSide FromString(string enumString)
+        protected override Side FromString(string enumString)
         {
             return EnumsToApiStrings.SideFromApiString(enumString);
         }
     }
 
-    internal class OrderExpirationJsonSerializer : EnumJsonSerializer<OrderExpiration>
+    internal class ExpirationJsonSerializer : EnumJsonSerializer<Expiration>
     {
-        protected override string ToString(OrderExpiration enumValue)
+        protected override string ToString(Expiration enumValue)
         {
             return enumValue.ToApiString();
         }
 
-        protected override OrderExpiration FromString(string enumString)
+        protected override Expiration FromString(string enumString)
         {
             return EnumsToApiStrings.ExpirationFromApiString(enumString);
         }
     }
 
-    internal class OrderStatusJsonSerializer : EnumJsonSerializer<OrderStatus>
+    internal class StatusJsonSerializer : EnumJsonSerializer<Status>
     {
-        protected override string ToString(OrderStatus enumValue)
+        protected override string ToString(Status enumValue)
         {
             return enumValue.ToApiString();
         }
 
-        protected override OrderStatus FromString(string enumString)
+        protected override Status FromString(string enumString)
         {
             return EnumsToApiStrings.StatusFromApiString(enumString);
         }

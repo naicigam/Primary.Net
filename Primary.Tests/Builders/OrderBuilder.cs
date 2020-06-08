@@ -26,9 +26,9 @@ namespace Primary.Tests.Builders
             return new Order
             {
                 Instrument = instrument,
-                Expiration = OrderExpiration.Day,
-                Type = OrderType.Limit,
-                Side = OrderSide.Sell,
+                Expiration = Expiration.Day,
+                Type = Data.Orders.Type.Limit,
+                Side = Side.Sell,
                 Quantity = 100,
                 Price = prices.Last().Price
             };

@@ -9,7 +9,7 @@ namespace Primary.Examples
 {
     internal static class OrderExample
     {
-        private static async Task Main()
+        private static async Task Main3()
         {
             var api = new Api(Api.DemoEndpoint);
             await api.Login(Api.DemoUsername, Api.DemoPassword);
@@ -24,17 +24,17 @@ namespace Primary.Examples
             var order = new Order
             {
                 Instrument = instrument,
-                Expiration = OrderExpiration.Day,
-                Type = OrderType.Limit,
+                Expiration = Expiration.Day,
+                Type = Data.Orders.Type.Limit,
                 Price = prices.Last().Price,
-                Side = OrderSide.Sell,
+                Side = Side.Sell,
                 Quantity = 100
             };
 
             var orderId = await api.SubmitOrder(Api.DemoAccount, order);
-            Console.WriteLine($"{orderId.ClientId} / {orderId.Proprietary}");
+            Console.WriteLine($"{orderId.ClientOrderId} / {orderId.Proprietary}");
 
-            var retrievedOrder = await api.GetOrder(orderId);
+            var retrievedOrder = await api.GetOrderStatus(orderId);
             Console.WriteLine($"{retrievedOrder.Status} / {retrievedOrder.StatusText}");
 
             Console.WriteLine($"{retrievedOrder.Quantity} / {retrievedOrder.DisplayQuantity}" +

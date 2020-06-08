@@ -207,7 +207,7 @@ namespace Primary
 
             var request = new Request
             {
-                Accounts = accounts.Select(a => new OrderData.AccountId() { Id = a } ).ToArray()
+                Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a } ).ToArray()
             };
 
             return new OrderDataWebSocket(request, url.Uri, AccessToken, cancellationToken);
@@ -251,12 +251,17 @@ namespace Primary
                                                     }
             );
             
-            var response = JsonConvert.DeserializeObject<SubmitOrderResponse>(jsonResponse);
+            var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
                 throw new Exception($"{response.Message} ({response.Description})");
             }
-            return response.Order;
+            
+            return new OrderId()
+            { 
+                ClientOrderId = response.Order.ClientId,
+                Proprietary = response.Order.Proprietary
+            };
         }
         
         /// <summary>
@@ -264,10 +269,10 @@ namespace Primary
         /// </summary>
         /// <param name="orderId">Order identifier.</param>
         /// <returns>Order information.</returns>
-        public async Task<OrderData> GetOrder(OrderId orderId)
+        public async Task<OrderStatus> GetOrderStatus(OrderId orderId)
         {
             var uri = new Uri(_baseUri, "/rest/order/id").ToString();
-            uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
                      .AddQueryParam("proprietary", orderId.Proprietary);
 
             var jsonResponse = await uri.GetJsonFromUrlAsync(
@@ -293,7 +298,7 @@ namespace Primary
         public async Task CancelOrder(OrderId orderId)
         {
             var uri = new Uri(_baseUri, "/rest/order/cancelById").ToString();
-            uri = uri.AddQueryParam("clOrdId", orderId.ClientId)
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
                      .AddQueryParam("proprietary", orderId.Proprietary);
 
             var jsonResponse = await uri.GetJsonFromUrlAsync(
@@ -302,14 +307,14 @@ namespace Primary
                                                         request.Headers.Add("X-Auth-Token", AccessToken);
                                                     }
             );
-            var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
+            var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             //if (response.Status == Status.Error)
             //{
             //    throw new Exception($"{response.Message} ({response.Description})");
             //}
         }
 
-        private struct SubmitOrderResponse
+        private struct OrderIdResponse
         {
             [JsonProperty("status")]
             public string Status;
@@ -320,8 +325,17 @@ namespace Primary
             [JsonProperty("description")]
             public string Description;
             
+            public struct Id
+            { 
+                [JsonProperty("clientId")]
+                public ulong ClientId { get; set; }
+
+                [JsonProperty("proprietary")]
+                public string Proprietary { get; set; }
+            }
+
             [JsonProperty("order")]
-            public OrderId Order;
+            public Id Order;
         }
 
         private struct GetOrderResponse
@@ -336,7 +350,7 @@ namespace Primary
             public string Description;
 
             [JsonProperty("order")]
-            public OrderData Order;
+            public OrderStatus Order;
         }
 
         #endregion

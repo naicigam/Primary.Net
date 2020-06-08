@@ -24,7 +24,7 @@ namespace Primary.Tests
             Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
             // Retrieve the order
-            var retrievedOrder = await _api.GetOrder(orderId);
+            var retrievedOrder = await _api.GetOrderStatus(orderId);
 
             Assert.That(retrievedOrder.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
             Assert.That(retrievedOrder.Expiration, Is.EqualTo(order.Expiration));
@@ -39,13 +39,13 @@ namespace Primary.Tests
             Order order = Build.AnOrder(_api);
             var orderId = await _api.SubmitOrder(Api.DemoAccount, order);
 
-            var retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder.Status, Is.Not.EqualTo(OrderStatus.Cancelled));
+            var retrievedOrder = await _api.GetOrderStatus(orderId);
+            Assert.That(retrievedOrder.Status, Is.Not.EqualTo(Status.Cancelled));
 
             await _api.CancelOrder(orderId);
 
-            retrievedOrder = await _api.GetOrder(orderId);
-            Assert.That(retrievedOrder.Status, Is.EqualTo(OrderStatus.Cancelled), retrievedOrder.StatusText);
+            retrievedOrder = await _api.GetOrderStatus(orderId);
+            Assert.That(retrievedOrder.Status, Is.EqualTo(Status.Cancelled), retrievedOrder.StatusText);
         }
 
         [Test]
@@ -67,12 +67,12 @@ namespace Primary.Tests
         {
             var invalidOrderId = new OrderId()
             {
-                ClientId = ulong.MaxValue,
+                ClientOrderId = ulong.MaxValue,
                 Proprietary = "invalid_proprietary"
             };
 
-            var exception = Assert.ThrowsAsync<Exception>( async () => await _api.GetOrder(invalidOrderId) );
-            Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientId.ToString()));
+            var exception = Assert.ThrowsAsync<Exception>( async () => await _api.GetOrderStatus(invalidOrderId) );
+            Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientOrderId.ToString()));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.Proprietary));
         }
 

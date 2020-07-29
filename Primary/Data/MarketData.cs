@@ -74,9 +74,9 @@ namespace Primary.Data
             [JsonProperty("LO")] public decimal? SessionLowPrice { get; set; }
             [JsonProperty("IV")] public decimal? IndexValue { get; set; }
 
-            [JsonProperty("TV")] public decimal Volume { get; set; }
-            [JsonProperty("NV")] public decimal NominalVolume { get; set; }
-            [JsonProperty("EV")] public decimal EffectiveVolume { get; set; }
+            [JsonProperty("TV")] public decimal? Volume { get; set; }
+            [JsonProperty("NV")] public decimal? NominalVolume { get; set; }
+            [JsonProperty("EV")] public decimal? EffectiveVolume { get; set; }
         }                        
     }
 }

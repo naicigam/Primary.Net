@@ -68,7 +68,7 @@ namespace Primary.Net
             
             // Buffers for received data
             var receivedMessage = new List<byte>();
-            var buffer = new byte[4096];
+            var buffer = new byte[9192];
 
             while (true)
             {
@@ -79,16 +79,21 @@ namespace Primary.Net
                     do
                     {
                         response = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancelToken);
-                        receivedMessage.AddRange(new ArraySegment<byte>(buffer, 0, response.Count));
+                        if(response.CloseStatus != null)
+                        { 
+                            throw new Exception(response.CloseStatusDescription);
+                        }
+                        var segment = new ArraySegment<byte>(buffer, 0, response.Count);
+                        receivedMessage.AddRange(segment);
 
                     } while (!response.EndOfMessage);
 
                     // Decode the message
-                    var messageJson = (new ASCIIEncoding()).GetString(buffer).Substring(0, receivedMessage.Count);
-                    var data = JsonConvert.DeserializeObject<TResponse>(messageJson);
+                    var messageJson = Encoding.ASCII.GetString( receivedMessage.ToArray() );
                     receivedMessage.Clear();
 
-                    // Notify subscriber
+                    // Parse and notify subscriber
+                    var data = JsonConvert.DeserializeObject<TResponse>(messageJson);
                     OnData(data);
                 }
                 catch (OperationCanceledException) { }

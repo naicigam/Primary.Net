@@ -200,7 +200,7 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
-            var request = new Request
+            var request = new OrderDataRequest
             {
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a } ).ToArray()
             };

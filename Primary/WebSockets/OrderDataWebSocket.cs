@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using Primary.Data.Orders;
 using Primary.Net;
 
-namespace Primary
+namespace Primary.WebSockets
 {
-    public struct Request
+    public struct OrderDataRequest
     {
         [JsonProperty("type", Order=-2)]
         public string Type => "os";
@@ -15,18 +15,18 @@ namespace Primary
         public OrderStatus.AccountId[] Accounts;
     }
 
-    public struct Response
+    public struct OrderData
     {
         [JsonProperty("orderReport")]
         public OrderStatus OrderReport;
     }
 
-    public class OrderDataWebSocket : WebSocket<Request, Response>
+    public class OrderDataWebSocket : WebSocket<OrderDataRequest, OrderData>
     {
-        internal OrderDataWebSocket(Request orderDataToRequest, Uri url, string accessToken,
+        internal OrderDataWebSocket(Api api, OrderDataRequest orderDataToRequest,
                                     CancellationToken cancelToken)
         : 
-        base(orderDataToRequest, url, accessToken, cancelToken)
+        base(api, orderDataToRequest, cancelToken)
         {}
     }
 }

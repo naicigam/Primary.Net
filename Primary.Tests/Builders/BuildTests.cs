@@ -36,7 +36,7 @@ namespace Primary.Tests.Builders
             var retrievedOrder = await _api.GetOrderStatus(orderId);
 
             Assert.That(retrievedOrder.Status, 
-                        Is.EqualTo(Status.New).Or.EqualTo(Status.PendingNew), 
+                        Is.Not.EqualTo(Status.Rejected).And.Not.EqualTo(Status.Cancelled), 
                         retrievedOrder.StatusText
             );
         }

@@ -31,7 +31,7 @@ namespace Primary.Tests
             using var socket = _api.CreateMarketDataSocket(new[] { instrument }, AllEntries, 1, 1);
             
             MarketData retrievedData = null;
-            socket.OnData = (marketData => retrievedData = marketData);
+            socket.OnData = ( (api, marketData) => retrievedData = marketData );
             await socket.Start();
 
             // Wait until data arrives
@@ -97,7 +97,7 @@ namespace Primary.Tests
             using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
             
             MarketData retrievedData = null;
-            socket.OnData = (marketData => retrievedData = marketData);
+            socket.OnData = ( (api, marketData) => retrievedData = marketData);
             await socket.Start();
 
             // Wait until data arrives

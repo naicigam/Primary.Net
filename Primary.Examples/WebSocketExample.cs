@@ -40,7 +40,7 @@ namespace Primary.Examples
             await socketTask;
         }
 
-        private static void OnMarketData(MarketData marketData)
+        private static void OnMarketData(Api api, MarketData marketData)
         {
             var bid = default(decimal);
             var offer = default(decimal);

@@ -25,10 +25,10 @@ namespace Primary
         /// </summary>
         public Api(Uri baseUri)
         {
-            _baseUri = baseUri;
+            BaseUri = baseUri;
         }
 
-        private readonly Uri _baseUri;
+        public Uri BaseUri { get; private set; }
 
         #region Login
 
@@ -42,7 +42,7 @@ namespace Primary
         /// <returns></returns>
         public async Task Login(string username, string password)
         {
-            var uri = new Uri(_baseUri, "/auth/getToken");
+            var uri = new Uri(BaseUri, "/auth/getToken");
             
             await uri.ToString().PostToUrlAsync(null, "*/*", 
                                                 request =>
@@ -71,7 +71,7 @@ namespace Primary
         /// <returns>Instruments information.</returns>
         public async Task< IEnumerable<Instrument> > GetAllInstruments()
         {
-            var uri = new Uri(_baseUri, "/rest/instruments/all");
+            var uri = new Uri(BaseUri, "/rest/instruments/all");
             var response = await uri.ToString().GetJsonFromUrlAsync( request =>
             {
                 request.Headers.Add("X-Auth-Token", AccessToken);
@@ -108,7 +108,7 @@ namespace Primary
                                                                     DateTime dateFrom, 
                                                                     DateTime dateTo)
         {
-            var uri = new Uri(_baseUri, "/rest/data/getTrades");
+            var uri = new Uri(BaseUri, "/rest/data/getTrades");
 
             var response = await uri.ToString()
                                     .AddQueryParam("marketId", instrument.Market)
@@ -165,9 +165,6 @@ namespace Primary
                                                           CancellationToken cancellationToken
         )
         {
-            var wsScheme = (_baseUri.Scheme == "https" ? "wss" : "ws");
-            var url = new UriBuilder(_baseUri) { Scheme = wsScheme };
-
             var marketDataToRequest = new MarketDataInfo()
             {
                 Depth = depth,
@@ -176,7 +173,7 @@ namespace Primary
                 Products = instruments.ToArray()
             };
 
-            return new MarketDataWebSocket(marketDataToRequest, url.Uri, AccessToken, cancellationToken);
+            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken);
         }
 
         #endregion
@@ -203,15 +200,12 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
-            var wsScheme = (_baseUri.Scheme == "https" ? "wss" : "ws");
-            var url = new UriBuilder(_baseUri) { Scheme = wsScheme };
-
             var request = new Request
             {
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a } ).ToArray()
             };
 
-            return new OrderDataWebSocket(request, url.Uri, AccessToken, cancellationToken);
+            return new OrderDataWebSocket(this, request, cancellationToken);
         }
 
         #endregion
@@ -226,7 +220,7 @@ namespace Primary
         /// <returns>Order identifier.</returns>
         public async Task<OrderId> SubmitOrder(string account, Order order)
         {
-            var uri = new Uri(_baseUri, "/rest/order/newSingleOrder").ToString();
+            var uri = new Uri(BaseUri, "/rest/order/newSingleOrder").ToString();
 
             uri = uri.AddQueryParam("marketId", "ROFX")
                      .AddQueryParam("symbol", order.Instrument.Symbol)
@@ -272,7 +266,7 @@ namespace Primary
         /// <returns>Order information.</returns>
         public async Task<OrderStatus> GetOrderStatus(OrderId orderId)
         {
-            var uri = new Uri(_baseUri, "/rest/order/id").ToString();
+            var uri = new Uri(BaseUri, "/rest/order/id").ToString();
             uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
                      .AddQueryParam("proprietary", orderId.Proprietary);
 
@@ -298,7 +292,7 @@ namespace Primary
         /// <param name="orderId">Order identifier to cancel.</param>
         public async Task CancelOrder(OrderId orderId)
         {
-            var uri = new Uri(_baseUri, "/rest/order/cancelById").ToString();
+            var uri = new Uri(BaseUri, "/rest/order/cancelById").ToString();
             uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
                      .AddQueryParam("proprietary", orderId.Proprietary);
 

@@ -10,19 +10,22 @@ namespace Primary.Net
 {
     public class WebSocket<TRequest, TResponse> : IDisposable
     {
-        internal WebSocket(TRequest request, Uri url, string accessToken, CancellationToken cancelToken)
+        internal WebSocket(Api api, TRequest request, CancellationToken cancelToken)
         {
+            _api = api;
             _request = request;
-            _url = url;
-            _accessToken = accessToken;
             CancelToken = cancelToken;
+
+            var wsScheme = (_api.BaseUri.Scheme == "https" ? "wss" : "ws");
+            var uriBuilder = new UriBuilder(_api.BaseUri) { Scheme = wsScheme };
+            _uri = uriBuilder.Uri; 
         }
         
         public async Task<Task> Start()
         {
-            _client.Options.SetRequestHeader("X-Auth-Token", _accessToken);
+            _client.Options.SetRequestHeader("X-Auth-Token", _api.AccessToken);
 
-            await _client.ConnectAsync(_url, CancelToken);
+            await _client.ConnectAsync(_uri, CancelToken);
 
             // Send data to request
             var jsonRequest = JsonConvert.SerializeObject(_request);
@@ -42,7 +45,7 @@ namespace Primary.Net
         public bool IsRunning { get; private set; }
         public CancellationToken CancelToken { get; }
 
-        public Action<TResponse> OnData { get; set; }
+        public Action<Api, TResponse> OnData { get; set; }
         
         #region IDisposable implementation
 
@@ -94,7 +97,7 @@ namespace Primary.Net
 
                     // Parse and notify subscriber
                     var data = JsonConvert.DeserializeObject<TResponse>(messageJson);
-                    OnData(data);
+                    OnData(_api, data);
                 }
                 catch (OperationCanceledException) { }
 
@@ -109,7 +112,7 @@ namespace Primary.Net
         private readonly ClientWebSocket _client = new ClientWebSocket();
 
         private readonly TRequest _request;
-        private readonly Uri _url;
-        private readonly string _accessToken;
+        private readonly Api _api;
+        private readonly Uri _uri;
     }
 }

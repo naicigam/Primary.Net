@@ -23,10 +23,10 @@ namespace Primary.WebSockets
 
     public class OrderDataWebSocket : WebSocket<Request, Response>
     {
-        internal OrderDataWebSocket(Request orderDataToRequest, Uri url, string accessToken,
+        internal OrderDataWebSocket(Api api, Request orderDataToRequest,
                                     CancellationToken cancelToken)
         : 
-        base(orderDataToRequest, url, accessToken, cancelToken)
+        base(api, orderDataToRequest, cancelToken)
         {}
     }
 }

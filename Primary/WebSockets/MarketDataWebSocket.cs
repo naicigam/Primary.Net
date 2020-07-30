@@ -7,10 +7,10 @@ namespace Primary.WebSockets
 {
     public class MarketDataWebSocket : WebSocket<MarketDataInfo, MarketData>
     {
-        internal MarketDataWebSocket(MarketDataInfo marketDataToRequest, Uri url, string accessToken,
+        internal MarketDataWebSocket(Api api, MarketDataInfo marketDataToRequest, 
                                      CancellationToken cancelToken)
         : 
-        base(marketDataToRequest, url, accessToken, cancelToken)
+        base(api, marketDataToRequest, cancelToken)
         {}
     }
 }

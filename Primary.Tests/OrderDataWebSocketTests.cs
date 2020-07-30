@@ -27,7 +27,7 @@ namespace Primary.Tests
             using var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount });
             
             OrderStatus retrievedData = null;
-            socket.OnData = (orderData => retrievedData = orderData.OrderReport);
+            socket.OnData = ( (api, orderData) => retrievedData = orderData.OrderReport );
             await socket.Start();
 
             // Send order

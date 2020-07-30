@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>0.4.1-alpha</Version>
+    <Version>0.5.2-alpha</Version>
     <PackageId>Primary.Net</PackageId>
     <Authors>Juan Manuel Alvarez</Authors>
     <Company />

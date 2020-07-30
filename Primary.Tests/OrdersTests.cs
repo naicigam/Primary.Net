@@ -67,7 +67,7 @@ namespace Primary.Tests
         {
             var invalidOrderId = new OrderId()
             {
-                ClientOrderId = ulong.MaxValue,
+                ClientOrderId = "invalid_id",
                 Proprietary = "invalid_proprietary"
             };
 

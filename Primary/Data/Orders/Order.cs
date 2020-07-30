@@ -1,8 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Primary.Data.Orders;
 
-namespace Primary.Data
+namespace Primary.Data.Orders
 {
     /// <summary>
     /// Has all the necesary information to submit an order.

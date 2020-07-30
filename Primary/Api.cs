@@ -323,7 +323,7 @@ namespace Primary
             public struct Id
             { 
                 [JsonProperty("clientId")]
-                public ulong ClientId { get; set; }
+                public string ClientId { get; set; }
 
                 [JsonProperty("proprietary")]
                 public string Proprietary { get; set; }

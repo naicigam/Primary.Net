@@ -11,6 +11,6 @@ namespace Primary.Data.Orders
         public string Proprietary { get; set; }
 
         [JsonProperty("clOrdId")]
-        public ulong ClientOrderId { get; set; }
+        public string ClientOrderId { get; set; }
     }
 }

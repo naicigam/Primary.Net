@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Primary.Data;
 using Primary.Data.Orders;
+using Primary.WebSockets;
 using ServiceStack;
 
 namespace Primary

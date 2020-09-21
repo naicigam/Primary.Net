@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Primary.Data;
 
@@ -22,9 +21,9 @@ namespace Primary.Examples
 
             var symbols = new[]
             {
-                "DOOct19",
-                "DONov19",
-                "DODic19"
+                "DOMay20",
+                "DOJun20",
+                "DOJul20"
             };
             var dollarFuture = allIInstruments.Where(c => symbols.Contains(c.Symbol));
 
@@ -32,46 +31,33 @@ namespace Primary.Examples
             var entries = new[] { Entry.Bids, Entry.Offers };
 
             Console.WriteLine("Connecting to market data...");
-            using (var socket = api.CreateSocket(dollarFuture, entries, 1, 1))
-            {
-                socket.OnMarketData = OnMarketData;
 
-                var socketTask = await socket.Start();
-                //socket.Cancel();
-                //socketTask.Wait();
-                await socketTask;
+            using var socket = api.CreateMarketDataSocket(dollarFuture, entries, 1, 1);
+            socket.OnData = OnMarketData;
 
-                // Fix: use semaphore
-                while (true)
-                {
-                    Thread.Sleep(100);
-                }
-            }
+            var socketTask = await socket.Start();
+            socketTask.Wait();
+            await socketTask;
         }
 
-        private static void OnMarketData(MarketData marketData)
+        private static void OnMarketData(Api api, MarketData marketData)
         {
-            var bid = default(float);
-            var offer = default(float);
+            var bid = default(decimal);
+            var offer = default(decimal);
 
-            var bidSize = default(float);
-            var offerSize = default(float);
+            var bidSize = default(decimal);
+            var offerSize = default(decimal);
 
-            foreach (var (entry, trades) in marketData.Data)
+            foreach(var trade in marketData.Data.Bids)
             {
-                foreach (var trade in trades)
-                {
-                    if (entry == Entry.Bids)
-                    {
-                        bid = trade.Price;
-                        bidSize = trade.Size;
-                    }
-                    else if (entry == Entry.Offers)
-                    {
-                        offer = trade.Price;
-                        offerSize = trade.Size;
-                    }
-                }
+                bid = trade.Price;
+                bidSize = trade.Size;
+            }
+
+            foreach(var trade in marketData.Data.Offers)
+            {
+                offer = trade.Price;
+                offerSize = trade.Size;
             }
 
             Console.WriteLine($"({marketData.Timestamp}) " +

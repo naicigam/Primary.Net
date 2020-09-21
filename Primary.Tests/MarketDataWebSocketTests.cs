@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -19,61 +20,110 @@ namespace Primary.Tests
         private Api _api;
 
         [Test]
+        [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCreated()
         {
             // Get a dollar future
-            var allIInstruments = await _api.GetAllInstruments();
-            var instrument = allIInstruments.First(c => c.Symbol.StartsWith("DO"));
+            var instruments = await _api.GetAllInstruments();
+            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+
+            // Subscribe to all entries
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, AllEntries, 1, 1);
+            
+            MarketData retrievedData = null;
+            socket.OnData = ( (api, marketData) => retrievedData = marketData );
+            await socket.Start();
+
+            // Wait until data arrives
+            while (retrievedData == null)
+            {
+                Thread.Sleep(100);
+            }
+
+            Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
+        }
+
+        [Test]
+        [Timeout(10000)]
+        public async Task SubscriptionToMarketDataCanBeCancelled()
+        {
+            // Get a dollar future
+            var instruments = await _api.GetAllInstruments();
+            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
 
-            using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1))
-            {
-                MarketData retrievedData = null;
-                socket.OnMarketData = (marketData => retrievedData = marketData);
-                await socket.Start();
-                
-                // Wait until data arrives
-                while (retrievedData == null)
-                {
-                    Thread.Sleep(100);
-                }
+            // Used to cancel the task
+            using var cancellationSource = new CancellationTokenSource();
 
-                Assert.That(retrievedData.Data, Is.Not.Empty);
-                Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
-                Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+            // Create and start the web socket
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1, cancellationSource.Token);
+            Assert.That(!socket.IsRunning);
+
+            var socketTask = await socket.Start();
+
+            // Wait until it is running
+            while (!socket.IsRunning)
+            {
+                Thread.Sleep(10);
+            }
+
+            cancellationSource.Cancel();
+
+            try
+            {
+                await socketTask;
+                Assert.Fail();
+            }
+            catch (OperationCanceledException)
+            {
+                Assert.That(!socket.IsRunning);
             }
         }
 
         [Test]
-        [Ignore("WIP")]
-        public async Task SubscriptionToMarketDataCanBeCancelled()
+        [Timeout(10000)]
+        public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future
-            var allIInstruments = await _api.GetAllInstruments();
-            var instrument = allIInstruments.First(c => c.Symbol.StartsWith("DO"));
+            var instruments = await _api.GetAllInstruments();
+            var instrument = instruments.Last( i => i.Symbol == "I.RFX20" );
 
-            // Subscribe to bids and offers
-            var entries = new[] { Entry.Bids, Entry.Offers };
+            // Subscribe to all entries
+            var entries = new[] { Entry.IndexValue };
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
+            
+            MarketData retrievedData = null;
+            socket.OnData = ( (api, marketData) => retrievedData = marketData);
+            await socket.Start();
 
-            using (var socket = _api.CreateSocket(new[] {instrument}, entries, 1, 1))
+            // Wait until data arrives
+            while (retrievedData == null)
             {
-                Assert.That(!socket.IsRunning);
-
-                var socketTask = socket.Start();
-
-                // Wait until it is running
-                while (!socket.IsRunning)
-                {
-                    Thread.Sleep(10);
-                }
-
-                socket.Cancel();
-                socketTask.Wait();
-
-                Assert.That(!socket.IsRunning);
+                Thread.Sleep(100);
             }
+
+            Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
         }
+
+        public static Entry[] AllEntries = { 
+            Entry.Bids,
+            Entry.Offers,
+            Entry.Last,
+            Entry.Open,
+            Entry.Close,
+            Entry.SettlementPrice,
+            Entry.SessionHighPrice,
+            Entry.SessionLowPrice,
+            Entry.Volume,
+            Entry.OpenInterest,
+            Entry.IndexValue,
+            Entry.EffectiveVolume,
+            Entry.NominalVolume
+        };
     }
 }

@@ -4,20 +4,46 @@ configuration:
 - Release
 
 image:
-- Visual Studio 2017
+- Visual Studio 2019
 - Ubuntu
 
 platform:
-  - Any CPU
+- Any CPU
 
 before_build:
-  - dotnet restore
+- dotnet restore
 
 dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+    patch: true
+    file: '**\*.csproj'
+    version: '{version}'
+    package_version: '{version}'
+    assembly_version: '{version}'
+    file_version: '{version}'
+    informational_version: '{version}'
+
+# Documentation
+for:
+-
+    branches:
+        only:
+            - master
+    
+    configuration: Release
+    image: Visual Studio 2019
+
+    environment:
+        github_access_token:
+            secure: c2CeimnWglwkLOZUnSYrV520CTqv22SyLQRqxTAqjuYvOVb61P9mfcnuZICz9xMH
+        github_email:
+            secure: YgRowyrTWD474co1vP2R/BJEL5MzbybUWZK/81N9MZU=
+
+    install:
+    - cinst docfx
+
+    deploy_script:
+    - git config --global credential.helper store
+    - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
+    - git config --global user.email %github_email%
+    - git config --global user.name "naicigam"
+    - bash docs/release_docs.sh

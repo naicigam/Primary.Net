@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Primary.Serialization
 {
-    public abstract class EnumJsonSerializer<T> : JsonConverter
+    internal abstract class EnumJsonSerializer<T> : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Newtonsoft.Json;
 using Primary.Data;
 using Primary.Data.Orders;
 using Primary.WebSockets;
+using ServiceStack;
 
 namespace Primary
 {
@@ -24,14 +23,12 @@ namespace Primary
         /// <summary>
         /// Build a new API object.
         /// </summary>
-        public Api(Uri baseUri, HttpClient httpClient = null)
+        public Api(Uri baseUri)
         {
             BaseUri = baseUri;
-            HttpClient = httpClient ?? new HttpClient();
         }
 
         public Uri BaseUri { get; private set; }
-        public HttpClient HttpClient { get; private set; }
 
         #region Login
 
@@ -43,24 +40,21 @@ namespace Primary
         /// <param name="username">User used for authentication.</param>
         /// <param name="password">Password used for authentication.</param>
         /// <returns></returns>
-        public async Task<bool> Login(string username, string password)
+        public async Task Login(string username, string password)
         {
             var uri = new Uri(BaseUri, "/auth/getToken");
-
-            HttpClient.DefaultRequestHeaders.Clear();
-            HttpClient.DefaultRequestHeaders.Add("X-Username", username);
-            HttpClient.DefaultRequestHeaders.Add("X-Password", password);
-
-            var result = await HttpClient.PostAsync(uri, new StringContent(string.Empty));
-
-            if (result.IsSuccessStatusCode)
-            {
-                AccessToken = result.Headers.GetValues("X-Auth-Token").FirstOrDefault();
-                HttpClient.DefaultRequestHeaders.Clear();
-                HttpClient.DefaultRequestHeaders.Add("X-Auth-Token", AccessToken);
-            }
-
-            return result.IsSuccessStatusCode;
+            
+            await uri.ToString().PostToUrlAsync(null, "*/*", 
+                                                request =>
+                                                {
+                                                    request.Headers.Add("X-Username", username);
+                                                    request.Headers.Add("X-Password", password);
+                                                },
+                                                response =>
+                                                {
+                                                    AccessToken = response.Headers["X-Auth-Token"];
+                                                }
+            );
         }
 
         public const string DemoUsername = "naicigam2046";
@@ -78,7 +72,10 @@ namespace Primary
         public async Task< IEnumerable<Instrument> > GetAllInstruments()
         {
             var uri = new Uri(BaseUri, "/rest/instruments/all");
-            var response = await HttpClient.GetStringAsync(uri);
+            var response = await uri.ToString().GetJsonFromUrlAsync( request =>
+            {
+                request.Headers.Add("X-Auth-Token", AccessToken);
+            });
             
             var data = JsonConvert.DeserializeObject<GetAllInstrumentsResponse>(response);
             return data.Instruments.Select(i => i.InstrumentId);
@@ -111,15 +108,17 @@ namespace Primary
                                                                     DateTime dateFrom, 
                                                                     DateTime dateTo)
         {
-            UriBuilder builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["marketId"] = instrument.Market;
-            query["symbol"] = instrument.Symbol;
-            query["dateFrom"] = dateFrom.ToString("yyyy-MM-dd");
-            query["dateTo"] = dateTo.ToString("yyyy-MM-dd");
-            builder.Query = query.ToString();
+            var uri = new Uri(BaseUri, "/rest/data/getTrades");
 
-            var response = await HttpClient.GetStringAsync(builder.Uri);
+            var response = await uri.ToString()
+                                    .AddQueryParam("marketId", instrument.Market)
+                                    .AddQueryParam("symbol", instrument.Symbol)
+                                    .AddQueryParam("dateFrom", dateFrom.ToString("yyyy-MM-dd"))
+                                    .AddQueryParam("dateTo", dateTo.ToString("yyyy-MM-dd"))
+                                    .GetJsonFromUrlAsync( request =>
+                                    {
+                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                    });
             
             var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
             return data.Trades;
@@ -221,27 +220,31 @@ namespace Primary
         /// <returns>Order identifier.</returns>
         public async Task<OrderId> SubmitOrder(string account, Order order)
         {
-            var builder = new UriBuilder(BaseUri + "/rest/order/newSingleOrder");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["marketId"] = "ROFX";
-            query["symbol"] = order.Instrument.Symbol;
-            query["price"] = order.Price.ToApiString();
-            query["orderQty"] = order.Quantity.ToString();
-            query["ordType"] = order.Type.ToApiString();
-            query["side"] = order.Side.ToApiString();
-            query["timeInForce"] = order.Expiration.ToApiString();
-            query["account"] = account;
-            query["cancelPrevious"] = order.CancelPrevious.ToApiString();
-            query["iceberg"] = order.Iceberg.ToApiString();
-            query["expireDate"] = order.ExpirationDate.ToString("yyyyMMdd");
+            var uri = new Uri(BaseUri, "/rest/order/newSingleOrder").ToString();
+
+            uri = uri.AddQueryParam("marketId", "ROFX")
+                     .AddQueryParam("symbol", order.Instrument.Symbol)
+                     .AddQueryParam("price", order.Price)
+                     .AddQueryParam("orderQty", order.Quantity)
+                     .AddQueryParam("ordType", order.Type.ToApiString())
+                     .AddQueryParam("side", order.Side.ToApiString())
+                     .AddQueryParam("timeInForce", order.Expiration.ToApiString())
+                     .AddQueryParam("account", account)
+                     .AddQueryParam("cancelPrevious", order.CancelPrevious)
+                     .AddQueryParam("iceberg", order.Iceberg)
+                     .AddQueryParam("expireDate", order.ExpirationDate.ToString("yyyyMMdd"));
 
             if (order.Iceberg)
             {
-                query["displayQty"] = order.DisplayQuantity.ToApiString();
+                uri = uri.AddQueryParam("displayQty", order.DisplayQuantity);
             }
-            builder.Query = query.ToString();
-
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
             
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             if (response.Status == Status.Error)
@@ -263,14 +266,16 @@ namespace Primary
         /// <returns>Order information.</returns>
         public async Task<OrderStatus> GetOrderStatus(OrderId orderId)
         {
+            var uri = new Uri(BaseUri, "/rest/order/id").ToString();
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
+                     .AddQueryParam("proprietary", orderId.Proprietary);
 
-            var builder = new UriBuilder(BaseUri + "/rest/order/id");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["clOrdId"] = orderId.ClientOrderId;
-            query["proprietary"] = orderId.Proprietary;
-            builder.Query = query.ToString();
-
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
 
             var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
             if (response.Status == Status.Error)
@@ -287,15 +292,16 @@ namespace Primary
         /// <param name="orderId">Order identifier to cancel.</param>
         public async Task CancelOrder(OrderId orderId)
         {
+            var uri = new Uri(BaseUri, "/rest/order/cancelById").ToString();
+            uri = uri.AddQueryParam("clOrdId", orderId.ClientOrderId)
+                     .AddQueryParam("proprietary", orderId.Proprietary);
 
-            var builder = new UriBuilder(BaseUri + "/rest/order/cancelById");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["clOrdId"] = orderId.ClientOrderId;
-            query["proprietary"] = orderId.Proprietary;
-            builder.Query = query.ToString();
-
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
-
+            var jsonResponse = await uri.GetJsonFromUrlAsync(
+                                                    request =>
+                                                    {
+                                                        request.Headers.Add("X-Auth-Token", AccessToken);
+                                                    }
+            );
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             //if (response.Status == Status.Error)
             //{

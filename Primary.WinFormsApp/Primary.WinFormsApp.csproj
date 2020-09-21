@@ -80,7 +80,9 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMarketData.cs" />
+    <Compile Include="FrmMarketData.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FrmMarketData.Designer.cs">
       <DependentUpon>FrmMarketData.cs</DependentUpon>
     </Compile>

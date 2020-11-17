@@ -27,8 +27,8 @@ namespace Primary.Tests
             var instruments = await _api.GetAllInstruments();
             var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
 
-            // Subscribe to all entries
-            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, AllEntries, 1, 1);
+            // Subscribe to market data
+            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, new[] { Entry.Last } , 1, 1);
             
             MarketData retrievedData = null;
             socket.OnData = ( (api, marketData) => retrievedData = marketData );
@@ -43,6 +43,12 @@ namespace Primary.Tests
             Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
+
+            Trade last = retrievedData.Data.Last;
+            
+            Assert.That(last.Price, Is.Not.EqualTo(default(float)));
+            Assert.That(last.Size, Is.Not.EqualTo(default(float)));
+            Assert.That(last.DateTime, Is.Not.EqualTo(default(DateTime)));
         }
 
         [Test]

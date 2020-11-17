@@ -60,8 +60,8 @@ namespace Primary.Data
 
         public class Entries
         {
-            [JsonProperty("BI")] public IEnumerable<Trade> Bids { get; set; }
-            [JsonProperty("OF")] public IEnumerable<Trade> Offers { get; set; }
+            [JsonProperty("BI")] public Trade[] Bids { get; set; }
+            [JsonProperty("OF")] public Trade[] Offers { get; set; }
 
             [JsonProperty("LA")] public Trade Last { get; set; }
             [JsonProperty("OP")] public decimal? Open { get; set; }

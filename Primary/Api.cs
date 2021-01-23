@@ -110,7 +110,7 @@ namespace Primary
         {
             var uri = new Uri(BaseUri, "/rest/data/getTrades");
 
-            var response = await uri.ToString()
+            var jsonResponse = await uri.ToString()
                                     .AddQueryParam("marketId", instrument.Market)
                                     .AddQueryParam("symbol", instrument.Symbol)
                                     .AddQueryParam("dateFrom", dateFrom.ToString("yyyy-MM-dd"))
@@ -120,12 +120,26 @@ namespace Primary
                                         request.Headers.Add("X-Auth-Token", AccessToken);
                                     });
             
-            var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
-            return data.Trades;
+            var response = JsonConvert.DeserializeObject<GetTradesResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            
+            return response.Trades;
         }
 
         private class GetTradesResponse
         {
+            [JsonProperty("status")]
+            public string Status;
+            
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+
             [JsonProperty("trades")]
             public List<Trade> Trades { get; set; }
         }

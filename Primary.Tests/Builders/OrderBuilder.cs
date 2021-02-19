@@ -28,9 +28,9 @@ namespace Primary.Tests.Builders
                 Instrument = instrument,
                 Expiration = Expiration.Day,
                 Type = Data.Orders.Type.Limit,
-                Side = Side.Sell,
-                Quantity = 100,
-                Price = prices.Last().Price
+                Side = Side.Buy,
+                Quantity = 1000,
+                Price = prices.Last().Price - 1m
             };
         }
 

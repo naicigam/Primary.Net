@@ -120,13 +120,27 @@ namespace Primary
             builder.Query = query.ToString();
 
             var response = await HttpClient.GetStringAsync(builder.Uri);
-
             var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
+
+            if (data.Status == Status.Error)
+            {
+                throw new Exception($"{data.Message} ({data.Description})");
+            }
+            
             return data.Trades;
         }
 
         private class GetTradesResponse
         {
+            [JsonProperty("status")]
+            public string Status;
+            
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+
             [JsonProperty("trades")]
             public List<Trade> Trades { get; set; }
         }

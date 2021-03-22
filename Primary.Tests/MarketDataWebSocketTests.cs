@@ -44,8 +44,7 @@ namespace Primary.Tests
             Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
 
-            Trade close = retrievedData.Data.Close;
-            
+            var close = retrievedData.Data.Close;            
             Assert.That(close.Price, Is.Not.EqualTo(default(float)));
             Assert.That(close.DateTime, Is.Not.EqualTo(default(DateTime)));
         }
@@ -113,6 +112,9 @@ namespace Primary.Tests
 
             Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
+
+            Assert.That(retrievedData.Data.IndexValue, Is.Not.Null.And.Not.Empty);
         }
 
         public static Entry[] AllEntries = { 

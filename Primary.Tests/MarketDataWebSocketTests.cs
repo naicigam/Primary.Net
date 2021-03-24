@@ -44,8 +44,7 @@ namespace Primary.Tests
             Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
 
-            Trade close = retrievedData.Data.Close;
-            
+            var close = retrievedData.Data.Close;            
             Assert.That(close.Price, Is.Not.EqualTo(default(float)));
             Assert.That(close.DateTime, Is.Not.EqualTo(default(DateTime)));
         }
@@ -90,7 +89,8 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Timeout(10000)]
+        [Ignore("ReMarkets does not push index data.")]
+        [Timeout(100000)]
         public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future
@@ -102,7 +102,9 @@ namespace Primary.Tests
             using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
             
             MarketData retrievedData = null;
-            socket.OnData = ( (api, marketData) => retrievedData = marketData);
+            socket.OnData = ( (api, marketData) => 
+                                    retrievedData = (marketData.Data.IndexValue != null ? marketData : null)
+            );
             await socket.Start();
 
             // Wait until data arrives
@@ -113,6 +115,9 @@ namespace Primary.Tests
 
             Assert.That(retrievedData.Instrument.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.Instrument.Symbol, Is.Not.Null.And.Not.Empty);
+            Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
+
+            Assert.That(retrievedData.Data.IndexValue, Is.Not.Null.And.Not.Empty);
         }
 
         public static Entry[] AllEntries = { 

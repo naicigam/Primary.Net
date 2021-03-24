@@ -60,15 +60,15 @@ namespace Primary.Data
 
         public class Entries
         {
-            [JsonProperty("BI")] public Trade[] Bids { get; set; }
-            [JsonProperty("OF")] public Trade[] Offers { get; set; }
+            [JsonProperty("BI")] public PriceSize[] Bids { get; set; }
+            [JsonProperty("OF")] public PriceSize[] Offers { get; set; }
 
-            [JsonProperty("LA")] public Trade Last { get; set; }
+            [JsonProperty("LA")] public PriceDate Last { get; set; }
             [JsonProperty("OP")] public decimal? Open { get; set; }
-            [JsonProperty("CL")] public Trade Close { get; set; }
+            [JsonProperty("CL")] public PriceDate Close { get; set; }
 
-            [JsonProperty("SE")] public Trade SettlementPrice { get; set; }
-            [JsonProperty("OI")] public Trade OpenInterest { get; set; }
+            [JsonProperty("SE")] public PriceDate SettlementPrice { get; set; }
+            [JsonProperty("OI")] public SizeDate OpenInterest { get; set; }
 
             [JsonProperty("HI")] public decimal? SessionHighPrice { get; set; }
             [JsonProperty("LO")] public decimal? SessionLowPrice { get; set; }

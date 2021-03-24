@@ -89,7 +89,8 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Timeout(10000)]
+        [Timeout(100000)]
+        [Ignore]
         public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future
@@ -101,7 +102,9 @@ namespace Primary.Tests
             using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
             
             MarketData retrievedData = null;
-            socket.OnData = ( (api, marketData) => retrievedData = marketData);
+            socket.OnData = ( (api, marketData) => 
+                                    retrievedData = (marketData.Data.IndexValue != null ? marketData : null)
+            );
             await socket.Start();
 
             // Wait until data arrives

@@ -89,8 +89,8 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Ignore("ReMarkets does not push index data.")]
         [Timeout(100000)]
-        [Ignore]
         public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future

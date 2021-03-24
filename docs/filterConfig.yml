@@ -1,5 +1,0 @@
-apiRules:
-- exclude:
-    uidRegex: ^System
-- exclude:
-    uidRegex: ^System.Object

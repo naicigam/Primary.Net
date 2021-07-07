@@ -7,21 +7,12 @@ using Primary.Data;
 namespace Primary.Tests
 {
     [TestFixture]
-    public class ApiTests
+    internal class ApiTests : TestWithApi
     {
-        [OneTimeSetUp]
-        public async Task Login()
-        {
-            _api = new Api(Api.DemoEndpoint);
-            await _api.Login(Api.DemoUsername, Api.DemoPassword);
-        }
-
-        private Api _api;
-
         [Test]
         public async Task AllAvailableInstrumentsCanBeRetrieved()
         {
-            var instruments = await _api.GetAllInstruments();
+            var instruments = await Api.GetAllInstruments();
             Assert.That(instruments, Is.Not.Empty);
             
             foreach (var instrument in instruments)
@@ -43,7 +34,7 @@ namespace Primary.Tests
             var dateFrom = DateTime.Today.AddDays(-20);
             var dateTo = DateTime.Today;
 
-            var trades = await _api.GetHistoricalTrades(instrument, dateFrom, dateTo);
+            var trades = await Api.GetHistoricalTrades(instrument, dateFrom, dateTo);
             Assert.That(trades, Is.Not.Empty);
 
             foreach (var trade in trades)

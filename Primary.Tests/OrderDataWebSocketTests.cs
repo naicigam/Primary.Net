@@ -8,31 +8,22 @@ using Primary.Data.Orders;
 namespace Primary.Tests
 {
     [TestFixture]
-    internal class OrderDataWebSocketTests
+    internal class OrderDataWebSocketTests : TestWithApi
     {
-        [OneTimeSetUp]
-        public async Task Login()
-        {
-            _api = new Api(Api.DemoEndpoint);
-            await _api.Login(Api.DemoUsername, Api.DemoPassword);
-        }
-
-        private Api _api;
-
         [Test]
         [Timeout(10000)]
         public async Task SubscriptionToOrdersDataCanBeCreated()
         {
             // Subscribe to demo account
-            using var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
             
             OrderStatus retrievedData = null;
             socket.OnData = ( (api, orderData) => retrievedData = orderData.OrderReport );
             await socket.Start();
 
             // Send order
-            Order order = Build.AnOrder(_api);
-            await _api.SubmitOrder(Api.DemoAccount, order);
+            Order order = Build.AnOrder(Api);
+            await Api.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
             while (retrievedData == null)
@@ -55,7 +46,7 @@ namespace Primary.Tests
             using var cancellationSource = new CancellationTokenSource();
 
             // Create and start the web socket
-            using var socket = _api.CreateOrderDataSocket(new[] { Api.DemoAccount }, cancellationSource.Token);
+            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount }, cancellationSource.Token);
             Assert.That(!socket.IsRunning);
 
             var socketTask = await socket.Start();

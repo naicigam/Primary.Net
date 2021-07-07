@@ -16,8 +16,11 @@ namespace Primary.Tests.Builders
 
         private Order Build()
         {
-            var instruments = _api.GetAllInstruments().Result;
-            var instrument = instruments.Last( i => i.Symbol == Tests.Build.DollarFutureSymbol() );
+            var instrument = new Instrument()
+            {
+                Market = "ROFX",
+                Symbol = Tests.Build.DollarFutureSymbol()
+            };
 
             // Get a valid price
             var today = DateTime.Today;

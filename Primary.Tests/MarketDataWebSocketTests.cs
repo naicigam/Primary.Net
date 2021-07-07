@@ -23,9 +23,11 @@ namespace Primary.Tests
         [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCreated()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+            var instrument = new Instrument()
+            {
+                Market = "ROFX",
+                Symbol = Build.DollarFutureSymbol()
+            };
 
             // Subscribe to market data
             using var socket = _api.CreateMarketDataSocket(new[] { instrument }, new[] { Entry.Close } , 1, 1);
@@ -53,9 +55,11 @@ namespace Primary.Tests
         [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+            var instrument = new Instrument()
+            {
+                Market = "ROFX",
+                Symbol = Build.DollarFutureSymbol()
+            };
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
@@ -90,7 +94,7 @@ namespace Primary.Tests
 
         [Test]
         [Ignore("ReMarkets does not push index data.")]
-        [Timeout(100000)]
+        [Timeout(10000)]
         public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future

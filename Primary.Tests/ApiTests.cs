@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using Primary.Data;
 
 namespace Primary.Tests
 {
@@ -33,9 +34,11 @@ namespace Primary.Tests
         [Test]
         public async Task HistoricalTradesCanBeRetrievedForAnInstrument()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+            var instrument = new Instrument() 
+            { 
+                Market = "ROFX", 
+                Symbol = Build.DollarFutureSymbol() 
+            };
 
             var dateFrom = DateTime.Today.AddDays(-20);
             var dateTo = DateTime.Today;

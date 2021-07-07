@@ -31,6 +31,7 @@ namespace Primary.Tests
             Assert.That(retrievedOrder.Type, Is.EqualTo(order.Type));
             Assert.That(retrievedOrder.Quantity, Is.EqualTo(order.Quantity));
             Assert.That(retrievedOrder.Price, Is.EqualTo(order.Price));
+            Assert.That(retrievedOrder.Side, Is.EqualTo(order.Side));
         }
 
         [Test]

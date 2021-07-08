@@ -8,27 +8,20 @@ using Primary.Data;
 namespace Primary.Tests
 {
     [TestFixture]
-    internal class MarketDataWebSocketTests
+    internal class MarketDataWebSocketTests : TestWithApi
     {
-        [OneTimeSetUp]
-        public async Task Login()
-        {
-            _api = new Api(Api.DemoEndpoint);
-            await _api.Login(Api.DemoUsername, Api.DemoPassword);
-        }
-
-        private Api _api;
-
         [Test]
         [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCreated()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+            var instrument = new Instrument()
+            {
+                Market = "ROFX",
+                Symbol = Build.DollarFutureSymbol()
+            };
 
             // Subscribe to market data
-            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, new[] { Entry.Close } , 1, 1);
+            using var socket = Api.CreateMarketDataSocket(new[] { instrument }, new[] { Entry.Close } , 1, 1);
             
             MarketData retrievedData = null;
             socket.OnData = ( (api, marketData) => retrievedData = marketData );
@@ -53,9 +46,11 @@ namespace Primary.Tests
         [Timeout(10000)]
         public async Task SubscriptionToMarketDataCanBeCancelled()
         {
-            // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
-            var instrument = instruments.Last( i => i.Symbol == Build.DollarFutureSymbol() );
+            var instrument = new Instrument()
+            {
+                Market = "ROFX",
+                Symbol = Build.DollarFutureSymbol()
+            };
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
@@ -64,7 +59,7 @@ namespace Primary.Tests
             using var cancellationSource = new CancellationTokenSource();
 
             // Create and start the web socket
-            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1, cancellationSource.Token);
+            using var socket = Api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1, cancellationSource.Token);
             Assert.That(!socket.IsRunning);
 
             var socketTask = await socket.Start();
@@ -90,16 +85,16 @@ namespace Primary.Tests
 
         [Test]
         [Ignore("ReMarkets does not push index data.")]
-        [Timeout(100000)]
+        [Timeout(10000)]
         public async Task SubscriptionToIndexMarketDataCanBeCreated()
         {
             // Get a dollar future
-            var instruments = await _api.GetAllInstruments();
+            var instruments = await Api.GetAllInstruments();
             var instrument = instruments.Last( i => i.Symbol == "I.RFX20" );
 
             // Subscribe to all entries
             var entries = new[] { Entry.IndexValue };
-            using var socket = _api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
+            using var socket = Api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
             
             MarketData retrievedData = null;
             socket.OnData = ( (api, marketData) => 

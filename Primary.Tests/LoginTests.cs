@@ -7,6 +7,7 @@ namespace Primary.Tests
     public class LoginTests
     {
         [Test]
+        [NonParallelizable]
         public async Task AccessTokenCanBeObtainedByLoginInWithUserAndPassword()
         {
             var api = new Api(Api.DemoEndpoint);

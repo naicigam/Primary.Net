@@ -1,15 +1,13 @@
-﻿using Primary.Data;
-using Primary.Data.Orders;
+﻿using Primary.Data.Orders;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Primary.Examples
 {
     internal static class OrderExample
     {
-        private static async Task Main3()
+        public static async Task Run()
         {
             var api = new Api(Api.DemoEndpoint);
             await api.Login(Api.DemoUsername, Api.DemoPassword);

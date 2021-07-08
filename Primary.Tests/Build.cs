@@ -18,19 +18,18 @@ namespace Primary.Tests
 
         public static string DollarFutureSymbol()
         {
-            const string symbolBase = "DO";
-
+            const string symbolBase = "DLR/";
+            
             var monthMapper = new Dictionary<int, string>
             {
-                {1, "Ene"}, {2, "Feb"}, {3, "Mar"}, {4, "Abr"}, 
-                {5, "May"}, {6, "Jun"}, {7, "Jul"}, {8, "Ago"}, 
-                {9, "Sep"}, {10, "Oct"}, {11, "Nov"}, {12, "Dic"}
+                {1, "ENE"}, {2, "FEB"}, {3, "MAR"}, {4, "ABR"}, 
+                {5, "MAY"}, {6, "JUN"}, {7, "JUL"}, {8, "AGO"}, 
+                {9, "SEP"}, {10, "OCT"}, {11, "NOV"}, {12, "DIC"}
             };
             var nextMonth = DateTime.Today.AddMonths(1);
             var nextMonthNumber = nextMonth.Month;
-                
-            var nextMonthYear = DateTime.Today.AddMonths(1).ToString("yy");
-
+            var nextMonthYear = nextMonth.ToString("yy");
+            
             return symbolBase + monthMapper[nextMonthNumber] + nextMonthYear;
         }
     }

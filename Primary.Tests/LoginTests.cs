@@ -4,10 +4,10 @@ using NUnit.Framework;
 namespace Primary.Tests
 {
     [TestFixture]
-    [NonParallelizable]
     public class LoginTests
     {
         [Test]
+        [NonParallelizable]
         public async Task AccessTokenCanBeObtainedByLoginInWithUserAndPassword()
         {
             var api = new Api(Api.DemoEndpoint);

@@ -4,7 +4,6 @@ using NUnit.Framework;
 namespace Primary.Tests
 {
     [TestFixture]
-    [NonParallelizable]
     public class LoginTests
     {
         [Test]

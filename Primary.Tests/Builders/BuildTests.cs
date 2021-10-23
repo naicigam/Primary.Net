@@ -5,14 +5,8 @@ using Primary.Data.Orders;
 namespace Primary.Tests.Builders
 {
     [TestFixture]
-    public class BuildTests
+    internal class BuildTests : TestWithApi
     {
-        [OneTimeSetUp]
-        public async Task Setup()
-        {
-            _api = await Build.AnApi();
-        }
-
         #region API builder
 
         [Test]
@@ -28,19 +22,17 @@ namespace Primary.Tests.Builders
         public async Task OrderCanBeBuildReadyToBeSubmitted()
         {
             // Submit an order
-            var order = Build.AnOrder(_api);
-            var orderId = await _api.SubmitOrder(Api.DemoAccount, order);
+            var order = Build.AnOrder(Api);
+            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
             Assert.That( orderId, Is.Not.EqualTo( default(ulong) ) );
 
             // Retrieve the order
-            var retrievedOrder = await _api.GetOrderStatus(orderId);
+            var retrievedOrder = await Api.GetOrderStatus(orderId);
 
             Assert.That(retrievedOrder.Status, 
                         Is.Not.EqualTo(Status.Rejected).And.Not.EqualTo(Status.Cancelled), 
                         retrievedOrder.StatusText
             );
         }
-
-        private Api _api;
     }
 }

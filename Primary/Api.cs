@@ -170,7 +170,16 @@ namespace Primary
         /// </summary>
         /// <param name="instruments">Instruments to watch.</param>
         /// <param name="entries">Market data entries to watch.</param>
-        /// <param name="level"></param>
+        /// <param name="level">Real-time message update time.
+        ///     <list type="table">
+        ///         <listheader> <term>Level</term> <description>Update time (ms)</description> </listheader>
+        ///         <item> <term>1</term> <description>100</description> </item>
+        ///         <item> <term>2</term> <description>500</description> </item>
+        ///         <item> <term>3</term> <description>1000</description> </item>
+        ///         <item> <term>4</term> <description>3000</description> </item>
+        ///         <item> <term>5</term> <description>6000</description> </item>
+        ///     </list>
+        /// </param>
         /// <param name="depth">Depth of the book.</param>
         /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
         /// <returns>The market data web socket.</returns>

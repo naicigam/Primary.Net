@@ -93,8 +93,8 @@ namespace Primary.Data.Orders
         {
             return value switch
             {
-                Side.Buy => "Sell",
-                Side.Sell => "Buy",
+                Side.Buy => "Buy",
+                Side.Sell => "Sell",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }

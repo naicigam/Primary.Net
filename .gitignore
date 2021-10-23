@@ -10,7 +10,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-
+/.vs
 /git/.vs
 /.vs/Primary
 /packages
@@ -21,4 +21,3 @@ bld/
 /Primary.Tests/bin
 /Primary.Tests/obj
 *.user
-/codealike.json

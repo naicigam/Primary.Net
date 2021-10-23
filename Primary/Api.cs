@@ -4,6 +4,7 @@ using Primary.Data.Orders;
 using Primary.WebSockets;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -248,19 +249,19 @@ namespace Primary
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = "ROFX";
             query["symbol"] = order.Instrument.Symbol;
-            query["price"] = order.Price.ToApiString();
+            query["price"] = order.Price?.ToString(CultureInfo.InvariantCulture);
             query["orderQty"] = order.Quantity.ToString();
             query["ordType"] = order.Type.ToApiString();
             query["side"] = order.Side.ToApiString();
             query["timeInForce"] = order.Expiration.ToApiString();
             query["account"] = account;
-            query["cancelPrevious"] = order.CancelPrevious.ToApiString();
-            query["iceberg"] = order.Iceberg.ToApiString();
+            query["cancelPrevious"] = order.CancelPrevious.ToString(CultureInfo.InvariantCulture);
+            query["iceberg"] = order.Iceberg.ToString(CultureInfo.InvariantCulture);
             query["expireDate"] = order.ExpirationDate.ToString("yyyyMMdd");
 
             if (order.Iceberg)
             {
-                query["displayQty"] = order.DisplayQuantity.ToApiString();
+                query["displayQty"] = order.DisplayQuantity.ToString(CultureInfo.InvariantCulture);
             }
             builder.Query = query.ToString();
 

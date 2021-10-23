@@ -171,24 +171,6 @@ namespace Primary.Data.Orders
             };
         }
 
-        public static string ToApiString(this decimal? value)
-        {
-            if (value.HasValue)
-                return value.Value.ToString(CultureInfo.InvariantCulture);
-
-            return string.Empty;
-        }
-
-        public static string ToApiString(this bool value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        public static string ToApiString(this uint value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
         #endregion
     }
 

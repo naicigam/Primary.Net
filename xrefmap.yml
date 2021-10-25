@@ -13,12 +13,12 @@ references:
   commentId: T:Primary.Api
   fullName: Primary.Api
   nameWithType: Api
-- uid: Primary.Api.#ctor(System.Uri)
-  name: Api(Uri)
-  href: api/Primary.Api.html#Primary_Api__ctor_System_Uri_
-  commentId: M:Primary.Api.#ctor(System.Uri)
-  fullName: Primary.Api.Api(System.Uri)
-  nameWithType: Api.Api(Uri)
+- uid: Primary.Api.#ctor(System.Uri,System.Net.Http.HttpClient)
+  name: Api(Uri, HttpClient)
+  href: api/Primary.Api.html#Primary_Api__ctor_System_Uri_System_Net_Http_HttpClient_
+  commentId: M:Primary.Api.#ctor(System.Uri,System.Net.Http.HttpClient)
+  fullName: Primary.Api.Api(System.Uri, System.Net.Http.HttpClient)
+  nameWithType: Api.Api(Uri, HttpClient)
 - uid: Primary.Api.#ctor*
   name: Api
   href: api/Primary.Api.html#Primary_Api__ctor_
@@ -185,6 +185,19 @@ references:
   isSpec: "True"
   fullName: Primary.Api.GetOrderStatus
   nameWithType: Api.GetOrderStatus
+- uid: Primary.Api.HttpClient
+  name: HttpClient
+  href: api/Primary.Api.html#Primary_Api_HttpClient
+  commentId: P:Primary.Api.HttpClient
+  fullName: Primary.Api.HttpClient
+  nameWithType: Api.HttpClient
+- uid: Primary.Api.HttpClient*
+  name: HttpClient
+  href: api/Primary.Api.html#Primary_Api_HttpClient_
+  commentId: Overload:Primary.Api.HttpClient
+  isSpec: "True"
+  fullName: Primary.Api.HttpClient
+  nameWithType: Api.HttpClient
 - uid: Primary.Api.Login(System.String,System.String)
   name: Login(String, String)
   href: api/Primary.Api.html#Primary_Api_Login_System_String_System_String_

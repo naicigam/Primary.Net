@@ -1,4 +1,17 @@
-﻿/git/.vs
+﻿# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+/.vs
+/git/.vs
 /.vs/Primary
 /packages
 /Primary/bin
@@ -8,4 +21,3 @@
 /Primary.Tests/bin
 /Primary.Tests/obj
 *.user
-/codealike.json

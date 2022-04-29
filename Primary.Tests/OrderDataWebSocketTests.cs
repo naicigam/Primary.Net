@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Primary.Data;
 using Primary.Data.Orders;
 
 namespace Primary.Tests

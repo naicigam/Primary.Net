@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Primary.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Primary.Data
 {

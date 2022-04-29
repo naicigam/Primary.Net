@@ -109,7 +109,10 @@ namespace Primary.Net
             }
         }
 
-        private readonly ClientWebSocket _client = new ClientWebSocket();
+        private readonly ClientWebSocket _client = new()
+        {
+            Options = { KeepAliveInterval = TimeSpan.FromSeconds(30) }
+        };
 
         private readonly TRequest _request;
         private readonly Api _api;

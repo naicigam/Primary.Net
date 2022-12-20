@@ -78,23 +78,17 @@ namespace Primary
         /// <returns>Instruments information.</returns>
         public async Task<IEnumerable<Instrument>> GetAllInstruments()
         {
-            var uri = new Uri(BaseUri, "/rest/instruments/all");
+            var uri = new Uri(BaseUri, "/rest/instruments/details");
             var response = await HttpClient.GetStringAsync(uri);
 
             var data = JsonConvert.DeserializeObject<GetAllInstrumentsResponse>(response);
-            return data.Instruments.Select(i => i.InstrumentId);
+            return data.Instruments;
         }
 
         private class GetAllInstrumentsResponse
         {
-            public class InstrumentEntry
-            {
-                [JsonProperty("instrumentId")]
-                public Instrument InstrumentId { get; set; }
-            }
-
             [JsonProperty("instruments")]
-            public List<InstrumentEntry> Instruments { get; set; }
+            public List<Instrument> Instruments { get; set; }
         }
 
         #endregion
@@ -127,7 +121,7 @@ namespace Primary
             {
                 throw new Exception($"{data.Message} ({data.Description})");
             }
-            
+
             return data.Trades;
         }
 
@@ -135,7 +129,7 @@ namespace Primary
         {
             [JsonProperty("status")]
             public string Status;
-            
+
             [JsonProperty("message")]
             public string Message;
 
@@ -169,7 +163,7 @@ namespace Primary
         /// <summary>
         /// Create a Market Data web socket to receive real-time market data.
         /// </summary>
-        /// <param name="instruments">Instruments to watch.</param>
+        /// <param name="instrumentIds">Instruments to watch.</param>
         /// <param name="entries">Market data entries to watch.</param>
         /// <param name="level">Real-time message update time.
         ///     <list type="table">

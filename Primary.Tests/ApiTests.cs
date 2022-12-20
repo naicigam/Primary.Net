@@ -2,6 +2,9 @@
 using NUnit.Framework;
 using System.Threading.Tasks;
 using Primary.Data;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Primary.Tests
 {
@@ -18,7 +21,12 @@ namespace Primary.Tests
             {
                 Assert.That(instrument.Market, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Symbol, Is.Not.Null.And.Not.Empty);
+                Assert.That(instrument.Description, Is.Not.Null.And.Not.Empty);
+                Assert.That(instrument.Currency, Is.Not.Null.And.Not.Empty);
+                Assert.That(instrument.PriceConvertionFactor, Is.Not.EqualTo(default));
             }
+
+            Assert.That(instruments.Where(i => i.MaturityDate != default), Is.Not.Empty);
         }
 
         [Test]

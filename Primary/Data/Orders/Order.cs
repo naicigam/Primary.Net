@@ -1,5 +1,5 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Primary.Data.Orders
 {
@@ -22,20 +22,20 @@ namespace Primary.Data.Orders
 
         /// <summary>Which instrument is the order for.</summary>
         [JsonProperty("instrumentId")]
-        public Instrument Instrument { get; set; }
+        public InstrumentId InstrumentId { get; set; }
 
         /// <summary>Instrument price.</summary>
         [JsonProperty("price")]
         public decimal? Price { get; set; }
-        
+
         /// <summary>Order size.</summary>
         [JsonProperty("orderQty")]
         public int Quantity { get; set; }
-        
+
         /// <summary>Market or limit.</summary>
         [JsonProperty("ordType")]
         public Orders.Type Type { get; set; }
-        
+
         /// <summary>Buy or sell.</summary>
         [JsonProperty("side")]
         public Side Side { get; set; }
@@ -43,7 +43,7 @@ namespace Primary.Data.Orders
         /// <summary>How long the order will last if not filled.</summary>
         [JsonProperty("timeInForce")]
         public Expiration Expiration { get; set; }
-        
+
         /// <summary>Order expiration date.</summary>
         /// <remarks>Only valid when `Expiration` is `GoodTillDate`.</remarks>
         [JsonProperty("expireDate")]

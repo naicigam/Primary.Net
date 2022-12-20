@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework;
+using Primary.Data.Orders;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using Primary.Data.Orders;
 
 namespace Primary.Tests
 {
@@ -15,9 +15,9 @@ namespace Primary.Tests
         {
             // Subscribe to demo account
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
-            
+
             OrderStatus retrievedData = null;
-            socket.OnData = ( (api, orderData) => retrievedData = orderData.OrderReport );
+            socket.OnData = ((api, orderData) => retrievedData = orderData.OrderReport);
             await socket.Start();
 
             // Send order
@@ -31,8 +31,8 @@ namespace Primary.Tests
             }
 
             Assert.That(retrievedData.Account.Id, Is.EqualTo(Api.DemoAccount));
-            Assert.That(retrievedData.Instrument.Symbol, Is.EqualTo(order.Instrument.Symbol));
-            Assert.That(retrievedData.Instrument.Market, Is.EqualTo(order.Instrument.Market));
+            Assert.That(retrievedData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
+            Assert.That(retrievedData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
             Assert.That(retrievedData.Price, Is.EqualTo(order.Price));
             Assert.That(retrievedData.TransactionTime, Is.Not.EqualTo(default(long)));
         }

@@ -24,6 +24,7 @@ namespace Primary.Tests
             using var socket = Api.CreateMarketDataSocket(new[] { instrumentId }, new[] { Entry.Close }, 1, 1);
 
             MarketData retrievedData = null;
+            socket.OnData = ((api, marketData) => retrievedData = marketData);
             await socket.Start();
 
             // Wait until data arrives
@@ -112,6 +113,23 @@ namespace Primary.Tests
             Assert.That(retrievedData.Timestamp, Is.Not.EqualTo(default(long)));
 
             Assert.That(retrievedData.Data.IndexValue, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
+        [Timeout(10000)]
+        public void SubscriptionToMarketDataCannotBeStartedUnlessDataCallbackIsProvided()
+        {
+            var instrumentId = new InstrumentId()
+            {
+                Market = "ROFX",
+                Symbol = Build.DollarFutureSymbol()
+            };
+            var entries = new[] { Entry.IndexValue };
+            using var socket = Api.CreateMarketDataSocket(new[] { instrumentId }, entries, 1, 1);
+            socket.OnData = null;
+
+            var exception = Assert.ThrowsAsync<Exception>(socket.Start);
+            Assert.That(exception.Message, Does.Contain(ErrorMessages.CallbackNotSet));
         }
 
         public static Entry[] AllEntries = {

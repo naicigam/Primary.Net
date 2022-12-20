@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Primary.Net
 {
@@ -18,11 +18,16 @@ namespace Primary.Net
 
             var wsScheme = (_api.BaseUri.Scheme == "https" ? "wss" : "ws");
             var uriBuilder = new UriBuilder(_api.BaseUri) { Scheme = wsScheme };
-            _uri = uriBuilder.Uri; 
+            _uri = uriBuilder.Uri;
         }
-        
+
         public async Task<Task> Start()
         {
+            if (OnData == null)
+            {
+                throw new Exception(ErrorMessages.CallbackNotSet);
+            }
+
             _client.Options.SetRequestHeader("X-Auth-Token", _api.AccessToken);
 
             await _client.ConnectAsync(_uri, CancelToken);
@@ -41,12 +46,12 @@ namespace Primary.Net
 
             return socketTask.Unwrap();
         }
-        
+
         public bool IsRunning { get; private set; }
         public CancellationToken CancelToken { get; }
 
         public Action<Api, TResponse> OnData { get; set; }
-        
+
         #region IDisposable implementation
 
         public void Dispose()
@@ -68,7 +73,7 @@ namespace Primary.Net
         private async Task ProcessSocketData()
         {
             IsRunning = true;
-            
+
             // Buffers for received data
             var receivedMessage = new List<byte>();
             var buffer = new byte[9192];
@@ -82,8 +87,8 @@ namespace Primary.Net
                     do
                     {
                         response = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancelToken);
-                        if(response.CloseStatus != null)
-                        { 
+                        if (response.CloseStatus != null)
+                        {
                             throw new Exception(response.CloseStatusDescription);
                         }
                         var segment = new ArraySegment<byte>(buffer, 0, response.Count);
@@ -92,7 +97,7 @@ namespace Primary.Net
                     } while (!response.EndOfMessage);
 
                     // Decode the message
-                    var messageJson = Encoding.ASCII.GetString( receivedMessage.ToArray() );
+                    var messageJson = Encoding.ASCII.GetString(receivedMessage.ToArray());
                     receivedMessage.Clear();
 
                     // Parse and notify subscriber

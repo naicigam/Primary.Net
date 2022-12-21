@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Instrument
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,38 +73,59 @@
   
   <h1 id="Primary_Data_Instrument" data-uid="Primary.Data.Instrument" class="text-break">Class Instrument
   </h1>
-  <div class="markdown level0 summary"><p>Identifies a market instrument.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Instrument</span></div>
+    <div class="level1"><a class="xref" href="Primary.Data.InstrumentId.html">InstrumentId</a></div>
+    <div class="level2"><span class="xref">Instrument</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Market">InstrumentId.Market</a>
+    </div>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Symbol">InstrumentId.Symbol</a>
+    </div>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedMarket">InstrumentId.NestedMarket</a>
+    </div>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedSymbol">InstrumentId.NestedSymbol</a>
+    </div>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedMarket">InstrumentId.ShouldSerializeNestedMarket()</a>
+    </div>
+    <div>
+      <a class="xref" href="Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedSymbol">InstrumentId.ShouldSerializeNestedSymbol()</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Primary.Data.html">Primary.Data</a></h6>
   <h6><strong>Assembly</strong>: Primary.dll</h6>
   <h5 id="Primary_Data_Instrument_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Instrument</code></pre>
+    <pre><code class="lang-csharp hljs">public class Instrument : InstrumentId</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_Market.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.Market%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_Currency.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.Currency%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L10">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L46">View Source</a>
   </span>
-  <a id="Primary_Data_Instrument_Market_" data-uid="Primary.Data.Instrument.Market*"></a>
-  <h4 id="Primary_Data_Instrument_Market" data-uid="Primary.Data.Instrument.Market">Market</h4>
-  <div class="markdown level1 summary"><p>Market where the instruments belongs to.</p>
+  <a id="Primary_Data_Instrument_Currency_" data-uid="Primary.Data.Instrument.Currency*"></a>
+  <h4 id="Primary_Data_Instrument_Currency" data-uid="Primary.Data.Instrument.Currency">Currency</h4>
+  <div class="markdown level1 summary"><p>Currency.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;marketId&quot;)]
-public string Market { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;currency&quot;)]
+public string Currency { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -121,25 +142,22 @@ public string Market { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 id="Primary_Data_Instrument_Market_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>Only accepted value is <strong>ROFX</strong>.</p>
-</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_Symbol.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.Symbol%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_Description.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.Description%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L14">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L42">View Source</a>
   </span>
-  <a id="Primary_Data_Instrument_Symbol_" data-uid="Primary.Data.Instrument.Symbol*"></a>
-  <h4 id="Primary_Data_Instrument_Symbol" data-uid="Primary.Data.Instrument.Symbol">Symbol</h4>
-  <div class="markdown level1 summary"><p>Ticker of the instrument.</p>
+  <a id="Primary_Data_Instrument_Description_" data-uid="Primary.Data.Instrument.Description*"></a>
+  <h4 id="Primary_Data_Instrument_Description" data-uid="Primary.Data.Instrument.Description">Description</h4>
+  <div class="markdown level1 summary"><p>Dezscription of the instrument.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;symbol&quot;)]
-public string Symbol { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;securityDescription&quot;)]
+public string Description { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -152,6 +170,72 @@ public string Symbol { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_MaturityDate.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.MaturityDate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L50">View Source</a>
+  </span>
+  <a id="Primary_Data_Instrument_MaturityDate_" data-uid="Primary.Data.Instrument.MaturityDate*"></a>
+  <h4 id="Primary_Data_Instrument_MaturityDate" data-uid="Primary.Data.Instrument.MaturityDate">MaturityDate</h4>
+  <div class="markdown level1 summary"><p>Maturity date (if applicable).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;maturityDate&quot;)]
+[JsonConverter(typeof(FlatDateTimeJsonDeserializer))]
+public DateTime? MaturityDate { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument_PriceConversionFactor.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument.PriceConversionFactor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L57">View Source</a>
+  </span>
+  <a id="Primary_Data_Instrument_PriceConversionFactor_" data-uid="Primary.Data.Instrument.PriceConversionFactor*"></a>
+  <h4 id="Primary_Data_Instrument_PriceConversionFactor" data-uid="Primary.Data.Instrument.PriceConversionFactor">PriceConversionFactor</h4>
+  <div class="markdown level1 summary"><p>Price multiplier to get the price for a single unit.
+For example, if an instrument is traded in lots of 100, this value will be 0.01.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;priceConvertionFactor&quot;)]
+public float PriceConversionFactor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Single</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -167,7 +251,7 @@ public string Symbol { get; set; }</code></pre>
                     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Data_Instrument.md&amp;value=---%0Auid%3A%20Primary.Data.Instrument%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Data/Instrument.cs/#L39" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

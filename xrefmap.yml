@@ -65,24 +65,24 @@ references:
   isSpec: "True"
   fullName: Primary.Api.CancelOrder
   nameWithType: Api.CancelOrder
-- uid: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)
-  name: CreateMarketDataSocket(IEnumerable<Instrument>, IEnumerable<Entry>, UInt32, UInt32)
-  href: api/Primary.Api.html#Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_
-  commentId: M:Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)
-  name.vb: CreateMarketDataSocket(IEnumerable(Of Instrument), IEnumerable(Of Entry), UInt32, UInt32)
-  fullName: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable<Primary.Data.Instrument>, System.Collections.Generic.IEnumerable<Primary.Data.Entry>, System.UInt32, System.UInt32)
-  fullName.vb: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable(Of Primary.Data.Instrument), System.Collections.Generic.IEnumerable(Of Primary.Data.Entry), System.UInt32, System.UInt32)
-  nameWithType: Api.CreateMarketDataSocket(IEnumerable<Instrument>, IEnumerable<Entry>, UInt32, UInt32)
-  nameWithType.vb: Api.CreateMarketDataSocket(IEnumerable(Of Instrument), IEnumerable(Of Entry), UInt32, UInt32)
-- uid: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)
-  name: CreateMarketDataSocket(IEnumerable<Instrument>, IEnumerable<Entry>, UInt32, UInt32, CancellationToken)
-  href: api/Primary.Api.html#Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_
-  commentId: M:Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)
-  name.vb: CreateMarketDataSocket(IEnumerable(Of Instrument), IEnumerable(Of Entry), UInt32, UInt32, CancellationToken)
-  fullName: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable<Primary.Data.Instrument>, System.Collections.Generic.IEnumerable<Primary.Data.Entry>, System.UInt32, System.UInt32, System.Threading.CancellationToken)
-  fullName.vb: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable(Of Primary.Data.Instrument), System.Collections.Generic.IEnumerable(Of Primary.Data.Entry), System.UInt32, System.UInt32, System.Threading.CancellationToken)
-  nameWithType: Api.CreateMarketDataSocket(IEnumerable<Instrument>, IEnumerable<Entry>, UInt32, UInt32, CancellationToken)
-  nameWithType.vb: Api.CreateMarketDataSocket(IEnumerable(Of Instrument), IEnumerable(Of Entry), UInt32, UInt32, CancellationToken)
+- uid: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)
+  name: CreateMarketDataSocket(IEnumerable<InstrumentId>, IEnumerable<Entry>, UInt32, UInt32)
+  href: api/Primary.Api.html#Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_
+  commentId: M:Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)
+  name.vb: CreateMarketDataSocket(IEnumerable(Of InstrumentId), IEnumerable(Of Entry), UInt32, UInt32)
+  fullName: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable<Primary.Data.InstrumentId>, System.Collections.Generic.IEnumerable<Primary.Data.Entry>, System.UInt32, System.UInt32)
+  fullName.vb: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable(Of Primary.Data.InstrumentId), System.Collections.Generic.IEnumerable(Of Primary.Data.Entry), System.UInt32, System.UInt32)
+  nameWithType: Api.CreateMarketDataSocket(IEnumerable<InstrumentId>, IEnumerable<Entry>, UInt32, UInt32)
+  nameWithType.vb: Api.CreateMarketDataSocket(IEnumerable(Of InstrumentId), IEnumerable(Of Entry), UInt32, UInt32)
+- uid: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)
+  name: CreateMarketDataSocket(IEnumerable<InstrumentId>, IEnumerable<Entry>, UInt32, UInt32, CancellationToken)
+  href: api/Primary.Api.html#Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_
+  commentId: M:Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)
+  name.vb: CreateMarketDataSocket(IEnumerable(Of InstrumentId), IEnumerable(Of Entry), UInt32, UInt32, CancellationToken)
+  fullName: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable<Primary.Data.InstrumentId>, System.Collections.Generic.IEnumerable<Primary.Data.Entry>, System.UInt32, System.UInt32, System.Threading.CancellationToken)
+  fullName.vb: Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable(Of Primary.Data.InstrumentId), System.Collections.Generic.IEnumerable(Of Primary.Data.Entry), System.UInt32, System.UInt32, System.Threading.CancellationToken)
+  nameWithType: Api.CreateMarketDataSocket(IEnumerable<InstrumentId>, IEnumerable<Entry>, UInt32, UInt32, CancellationToken)
+  nameWithType.vb: Api.CreateMarketDataSocket(IEnumerable(Of InstrumentId), IEnumerable(Of Entry), UInt32, UInt32, CancellationToken)
 - uid: Primary.Api.CreateMarketDataSocket*
   name: CreateMarketDataSocket
   href: api/Primary.Api.html#Primary_Api_CreateMarketDataSocket_
@@ -159,12 +159,12 @@ references:
   isSpec: "True"
   fullName: Primary.Api.GetAllInstruments
   nameWithType: Api.GetAllInstruments
-- uid: Primary.Api.GetHistoricalTrades(Primary.Data.Instrument,System.DateTime,System.DateTime)
-  name: GetHistoricalTrades(Instrument, DateTime, DateTime)
-  href: api/Primary.Api.html#Primary_Api_GetHistoricalTrades_Primary_Data_Instrument_System_DateTime_System_DateTime_
-  commentId: M:Primary.Api.GetHistoricalTrades(Primary.Data.Instrument,System.DateTime,System.DateTime)
-  fullName: Primary.Api.GetHistoricalTrades(Primary.Data.Instrument, System.DateTime, System.DateTime)
-  nameWithType: Api.GetHistoricalTrades(Instrument, DateTime, DateTime)
+- uid: Primary.Api.GetHistoricalTrades(Primary.Data.InstrumentId,System.DateTime,System.DateTime)
+  name: GetHistoricalTrades(InstrumentId, DateTime, DateTime)
+  href: api/Primary.Api.html#Primary_Api_GetHistoricalTrades_Primary_Data_InstrumentId_System_DateTime_System_DateTime_
+  commentId: M:Primary.Api.GetHistoricalTrades(Primary.Data.InstrumentId,System.DateTime,System.DateTime)
+  fullName: Primary.Api.GetHistoricalTrades(Primary.Data.InstrumentId, System.DateTime, System.DateTime)
+  nameWithType: Api.GetHistoricalTrades(InstrumentId, DateTime, DateTime)
 - uid: Primary.Api.GetHistoricalTrades*
   name: GetHistoricalTrades
   href: api/Primary.Api.html#Primary_Api_GetHistoricalTrades_
@@ -365,32 +365,142 @@ references:
   commentId: T:Primary.Data.Instrument
   fullName: Primary.Data.Instrument
   nameWithType: Instrument
-- uid: Primary.Data.Instrument.Market
-  name: Market
-  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Market
-  commentId: P:Primary.Data.Instrument.Market
-  fullName: Primary.Data.Instrument.Market
-  nameWithType: Instrument.Market
-- uid: Primary.Data.Instrument.Market*
-  name: Market
-  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Market_
-  commentId: Overload:Primary.Data.Instrument.Market
+- uid: Primary.Data.Instrument.Currency
+  name: Currency
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Currency
+  commentId: P:Primary.Data.Instrument.Currency
+  fullName: Primary.Data.Instrument.Currency
+  nameWithType: Instrument.Currency
+- uid: Primary.Data.Instrument.Currency*
+  name: Currency
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Currency_
+  commentId: Overload:Primary.Data.Instrument.Currency
   isSpec: "True"
-  fullName: Primary.Data.Instrument.Market
-  nameWithType: Instrument.Market
-- uid: Primary.Data.Instrument.Symbol
-  name: Symbol
-  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Symbol
-  commentId: P:Primary.Data.Instrument.Symbol
-  fullName: Primary.Data.Instrument.Symbol
-  nameWithType: Instrument.Symbol
-- uid: Primary.Data.Instrument.Symbol*
-  name: Symbol
-  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Symbol_
-  commentId: Overload:Primary.Data.Instrument.Symbol
+  fullName: Primary.Data.Instrument.Currency
+  nameWithType: Instrument.Currency
+- uid: Primary.Data.Instrument.Description
+  name: Description
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Description
+  commentId: P:Primary.Data.Instrument.Description
+  fullName: Primary.Data.Instrument.Description
+  nameWithType: Instrument.Description
+- uid: Primary.Data.Instrument.Description*
+  name: Description
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_Description_
+  commentId: Overload:Primary.Data.Instrument.Description
   isSpec: "True"
-  fullName: Primary.Data.Instrument.Symbol
-  nameWithType: Instrument.Symbol
+  fullName: Primary.Data.Instrument.Description
+  nameWithType: Instrument.Description
+- uid: Primary.Data.Instrument.MaturityDate
+  name: MaturityDate
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_MaturityDate
+  commentId: P:Primary.Data.Instrument.MaturityDate
+  fullName: Primary.Data.Instrument.MaturityDate
+  nameWithType: Instrument.MaturityDate
+- uid: Primary.Data.Instrument.MaturityDate*
+  name: MaturityDate
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_MaturityDate_
+  commentId: Overload:Primary.Data.Instrument.MaturityDate
+  isSpec: "True"
+  fullName: Primary.Data.Instrument.MaturityDate
+  nameWithType: Instrument.MaturityDate
+- uid: Primary.Data.Instrument.PriceConversionFactor
+  name: PriceConversionFactor
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_PriceConversionFactor
+  commentId: P:Primary.Data.Instrument.PriceConversionFactor
+  fullName: Primary.Data.Instrument.PriceConversionFactor
+  nameWithType: Instrument.PriceConversionFactor
+- uid: Primary.Data.Instrument.PriceConversionFactor*
+  name: PriceConversionFactor
+  href: api/Primary.Data.Instrument.html#Primary_Data_Instrument_PriceConversionFactor_
+  commentId: Overload:Primary.Data.Instrument.PriceConversionFactor
+  isSpec: "True"
+  fullName: Primary.Data.Instrument.PriceConversionFactor
+  nameWithType: Instrument.PriceConversionFactor
+- uid: Primary.Data.InstrumentId
+  name: InstrumentId
+  href: api/Primary.Data.InstrumentId.html
+  commentId: T:Primary.Data.InstrumentId
+  fullName: Primary.Data.InstrumentId
+  nameWithType: InstrumentId
+- uid: Primary.Data.InstrumentId.Market
+  name: Market
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Market
+  commentId: P:Primary.Data.InstrumentId.Market
+  fullName: Primary.Data.InstrumentId.Market
+  nameWithType: InstrumentId.Market
+- uid: Primary.Data.InstrumentId.Market*
+  name: Market
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Market_
+  commentId: Overload:Primary.Data.InstrumentId.Market
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.Market
+  nameWithType: InstrumentId.Market
+- uid: Primary.Data.InstrumentId.NestedMarket
+  name: NestedMarket
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedMarket
+  commentId: P:Primary.Data.InstrumentId.NestedMarket
+  fullName: Primary.Data.InstrumentId.NestedMarket
+  nameWithType: InstrumentId.NestedMarket
+- uid: Primary.Data.InstrumentId.NestedMarket*
+  name: NestedMarket
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedMarket_
+  commentId: Overload:Primary.Data.InstrumentId.NestedMarket
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.NestedMarket
+  nameWithType: InstrumentId.NestedMarket
+- uid: Primary.Data.InstrumentId.NestedSymbol
+  name: NestedSymbol
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedSymbol
+  commentId: P:Primary.Data.InstrumentId.NestedSymbol
+  fullName: Primary.Data.InstrumentId.NestedSymbol
+  nameWithType: InstrumentId.NestedSymbol
+- uid: Primary.Data.InstrumentId.NestedSymbol*
+  name: NestedSymbol
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_NestedSymbol_
+  commentId: Overload:Primary.Data.InstrumentId.NestedSymbol
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.NestedSymbol
+  nameWithType: InstrumentId.NestedSymbol
+- uid: Primary.Data.InstrumentId.ShouldSerializeNestedMarket
+  name: ShouldSerializeNestedMarket()
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedMarket
+  commentId: M:Primary.Data.InstrumentId.ShouldSerializeNestedMarket
+  fullName: Primary.Data.InstrumentId.ShouldSerializeNestedMarket()
+  nameWithType: InstrumentId.ShouldSerializeNestedMarket()
+- uid: Primary.Data.InstrumentId.ShouldSerializeNestedMarket*
+  name: ShouldSerializeNestedMarket
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedMarket_
+  commentId: Overload:Primary.Data.InstrumentId.ShouldSerializeNestedMarket
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.ShouldSerializeNestedMarket
+  nameWithType: InstrumentId.ShouldSerializeNestedMarket
+- uid: Primary.Data.InstrumentId.ShouldSerializeNestedSymbol
+  name: ShouldSerializeNestedSymbol()
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedSymbol
+  commentId: M:Primary.Data.InstrumentId.ShouldSerializeNestedSymbol
+  fullName: Primary.Data.InstrumentId.ShouldSerializeNestedSymbol()
+  nameWithType: InstrumentId.ShouldSerializeNestedSymbol()
+- uid: Primary.Data.InstrumentId.ShouldSerializeNestedSymbol*
+  name: ShouldSerializeNestedSymbol
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_ShouldSerializeNestedSymbol_
+  commentId: Overload:Primary.Data.InstrumentId.ShouldSerializeNestedSymbol
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.ShouldSerializeNestedSymbol
+  nameWithType: InstrumentId.ShouldSerializeNestedSymbol
+- uid: Primary.Data.InstrumentId.Symbol
+  name: Symbol
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Symbol
+  commentId: P:Primary.Data.InstrumentId.Symbol
+  fullName: Primary.Data.InstrumentId.Symbol
+  nameWithType: InstrumentId.Symbol
+- uid: Primary.Data.InstrumentId.Symbol*
+  name: Symbol
+  href: api/Primary.Data.InstrumentId.html#Primary_Data_InstrumentId_Symbol_
+  commentId: Overload:Primary.Data.InstrumentId.Symbol
+  isSpec: "True"
+  fullName: Primary.Data.InstrumentId.Symbol
+  nameWithType: InstrumentId.Symbol
 - uid: Primary.Data.MarketData
   name: MarketData
   href: api/Primary.Data.MarketData.html
@@ -585,19 +695,19 @@ references:
   isSpec: "True"
   fullName: Primary.Data.MarketData.Entries.Volume
   nameWithType: MarketData.Entries.Volume
-- uid: Primary.Data.MarketData.Instrument
-  name: Instrument
-  href: api/Primary.Data.MarketData.html#Primary_Data_MarketData_Instrument
-  commentId: P:Primary.Data.MarketData.Instrument
-  fullName: Primary.Data.MarketData.Instrument
-  nameWithType: MarketData.Instrument
-- uid: Primary.Data.MarketData.Instrument*
-  name: Instrument
-  href: api/Primary.Data.MarketData.html#Primary_Data_MarketData_Instrument_
-  commentId: Overload:Primary.Data.MarketData.Instrument
+- uid: Primary.Data.MarketData.InstrumentId
+  name: InstrumentId
+  href: api/Primary.Data.MarketData.html#Primary_Data_MarketData_InstrumentId
+  commentId: P:Primary.Data.MarketData.InstrumentId
+  fullName: Primary.Data.MarketData.InstrumentId
+  nameWithType: MarketData.InstrumentId
+- uid: Primary.Data.MarketData.InstrumentId*
+  name: InstrumentId
+  href: api/Primary.Data.MarketData.html#Primary_Data_MarketData_InstrumentId_
+  commentId: Overload:Primary.Data.MarketData.InstrumentId
   isSpec: "True"
-  fullName: Primary.Data.MarketData.Instrument
-  nameWithType: MarketData.Instrument
+  fullName: Primary.Data.MarketData.InstrumentId
+  nameWithType: MarketData.InstrumentId
 - uid: Primary.Data.MarketData.Timestamp
   name: Timestamp
   href: api/Primary.Data.MarketData.html#Primary_Data_MarketData_Timestamp
@@ -761,19 +871,19 @@ references:
   isSpec: "True"
   fullName: Primary.Data.Orders.Order.Iceberg
   nameWithType: Order.Iceberg
-- uid: Primary.Data.Orders.Order.Instrument
-  name: Instrument
-  href: api/Primary.Data.Orders.Order.html#Primary_Data_Orders_Order_Instrument
-  commentId: P:Primary.Data.Orders.Order.Instrument
-  fullName: Primary.Data.Orders.Order.Instrument
-  nameWithType: Order.Instrument
-- uid: Primary.Data.Orders.Order.Instrument*
-  name: Instrument
-  href: api/Primary.Data.Orders.Order.html#Primary_Data_Orders_Order_Instrument_
-  commentId: Overload:Primary.Data.Orders.Order.Instrument
+- uid: Primary.Data.Orders.Order.InstrumentId
+  name: InstrumentId
+  href: api/Primary.Data.Orders.Order.html#Primary_Data_Orders_Order_InstrumentId
+  commentId: P:Primary.Data.Orders.Order.InstrumentId
+  fullName: Primary.Data.Orders.Order.InstrumentId
+  nameWithType: Order.InstrumentId
+- uid: Primary.Data.Orders.Order.InstrumentId*
+  name: InstrumentId
+  href: api/Primary.Data.Orders.Order.html#Primary_Data_Orders_Order_InstrumentId_
+  commentId: Overload:Primary.Data.Orders.Order.InstrumentId
   isSpec: "True"
-  fullName: Primary.Data.Orders.Order.Instrument
-  nameWithType: Order.Instrument
+  fullName: Primary.Data.Orders.Order.InstrumentId
+  nameWithType: Order.InstrumentId
 - uid: Primary.Data.Orders.Order.Price
   name: Price
   href: api/Primary.Data.Orders.Order.html#Primary_Data_Orders_Order_Price
@@ -1225,6 +1335,51 @@ references:
   isSpec: "True"
   fullName: Primary.Data.Trade.Size
   nameWithType: Trade.Size
+- uid: Primary.ErrorMessages
+  name: ErrorMessages
+  href: api/Primary.ErrorMessages.html
+  commentId: T:Primary.ErrorMessages
+  fullName: Primary.ErrorMessages
+  nameWithType: ErrorMessages
+- uid: Primary.ErrorMessages.CallbackNotSet
+  name: CallbackNotSet
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_CallbackNotSet
+  commentId: P:Primary.ErrorMessages.CallbackNotSet
+  fullName: Primary.ErrorMessages.CallbackNotSet
+  nameWithType: ErrorMessages.CallbackNotSet
+- uid: Primary.ErrorMessages.CallbackNotSet*
+  name: CallbackNotSet
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_CallbackNotSet_
+  commentId: Overload:Primary.ErrorMessages.CallbackNotSet
+  isSpec: "True"
+  fullName: Primary.ErrorMessages.CallbackNotSet
+  nameWithType: ErrorMessages.CallbackNotSet
+- uid: Primary.ErrorMessages.Culture
+  name: Culture
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_Culture
+  commentId: P:Primary.ErrorMessages.Culture
+  fullName: Primary.ErrorMessages.Culture
+  nameWithType: ErrorMessages.Culture
+- uid: Primary.ErrorMessages.Culture*
+  name: Culture
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_Culture_
+  commentId: Overload:Primary.ErrorMessages.Culture
+  isSpec: "True"
+  fullName: Primary.ErrorMessages.Culture
+  nameWithType: ErrorMessages.Culture
+- uid: Primary.ErrorMessages.ResourceManager
+  name: ResourceManager
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_ResourceManager
+  commentId: P:Primary.ErrorMessages.ResourceManager
+  fullName: Primary.ErrorMessages.ResourceManager
+  nameWithType: ErrorMessages.ResourceManager
+- uid: Primary.ErrorMessages.ResourceManager*
+  name: ResourceManager
+  href: api/Primary.ErrorMessages.html#Primary_ErrorMessages_ResourceManager_
+  commentId: Overload:Primary.ErrorMessages.ResourceManager
+  isSpec: "True"
+  fullName: Primary.ErrorMessages.ResourceManager
+  nameWithType: ErrorMessages.ResourceManager
 - uid: Primary.Net
   name: Primary.Net
   href: api/Primary.Net.html

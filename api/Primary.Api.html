@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Api
    ">
-    <meta name="generator" content="docfx 2.59.2.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -379,7 +379,7 @@
     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CancelOrder_Primary_Data_Orders_OrderId_.md&amp;value=---%0Auid%3A%20Primary.Api.CancelOrder(Primary.Data.Orders.OrderId)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L312">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L306">View Source</a>
   </span>
   <a id="Primary_Api_CancelOrder_" data-uid="Primary.Api.CancelOrder*"></a>
   <h4 id="Primary_Api_CancelOrder_Primary_Data_Orders_OrderId_" data-uid="Primary.Api.CancelOrder(Primary.Data.Orders.OrderId)">CancelOrder(OrderId)</h4>
@@ -425,19 +425,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_.md&amp;value=---%0Auid%3A%20Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable%7BPrimary.Data.Instrument%7D%2CSystem.Collections.Generic.IEnumerable%7BPrimary.Data.Entry%7D%2CSystem.UInt32%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_.md&amp;value=---%0Auid%3A%20Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable%7BPrimary.Data.InstrumentId%7D%2CSystem.Collections.Generic.IEnumerable%7BPrimary.Data.Entry%7D%2CSystem.UInt32%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L161">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L155">View Source</a>
   </span>
   <a id="Primary_Api_CreateMarketDataSocket_" data-uid="Primary.Api.CreateMarketDataSocket*"></a>
-  <h4 id="Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_" data-uid="Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)">CreateMarketDataSocket(IEnumerable&lt;Instrument&gt;, IEnumerable&lt;Entry&gt;, UInt32, UInt32)</h4>
+  <h4 id="Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_" data-uid="Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32)">CreateMarketDataSocket(IEnumerable&lt;InstrumentId&gt;, IEnumerable&lt;Entry&gt;, UInt32, UInt32)</h4>
   <div class="markdown level1 summary"><p>Create a Market Data web socket to receive real-time market data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MarketDataWebSocket CreateMarketDataSocket(IEnumerable&lt;Instrument&gt; instruments, IEnumerable&lt;Entry&gt; entries, uint level, uint depth)</code></pre>
+    <pre><code class="lang-csharp hljs">public MarketDataWebSocket CreateMarketDataSocket(IEnumerable&lt;InstrumentId&gt; instruments, IEnumerable&lt;Entry&gt; entries, uint level, uint depth)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -450,7 +450,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Primary.Data.Instrument.html">Instrument</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Primary.Data.InstrumentId.html">InstrumentId</a>&gt;</td>
         <td><span class="parametername">instruments</span></td>
         <td><p>Instruments to watch.</p>
 </td>
@@ -492,19 +492,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable%7BPrimary.Data.Instrument%7D%2CSystem.Collections.Generic.IEnumerable%7BPrimary.Data.Entry%7D%2CSystem.UInt32%2CSystem.UInt32%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable%7BPrimary.Data.InstrumentId%7D%2CSystem.Collections.Generic.IEnumerable%7BPrimary.Data.Entry%7D%2CSystem.UInt32%2CSystem.UInt32%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L187">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L181">View Source</a>
   </span>
   <a id="Primary_Api_CreateMarketDataSocket_" data-uid="Primary.Api.CreateMarketDataSocket*"></a>
-  <h4 id="Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_Instrument__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_" data-uid="Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.Instrument},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)">CreateMarketDataSocket(IEnumerable&lt;Instrument&gt;, IEnumerable&lt;Entry&gt;, UInt32, UInt32, CancellationToken)</h4>
+  <h4 id="Primary_Api_CreateMarketDataSocket_System_Collections_Generic_IEnumerable_Primary_Data_InstrumentId__System_Collections_Generic_IEnumerable_Primary_Data_Entry__System_UInt32_System_UInt32_System_Threading_CancellationToken_" data-uid="Primary.Api.CreateMarketDataSocket(System.Collections.Generic.IEnumerable{Primary.Data.InstrumentId},System.Collections.Generic.IEnumerable{Primary.Data.Entry},System.UInt32,System.UInt32,System.Threading.CancellationToken)">CreateMarketDataSocket(IEnumerable&lt;InstrumentId&gt;, IEnumerable&lt;Entry&gt;, UInt32, UInt32, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Create a Market Data web socket to receive real-time market data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MarketDataWebSocket CreateMarketDataSocket(IEnumerable&lt;Instrument&gt; instruments, IEnumerable&lt;Entry&gt; entries, uint level, uint depth, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public MarketDataWebSocket CreateMarketDataSocket(IEnumerable&lt;InstrumentId&gt; instrumentIds, IEnumerable&lt;Entry&gt; entries, uint level, uint depth, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -517,8 +517,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Primary.Data.Instrument.html">Instrument</a>&gt;</td>
-        <td><span class="parametername">instruments</span></td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Primary.Data.InstrumentId.html">InstrumentId</a>&gt;</td>
+        <td><span class="parametername">instrumentIds</span></td>
         <td><p>Instruments to watch.</p>
 </td>
       </tr>
@@ -570,7 +570,7 @@
     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateOrderDataSocket_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Primary.Api.CreateOrderDataSocket(System.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L213">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L207">View Source</a>
   </span>
   <a id="Primary_Api_CreateOrderDataSocket_" data-uid="Primary.Api.CreateOrderDataSocket*"></a>
   <h4 id="Primary_Api_CreateOrderDataSocket_System_Collections_Generic_IEnumerable_System_String__" data-uid="Primary.Api.CreateOrderDataSocket(System.Collections.Generic.IEnumerable{System.String})">CreateOrderDataSocket(IEnumerable&lt;String&gt;)</h4>
@@ -620,7 +620,7 @@
     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_CreateOrderDataSocket_System_Collections_Generic_IEnumerable_System_String__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20Primary.Api.CreateOrderDataSocket(System.Collections.Generic.IEnumerable%7BSystem.String%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L224">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L218">View Source</a>
   </span>
   <a id="Primary_Api_CreateOrderDataSocket_" data-uid="Primary.Api.CreateOrderDataSocket*"></a>
   <h4 id="Primary_Api_CreateOrderDataSocket_System_Collections_Generic_IEnumerable_System_String__System_Threading_CancellationToken_" data-uid="Primary.Api.CreateOrderDataSocket(System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">CreateOrderDataSocket(IEnumerable&lt;String&gt;, CancellationToken)</h4>
@@ -705,19 +705,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_GetHistoricalTrades_Primary_Data_Instrument_System_DateTime_System_DateTime_.md&amp;value=---%0Auid%3A%20Primary.Api.GetHistoricalTrades(Primary.Data.Instrument%2CSystem.DateTime%2CSystem.DateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_GetHistoricalTrades_Primary_Data_InstrumentId_System_DateTime_System_DateTime_.md&amp;value=---%0Auid%3A%20Primary.Api.GetHistoricalTrades(Primary.Data.InstrumentId%2CSystem.DateTime%2CSystem.DateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L111">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L105">View Source</a>
   </span>
   <a id="Primary_Api_GetHistoricalTrades_" data-uid="Primary.Api.GetHistoricalTrades*"></a>
-  <h4 id="Primary_Api_GetHistoricalTrades_Primary_Data_Instrument_System_DateTime_System_DateTime_" data-uid="Primary.Api.GetHistoricalTrades(Primary.Data.Instrument,System.DateTime,System.DateTime)">GetHistoricalTrades(Instrument, DateTime, DateTime)</h4>
+  <h4 id="Primary_Api_GetHistoricalTrades_Primary_Data_InstrumentId_System_DateTime_System_DateTime_" data-uid="Primary.Api.GetHistoricalTrades(Primary.Data.InstrumentId,System.DateTime,System.DateTime)">GetHistoricalTrades(InstrumentId, DateTime, DateTime)</h4>
   <div class="markdown level1 summary"><p>Get historical trades for a specific instrument.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public async Task&lt;IEnumerable&lt;Trade&gt;&gt; GetHistoricalTrades(Instrument instrument, DateTime dateFrom, DateTime dateTo)</code></pre>
+    <pre><code class="lang-csharp hljs">public async Task&lt;IEnumerable&lt;Trade&gt;&gt; GetHistoricalTrades(InstrumentId instrumentId, DateTime dateFrom, DateTime dateTo)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -730,8 +730,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Primary.Data.Instrument.html">Instrument</a></td>
-        <td><span class="parametername">instrument</span></td>
+        <td><a class="xref" href="Primary.Data.InstrumentId.html">InstrumentId</a></td>
+        <td><span class="parametername">instrumentId</span></td>
         <td><p>Instrument to get information for.</p>
 </td>
       </tr>
@@ -770,7 +770,7 @@
     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_GetOrderStatus_Primary_Data_Orders_OrderId_.md&amp;value=---%0Auid%3A%20Primary.Api.GetOrderStatus(Primary.Data.Orders.OrderId)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L288">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L282">View Source</a>
   </span>
   <a id="Primary_Api_GetOrderStatus_" data-uid="Primary.Api.GetOrderStatus*"></a>
   <h4 id="Primary_Api_GetOrderStatus_Primary_Data_Orders_OrderId_" data-uid="Primary.Api.GetOrderStatus(Primary.Data.Orders.OrderId)">GetOrderStatus(OrderId)</h4>
@@ -875,7 +875,7 @@
     <a href="https://github.com/naicigam/Primary.Net/new/master/apiSpec/new?filename=Primary_Api_SubmitOrder_System_String_Primary_Data_Orders_Order_.md&amp;value=---%0Auid%3A%20Primary.Api.SubmitOrder(System.String%2CPrimary.Data.Orders.Order)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L246">View Source</a>
+    <a href="https://github.com/naicigam/Primary.Net/blob/master/Primary/Api.cs/#L240">View Source</a>
   </span>
   <a id="Primary_Api_SubmitOrder_" data-uid="Primary.Api.SubmitOrder*"></a>
   <h4 id="Primary_Api_SubmitOrder_System_String_Primary_Data_Orders_Order_" data-uid="Primary.Api.SubmitOrder(System.String,Primary.Data.Orders.Order)">SubmitOrder(String, Order)</h4>

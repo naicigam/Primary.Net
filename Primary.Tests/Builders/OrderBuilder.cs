@@ -32,7 +32,7 @@ namespace Primary.Tests.Builders
                 Expiration = Expiration.Day,
                 Type = Data.Orders.Type.Limit,
                 Side = Side.Buy,
-                Quantity = 1000,
+                Quantity = 100,
                 Price = prices.Last().Price - 1m
             };
         }

@@ -2,6 +2,7 @@
 using Primary.Data;
 using Primary.Data.Orders;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Primary.Tests
@@ -29,6 +30,7 @@ namespace Primary.Tests
         }
 
         [Test]
+        [Timeout(10000)]
         public async Task OrdersCanBeCancelled()
         {
             Order order = Build.AnOrder(Api);
@@ -39,7 +41,14 @@ namespace Primary.Tests
 
             await Api.CancelOrder(orderId);
 
-            retrievedOrder = await Api.GetOrderStatus(orderId);
+            for (int i = 0; i < 4; i++)
+            {
+                if (retrievedOrder.Status != Status.Cancelled)
+                {
+                    retrievedOrder = await Api.GetOrderStatus(orderId);
+                    Thread.Sleep(1000);
+                }
+            }
             Assert.That(retrievedOrder.Status, Is.EqualTo(Status.Cancelled), retrievedOrder.StatusText);
         }
 

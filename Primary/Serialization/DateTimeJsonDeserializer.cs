@@ -9,4 +9,12 @@ namespace Primary.Serialization
             DateTimeFormat = "yyyyMMdd-HH:mm:ss.fffK";
         }
     }
+
+    internal class FlatDateTimeJsonDeserializer : IsoDateTimeConverter
+    {
+        public FlatDateTimeJsonDeserializer()
+        {
+            DateTimeFormat = "yyyyMMdd";
+        }
+    }
 }

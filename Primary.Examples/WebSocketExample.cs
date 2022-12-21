@@ -61,7 +61,7 @@ namespace Primary.Examples
             }
 
             Console.WriteLine($"({marketData.Timestamp}) " +
-                              $"{marketData.Instrument.Symbol} -> " +
+                              $"{marketData.InstrumentId.Symbol} -> " +
                               $"{bid} ({bidSize}) --> ${offer - bid} <-- {offer} ({offerSize})"
             );
         }

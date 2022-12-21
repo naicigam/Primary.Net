@@ -9,7 +9,7 @@ namespace Primary.Examples
         public static async Task Run()
         {
             Console.WriteLine("Connecting to ReMarkets...");
-            
+
             var api = new Api(Api.DemoEndpoint);
             await api.Login(Api.DemoUsername, Api.DemoPassword);
 
@@ -19,13 +19,13 @@ namespace Primary.Examples
             var allIInstruments = await api.GetAllInstruments();
             foreach (var instrument in allIInstruments)
             {
-                Console.WriteLine($"{instrument.Market} / {instrument.Symbol}");
+                Console.WriteLine($"{instrument.Market},{instrument.Symbol},{instrument.Currency},{instrument.Description},{instrument.PriceConversionFactor}");
             }
 
             // Get all the dollar futures and their trades
             var fiveDaysAgo = DateTime.Today.AddDays(-5);
 
-            var dollarFutures = allIInstruments.Where( s => s.Symbol.StartsWith("DLR/") );
+            var dollarFutures = allIInstruments.Where(s => s.Symbol.StartsWith("DLR/"));
             foreach (var dollarFuture in dollarFutures)
             {
                 var symbol = dollarFuture.Symbol;

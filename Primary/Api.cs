@@ -78,23 +78,17 @@ namespace Primary
         /// <returns>Instruments information.</returns>
         public async Task<IEnumerable<Instrument>> GetAllInstruments()
         {
-            var uri = new Uri(BaseUri, "/rest/instruments/all");
+            var uri = new Uri(BaseUri, "/rest/instruments/details");
             var response = await HttpClient.GetStringAsync(uri);
 
             var data = JsonConvert.DeserializeObject<GetAllInstrumentsResponse>(response);
-            return data.Instruments.Select(i => i.InstrumentId);
+            return data.Instruments;
         }
 
         private class GetAllInstrumentsResponse
         {
-            public class InstrumentEntry
-            {
-                [JsonProperty("instrumentId")]
-                public Instrument InstrumentId { get; set; }
-            }
-
             [JsonProperty("instruments")]
-            public List<InstrumentEntry> Instruments { get; set; }
+            public List<Instrument> Instruments { get; set; }
         }
 
         #endregion
@@ -104,18 +98,18 @@ namespace Primary
         /// <summary>
         /// Get historical trades for a specific instrument.
         /// </summary>
-        /// <param name="instrument">Instrument to get information for.</param>
+        /// <param name="instrumentId">Instrument to get information for.</param>
         /// <param name="dateFrom">First date of trading information.</param>
         /// <param name="dateTo">Last date of trading information.</param>
         /// <returns>Trade information for the instrument in the specified period.</returns>
-        public async Task<IEnumerable<Trade>> GetHistoricalTrades(Instrument instrument,
+        public async Task<IEnumerable<Trade>> GetHistoricalTrades(InstrumentId instrumentId,
                                                                     DateTime dateFrom,
                                                                     DateTime dateTo)
         {
             UriBuilder builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
             var query = HttpUtility.ParseQueryString(builder.Query);
-            query["marketId"] = instrument.Market;
-            query["symbol"] = instrument.Symbol;
+            query["marketId"] = instrumentId.Market;
+            query["symbol"] = instrumentId.Symbol;
             query["dateFrom"] = dateFrom.ToString("yyyy-MM-dd");
             query["dateTo"] = dateTo.ToString("yyyy-MM-dd");
             builder.Query = query.ToString();
@@ -127,7 +121,7 @@ namespace Primary
             {
                 throw new Exception($"{data.Message} ({data.Description})");
             }
-            
+
             return data.Trades;
         }
 
@@ -135,7 +129,7 @@ namespace Primary
         {
             [JsonProperty("status")]
             public string Status;
-            
+
             [JsonProperty("message")]
             public string Message;
 
@@ -158,7 +152,7 @@ namespace Primary
         /// <param name="level"></param>
         /// <param name="depth">Depth of the book.</param>
         /// <returns>The market data web socket.</returns>
-        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<Instrument> instruments,
+        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<InstrumentId> instruments,
                                                           IEnumerable<Entry> entries,
                                                           uint level, uint depth
         )
@@ -169,7 +163,7 @@ namespace Primary
         /// <summary>
         /// Create a Market Data web socket to receive real-time market data.
         /// </summary>
-        /// <param name="instruments">Instruments to watch.</param>
+        /// <param name="instrumentIds">Instruments to watch.</param>
         /// <param name="entries">Market data entries to watch.</param>
         /// <param name="level">Real-time message update time.
         ///     <list type="table">
@@ -184,7 +178,7 @@ namespace Primary
         /// <param name="depth">Depth of the book.</param>
         /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
         /// <returns>The market data web socket.</returns>
-        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<Instrument> instruments,
+        public MarketDataWebSocket CreateMarketDataSocket(IEnumerable<InstrumentId> instrumentIds,
                                                           IEnumerable<Entry> entries,
                                                           uint level, uint depth,
                                                           CancellationToken cancellationToken
@@ -195,7 +189,7 @@ namespace Primary
                 Depth = depth,
                 Entries = entries.ToArray(),
                 Level = level,
-                Products = instruments.ToArray()
+                Products = instrumentIds.ToArray()
             };
 
             return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken);
@@ -248,7 +242,7 @@ namespace Primary
             var builder = new UriBuilder(BaseUri + "/rest/order/newSingleOrder");
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = "ROFX";
-            query["symbol"] = order.Instrument.Symbol;
+            query["symbol"] = order.InstrumentId.Symbol;
             query["price"] = order.Price?.ToString(CultureInfo.InvariantCulture);
             query["orderQty"] = order.Quantity.ToString();
             query["ordType"] = order.Type.ToApiString();

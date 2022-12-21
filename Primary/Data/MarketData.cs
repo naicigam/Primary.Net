@@ -8,9 +8,9 @@ namespace Primary.Data
     public struct MarketDataInfo
     {
         /// <summary>Order type.</summary>
-        [JsonProperty("type", Order=-2)] 
+        [JsonProperty("type", Order = -2)]
         public string Type => "smd";
-        
+
         /// <summary>
         /// Real-time message update time.
         /// <list type="table">
@@ -36,7 +36,7 @@ namespace Primary.Data
 
         /// <summary>Products to get the information for.</summary>
         [JsonProperty("products")]
-        public Instrument[] Products;
+        public InstrumentId[] Products;
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ namespace Primary.Data
 
         /// <summary>Instrument id.</summary>
         [JsonProperty("instrumentId")]
-        public Instrument Instrument { get; set; }
+        public InstrumentId InstrumentId { get; set; }
 
         /// <summary>Market data grouped by entry.</summary>
         [JsonProperty("marketData")]
@@ -75,6 +75,6 @@ namespace Primary.Data
             [JsonProperty("TV")] public decimal? Volume { get; set; }
             [JsonProperty("NV")] public decimal? NominalVolume { get; set; }
             [JsonProperty("EV")] public decimal? EffectiveVolume { get; set; }
-        }                        
+        }
     }
 }

@@ -55,6 +55,6 @@ namespace Primary.Data
         /// For example, if an instrument is traded in lots of 100, this value will be 0.01.
         /// </summary>
         [JsonProperty("priceConvertionFactor")]
-        public float PriceConvertionFactor { get; set; }
+        public float PriceConversionFactor { get; set; }
     }
 }

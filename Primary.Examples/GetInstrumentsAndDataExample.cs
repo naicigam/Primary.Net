@@ -19,7 +19,7 @@ namespace Primary.Examples
             var allIInstruments = await api.GetAllInstruments();
             foreach (var instrument in allIInstruments)
             {
-                Console.WriteLine($"{instrument.Market},{instrument.Symbol},{instrument.Currency},{instrument.Description},{instrument.PriceConvertionFactor}");
+                Console.WriteLine($"{instrument.Market},{instrument.Symbol},{instrument.Currency},{instrument.Description},{instrument.PriceConversionFactor}");
             }
 
             // Get all the dollar futures and their trades

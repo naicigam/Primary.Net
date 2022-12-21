@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Primary.Serialization;
 using System;
 
@@ -17,15 +18,24 @@ namespace Primary.Data
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
 
+        #region JSON serialization
+
         [JsonProperty("instrumentId.marketId")]
         protected string NestedMarket { get { return Market; } set { Market = value; } }
 
         [JsonProperty("instrumentId.symbol")]
         protected string NestedSymbol { get { return Symbol; } set { Symbol = value; } }
 
+        /// <summary>This is used for serialization purposes and should not be called.</summary>
+        public bool ShouldSerializeNestedMarket() { return false; }
+
+        /// <summary>This is used for serialization purposes and should not be called.</summary>
+        public bool ShouldSerializeNestedSymbol() { return false; }
+
+        #endregion
     }
 
-    [JsonConverter(typeof(JsonPathDeserializer))]
+    //[JsonConverter(typeof(JsonPathDeserializer))]
     public class Instrument : InstrumentId
     {
         /// <summary>Dezscription of the instrument.</summary>

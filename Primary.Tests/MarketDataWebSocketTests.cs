@@ -60,6 +60,8 @@ namespace Primary.Tests
 
             // Create and start the web socket
             using var socket = Api.CreateMarketDataSocket(new[] { instrumentId }, entries, 1, 1, cancellationSource.Token);
+            socket.OnData += ((api, orderData) => { });
+
             Assert.That(!socket.IsRunning);
 
             var socketTask = await socket.Start();
@@ -130,6 +132,29 @@ namespace Primary.Tests
 
             var exception = Assert.ThrowsAsync<Exception>(socket.Start);
             Assert.That(exception.Message, Does.Contain(ErrorMessages.CallbackNotSet));
+        }
+
+        [Test]
+        [Timeout(10000)]
+        public async Task TryingToSubscribeToMarketDataForAnInvalidInstrumentTriggersAnError()
+        {
+            var invalidInstrumentId = new InstrumentId()
+            {
+                Market = "ROFX",
+                Symbol = Build.RandomString()
+            };
+            var entries = new[] { Entry.IndexValue };
+            using var socket = Api.CreateMarketDataSocket(new[] { invalidInstrumentId }, entries, 1, 1);
+            socket.OnData += ((api, orderData) => { });
+
+            var socketTask = await socket.Start();
+            while (!socket.IsRunning)
+            {
+                Thread.Sleep(10);
+            }
+
+            var exception = Assert.ThrowsAsync<Exception>(async () => { await socketTask; });
+            Assert.That(exception.Message, Does.Contain(invalidInstrumentId.Symbol));
         }
 
         public static Entry[] AllEntries = {

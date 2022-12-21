@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
@@ -101,8 +102,20 @@ namespace Primary.Net
                     receivedMessage.Clear();
 
                     // Parse and notify subscriber
-                    var data = JsonConvert.DeserializeObject<TResponse>(messageJson);
-                    OnData(_api, data);
+                    var responseJson = JObject.Parse(messageJson);
+                    if (responseJson.ContainsKey("status") && responseJson.ContainsKey("message") &&
+                        responseJson.ContainsKey("description"))
+                    {
+                        if (responseJson["status"].ToString() == "ERROR")
+                        {
+                            throw new Exception($"{responseJson["description"]} + [{responseJson["message"]}]");
+                        }
+                    }
+                    else
+                    {
+                        var data = responseJson.ToObject<TResponse>();
+                        OnData(_api, data);
+                    }
                 }
                 catch (OperationCanceledException) { }
 

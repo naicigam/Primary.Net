@@ -46,7 +46,7 @@ namespace Primary.Tests
             // Create and start the web socket
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount }, cancellationSource.Token);
             Assert.That(!socket.IsRunning);
-            socket.OnData += new Action<Api, WebSockets.OrderData>((api, orderData) => { });
+            socket.OnData += ((api, orderData) => { });
 
             var socketTask = await socket.Start();
 
@@ -73,12 +73,30 @@ namespace Primary.Tests
         [Timeout(10000)]
         public void SubscriptionToOrdersCannotBeStartedUnlessDataCallbackIsProvided()
         {
-            // Subscribe to demo account
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
-            socket.OnData = null;
+            socket.OnData += null;
 
             var exception = Assert.ThrowsAsync<Exception>(socket.Start);
             Assert.That(exception.Message, Does.Contain(ErrorMessages.CallbackNotSet));
+        }
+
+        [Test]
+        [Timeout(10000)]
+        public async Task TryingToStartSocketWithAnInvalidAccountTriggersAnError()
+        {
+            var invalidAccount = Build.RandomString();
+
+            using var socket = Api.CreateOrderDataSocket(new[] { invalidAccount });
+            socket.OnData += ((api, orderData) => { });
+
+            var socketTask = await socket.Start();
+            while (!socket.IsRunning)
+            {
+                Thread.Sleep(10);
+            }
+
+            var exception = Assert.ThrowsAsync<Exception>(async () => { await socketTask; });
+            Assert.That(exception.Message, Does.Contain(invalidAccount));
         }
     }
 }

@@ -7,8 +7,8 @@ namespace Primary.Data
     public enum Entry
     {
         /// <summary>Best buy offer in the Market Book.</summary>
-        Bids, 
-        
+        Bids,
+
         /// <summary>Best sell offer in the Market Book.</summary>
         Offers,
 
@@ -23,36 +23,36 @@ namespace Primary.Data
 
         /// <summary>Settlement price (only for futures).</summary>
         SettlementPrice,
-        
+
         /// <summary>Highest price traded.</summary>
         SessionHighPrice,
-        
+
         /// <summary>Lowest price traded.</summary>
         SessionLowPrice,
-        
+
         /// <summary>Traded volume in contracts/nominal.</summary>
         Volume,
-        
+
         /// <summary>Open interest in contracts (only for futures).</summary>
         OpenInterest,
-        
+
         /// <summary>Calculated index value (only for indices).</summary>
         IndexValue,
-        
+
         /// <summary>Effective traded volume.</summary>
         EffectiveVolume,
-        
+
         /// <summary>Nominal traded volume.</summary>
         NominalVolume
-    } 
+    }
 
-    #region String serialization
+    #region JSON Serialization
 
-    internal static class EnumsToApiStrings
+    internal class EntryJsonSerializer : EnumJsonSerializer<Entry>
     {
-        public static string ToApiString(this Entry value)
+        protected override string ToString(Entry enumValue)
         {
-            return value switch
+            return enumValue switch
             {
                 Entry.Bids => "BI",
                 Entry.Offers => "OF",
@@ -67,13 +67,13 @@ namespace Primary.Data
                 Entry.IndexValue => "IV",
                 Entry.EffectiveVolume => "EV",
                 Entry.NominalVolume => "NV",
-                _ => throw new InvalidEnumStringException(value.ToString())
+                _ => throw new InvalidEnumStringException(enumValue.ToString())
             };
         }
 
-        public static Entry EntryFromApiString(string value)
+        protected override Entry FromString(string enumString)
         {
-            return value switch
+            return enumString switch
             {
                 "BI" => Entry.Bids,
                 "OF" => Entry.Offers,
@@ -88,25 +88,8 @@ namespace Primary.Data
                 "IV" => Entry.IndexValue,
                 "EV" => Entry.EffectiveVolume,
                 "NV" => Entry.NominalVolume,
-                _ => throw new InvalidEnumStringException(value)
+                _ => throw new InvalidEnumStringException(enumString)
             };
-        }
-    }
-
-    #endregion
-
-    #region JSON Serialization
-
-    internal class EntryJsonSerializer : EnumJsonSerializer<Entry>
-    {
-        protected override string ToString(Entry enumValue)
-        {
-            return enumValue.ToApiString();
-        }
-
-        protected override Entry FromString(string enumString)
-        {
-            return EnumsToApiStrings.EntryFromApiString(enumString);
         }
     }
 

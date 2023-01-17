@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Primary.Data;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Primary.Data;
 
 namespace Primary.Examples
 {
     internal static class WebSocketExample
     {
-        private static async Task Run()
+        public static async Task Run()
         {
             Console.WriteLine("Connecting to ReMarkets...");
 
@@ -48,13 +48,13 @@ namespace Primary.Examples
             var bidSize = default(decimal);
             var offerSize = default(decimal);
 
-            foreach(var trade in marketData.Data.Bids)
+            foreach (var trade in marketData.Data.Bids)
             {
                 bid = trade.Price;
                 bidSize = trade.Size;
             }
 
-            foreach(var trade in marketData.Data.Offers)
+            foreach (var trade in marketData.Data.Offers)
             {
                 offer = trade.Price;
                 offerSize = trade.Size;

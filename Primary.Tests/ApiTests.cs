@@ -22,6 +22,8 @@ namespace Primary.Tests
                 Assert.That(instrument.Description, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Currency, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.PriceConversionFactor, Is.Not.EqualTo(default));
+                Assert.That(instrument.CfiCode, Is.Not.Null.And.Not.Empty);
+                Assert.That(instrument.Type, Is.Not.EqualTo(InstrumentType.Unknown));
             }
 
             Assert.That(instruments.Where(i => i.MaturityDate != default), Is.Not.Empty);

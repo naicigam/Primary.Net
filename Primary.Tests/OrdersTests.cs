@@ -79,5 +79,14 @@ namespace Primary.Tests
             Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientOrderId.ToString()));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.Proprietary));
         }
+
+        [Test]
+        public void CancellingAnOrderWithInvalidInformationGeneratesAnException()
+        {
+            var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
+
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.CancelOrder(order));
+            Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
+        }
     }
 }

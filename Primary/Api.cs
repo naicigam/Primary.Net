@@ -315,10 +315,10 @@ namespace Primary
             var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
-            //if (response.Status == Status.Error)
-            //{
-            //    throw new Exception($"{response.Message} ({response.Description})");
-            //}
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
         }
 
         private struct OrderIdResponse

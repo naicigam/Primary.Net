@@ -18,9 +18,11 @@ namespace Primary.Data
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
 
+        /// <summary>Instrument type according to <seealso href="https://www.iso.org/standard/81140.html">ISO 10962</seealso>.</summary>
         [JsonProperty("cficode")]
         public string CfiCode { get; set; }
 
+        /// <summary>Instrument type from CFI code.</summary>
         public InstrumentType Type
         {
             get
@@ -50,7 +52,7 @@ namespace Primary.Data
         #region JSON serialization
 
         [JsonProperty("instrumentId.marketId")]
-        protected string NestedMarket { get { return Market; } set { Market = value; } }
+        protected string NestedMarket { set { Market = value; } }
 
         [JsonProperty("instrumentId.symbol")]
         protected string NestedSymbol { get { return Symbol; } set { Symbol = value; } }

@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3559615F-B6AA-46C5-882E-0DC3A0BB950B}"
 	ProjectSection(SolutionItems) = preProject
-		repo\.git = repo\.git
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -27,6 +25,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E9E4045D-7
 		docs\index.md = docs\index.md
 		docs\release_docs.sh = docs\release_docs.sh
 		docs\toc.yml = docs\toc.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{80CE512D-1366-42D6-9898-FFE2FB08979B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{FAD4EE80-BBC3-4747-B6DE-0E16F1D8ED18}"
+	ProjectSection(SolutionItems) = preProject
+		ci-build.yml = ci-build.yml
+		docs-only-build.yml = docs-only-build.yml
+		release-build.yml = release-build.yml
 	EndProjectSection
 EndProject
 Global
@@ -50,6 +57,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FAD4EE80-BBC3-4747-B6DE-0E16F1D8ED18} = {80CE512D-1366-42D6-9898-FFE2FB08979B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56FD0DEA-949C-4440-8945-5A620A1276EA}

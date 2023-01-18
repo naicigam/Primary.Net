@@ -1,0 +1,96 @@
+name: Build + Deploy
+
+on:
+  release:
+    types: [published]
+    branches: [master]
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience to speed up the build
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Release Build
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore Dependencies
+      run: dotnet restore Primary.sln
+
+    - name: Build
+      run: dotnet build Primary.sln --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test Primary.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Copy Coverage To Predictable Location
+      run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+
+    - name: Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.2.0
+      with:
+        filename: coverage.cobertura.xml
+        badge: true
+        format: 'md'
+        output: 'both'
+
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v2.3.0
+      with:
+        name: release-nugets
+        path: code-coverage-results.md
+
+    - name: Upload Nuget Artifact
+      uses: actions/upload-artifact@v2.3.0
+      with:
+        name: release-nugets
+        path: Primary/bin/Release/Primary*.nupkg
+
+  deploy-nuget:
+    name: Deploy Nuget
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: release-nugets
+
+    # Here you can deploy your Nuget package to 
+    # nuget.org, GitHub Packages or a private package feed
+
+    - name: Add Coverage to Release
+      uses: irongut/EditRelease@v1.0.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        id: ${{ github.event.release.id }}
+        files: code-coverage-results.md
+
+  deploy-docs:
+    name: Deploy Docs
+    needs: [build, deploy-nuget]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build Documentation
+      uses: nikeee/docfx-action@v1.0.0
+      with:
+        args: docfx_project/docfx.json
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

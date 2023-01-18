@@ -31,9 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{80CE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{FAD4EE80-BBC3-4747-B6DE-0E16F1D8ED18}"
 	ProjectSection(SolutionItems) = preProject
-		ci-build.yml = ci-build.yml
-		docs-only-build.yml = docs-only-build.yml
-		release-build.yml = release-build.yml
+		.github\workflows\ci-build.yml = .github\workflows\ci-build.yml
+		.github\workflows\docs-only-build.yml = .github\workflows\docs-only-build.yml
+		.github\workflows\release-build.yml = .github\workflows\release-build.yml
 	EndProjectSection
 EndProject
 Global

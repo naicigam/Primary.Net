@@ -18,10 +18,41 @@ namespace Primary.Data
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
 
+        /// <summary>Instrument type according to <seealso href="https://www.iso.org/standard/81140.html">ISO 10962</seealso>.</summary>
+        [JsonProperty("cficode")]
+        public string CfiCode { get; set; }
+
+        /// <summary>Instrument type from CFI code.</summary>
+        public InstrumentType Type
+        {
+            get
+            {
+                return CfiCode switch
+                {
+                    "ESXXXX" => InstrumentType.Equity,
+                    "DBXXXX" => InstrumentType.Bond,
+                    "OCASPS" => InstrumentType.EquityCallOption,
+                    "OPASPS" => InstrumentType.EquityPutOption,
+                    "FXXXSX" => InstrumentType.Future,
+                    "OPAFXS" => InstrumentType.FuturePutOption,
+                    "OCAFXS" => InstrumentType.FutureCallOption,
+                    "EMXXXX" => InstrumentType.Cedear,
+                    "DBXXFR" => InstrumentType.Obligation,
+                    "MRIXXX" => InstrumentType.Index,
+                    "FXXXXX" => InstrumentType.Future,
+                    "RPXXXX" => InstrumentType.Caucion,
+                    "MXXXXX" => InstrumentType.Miscellaneous,
+                    "LRSTXH" => InstrumentType.Miscellaneous,
+                    "DYXTXR" => InstrumentType.TreasureNotes,
+                    _ => InstrumentType.Unknown
+                };
+            }
+        }
+
         #region JSON serialization
 
         [JsonProperty("instrumentId.marketId")]
-        protected string NestedMarket { get { return Market; } set { Market = value; } }
+        protected string NestedMarket { set { Market = value; } }
 
         [JsonProperty("instrumentId.symbol")]
         protected string NestedSymbol { get { return Symbol; } set { Symbol = value; } }
@@ -35,7 +66,6 @@ namespace Primary.Data
         #endregion
     }
 
-    //[JsonConverter(typeof(JsonPathDeserializer))]
     public class Instrument : InstrumentId
     {
         /// <summary>Dezscription of the instrument.</summary>
@@ -56,5 +86,24 @@ namespace Primary.Data
         /// </summary>
         [JsonProperty("priceConvertionFactor")]
         public float PriceConversionFactor { get; set; }
+    }
+
+    public enum InstrumentType
+    {
+        Unknown,
+        Equity,
+        Future,
+        Option,
+        Bond,
+        Cedear,
+        Obligation,
+        EquityCallOption,
+        EquityPutOption,
+        FutureCallOption,
+        FuturePutOption,
+        Caucion,
+        Index,
+        TreasureNotes,
+        Miscellaneous
     }
 }

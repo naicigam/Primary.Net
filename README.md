@@ -39,8 +39,8 @@ Relevant test cases must be included in the PR.
 
 ## Aknowledgements
 - The API is developed and maintained by [Primary](http://www.primary.com.ar).
-- CI is provided by [AppVeyor](https://www.appveyor.com/).
-- The documentation is generated with [DocFX](https://dotnet.github.io/docfx/) and was deployed using [this tutorial](https://blog.markvincze.com/build-and-publish-documentation-and-api-reference-with-docfx-for-net-core-projects/).
+- CI is provided by [Github Actions](https://github.com/features/actions).
+- The documentation is generated with [DocFX](https://dotnet.github.io/docfx/) and was deployed using [this tutorial](https://blog.taranissoftware.com/document-your-net-code-with-docfx-and-github-actions).
 - This README was based on this [README template](https://github.com/jehna/readme-best-practices).
 
 ## Licensing

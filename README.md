@@ -23,7 +23,7 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 
 ## Building
 
-This project targets .NET Core 3.1. 
+This project targets .NET Core 6.0. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

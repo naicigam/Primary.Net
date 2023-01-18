@@ -28,6 +28,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E9E4045D-7
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{80CE512D-1366-42D6-9898-FFE2FB08979B}"
+	ProjectSection(SolutionItems) = preProject
+		docs-only-build.yml = docs-only-build.yml
+		release-build.yml = release-build.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{FAD4EE80-BBC3-4747-B6DE-0E16F1D8ED18}"
 	ProjectSection(SolutionItems) = preProject

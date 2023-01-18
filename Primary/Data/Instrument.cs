@@ -52,7 +52,7 @@ namespace Primary.Data
         #region JSON serialization
 
         [JsonProperty("instrumentId.marketId")]
-        protected string NestedMarket { set { Market = value; } }
+        protected string NestedMarket { get { return Market; } set { Market = value; } }
 
         [JsonProperty("instrumentId.symbol")]
         protected string NestedSymbol { get { return Symbol; } set { Symbol = value; } }

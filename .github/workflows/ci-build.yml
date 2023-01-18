@@ -29,13 +29,13 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore Dependencies
-      run: dotnet restore src/DocFXExample.sln
+      run: dotnet restore Primary.sln
 
     - name: Build
-      run: dotnet build src/DocFXExample.sln --configuration Release --no-restore
+      run: dotnet build Primary.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test src/DocFXExample.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test Primary.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
@@ -67,4 +67,4 @@ jobs:
       uses: actions/upload-artifact@v2.3.0
       with:
         name: ci-nugets
-        path: src/DocFXExample/bin/Release/Taranis.DocFXExample*.nupkg
+        path: Primary/bin/Release/Primary*.nupkg

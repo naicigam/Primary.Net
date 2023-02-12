@@ -28,7 +28,7 @@ namespace Primary
         public Api(Uri baseUri, HttpClient httpClient = null)
         {
             BaseUri = baseUri;
-            HttpClient = httpClient ?? new HttpClient();
+            HttpClient = httpClient ?? new HttpClient() { DefaultRequestVersion = new(2, 0) };
         }
 
         public Uri BaseUri { get; private set; }

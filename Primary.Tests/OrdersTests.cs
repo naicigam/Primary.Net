@@ -30,6 +30,27 @@ namespace Primary.Tests
         }
 
         [Test]
+        public async Task OrderSizeAndPriceCanBeUpdated()
+        {
+            // Submit an order
+            Order order = Build.AnOrder(Api);
+            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderStatus = await Api.GetOrderStatus(orderId);
+
+            var anotherQuantity = order.Quantity + 1;
+            var anotherPrice = order.Price + 1;
+
+            var replacedOrderId = await Api.UpdateOrder(orderId, anotherQuantity, anotherPrice);
+
+            orderStatus = await Api.GetOrderStatus(orderId);
+            Assert.That(orderStatus.Status, Is.Not.EqualTo(Status.Filled));
+
+            var replacedOrderStatus = await Api.GetOrderStatus(replacedOrderId);
+            Assert.That(replacedOrderStatus.Quantity, Is.EqualTo(anotherQuantity));
+            Assert.That(replacedOrderStatus.Price, Is.EqualTo(anotherPrice));
+        }
+
+        [Test]
         [Timeout(10000)]
         public async Task OrdersCanBeCancelled()
         {

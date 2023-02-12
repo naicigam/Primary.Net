@@ -7,8 +7,8 @@ namespace Primary.WebSockets
 {
     public struct OrderDataRequest
     {
-        [JsonProperty("type", Order=-2)]
-        public string Type => "os";
+        [JsonProperty("type", Order = -2)]
+        public static string Type => "os";
 
         [JsonProperty("accounts")]
         public OrderStatus.AccountId[] Accounts;

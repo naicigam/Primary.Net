@@ -300,6 +300,55 @@ namespace Primary
         }
 
         /// <summary>
+        /// Updates the order quantity and price.
+        /// </summary>
+        /// <param name="orderId">The id of the order to update.</param>
+        /// <param name="newQuantity">The new order quantity.</param>
+        /// <param name="newPrice">The new order price.</param>
+        /// <returns>Order identifier.</returns>
+        public async Task<OrderId> UpdateOrder(OrderId orderId, decimal newQuantity, decimal? newPrice)
+        {
+            var builder = new UriBuilder(BaseUri + "/rest/order/replaceById");
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["clOrdId"] = orderId.ClientOrderId;
+            query["proprietary"] = orderId.Proprietary;
+            query["orderQty"] = newQuantity.ToString();
+
+            if (newPrice != null)
+            {
+                query["price"] = newPrice?.ToString(CultureInfo.InvariantCulture);
+            }
+
+            builder.Query = query.ToString();
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                //throw new Exception($"{response.Message} ({response.Description})");
+            }
+
+            return new OrderId()
+            {
+                ClientOrderId = response.Order.ClientId,
+                Proprietary = response.Order.Proprietary
+            };
+        }
+
+        private struct StatusResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+        }
+
+        /// <summary>
         /// Cancel an order.
         /// </summary>
         /// <param name="orderId">Order identifier to cancel.</param>

@@ -102,6 +102,15 @@ namespace Primary.Tests
         }
 
         [Test]
+        public void UpdatingAnOrderWithInvalidInformationGeneratesAnException()
+        {
+            var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
+
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.UpdateOrder(order, 0, 0));
+            Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
+        }
+
+        [Test]
         public void CancellingAnOrderWithInvalidInformationGeneratesAnException()
         {
             var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };

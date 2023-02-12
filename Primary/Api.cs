@@ -326,7 +326,7 @@ namespace Primary
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                //throw new Exception($"{response.Message} ({response.Description})");
+                throw new Exception($"{response.Message} ({response.Description})");
             }
 
             return new OrderId()

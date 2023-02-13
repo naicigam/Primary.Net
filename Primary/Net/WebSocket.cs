@@ -72,6 +72,12 @@ namespace Primary.Net
         #endregion
 
         protected async Task SendJsonData(string jsonData)
+        {
+            var encoded = Encoding.UTF8.GetBytes(jsonData);
+            var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+            await _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancelToken);
+        }
+
         private async Task ProcessSocketData()
         {
             IsRunning = true;

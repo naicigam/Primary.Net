@@ -71,6 +71,7 @@ namespace Primary.Net
 
         #endregion
 
+        protected async Task SendJsonData(string jsonData)
         private async Task ProcessSocketData()
         {
             IsRunning = true;

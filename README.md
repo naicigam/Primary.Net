@@ -15,9 +15,10 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 - Historical market data.
 - Real-time market data.
 - Real-time order data.
-- Submit and cancel orders.
+- Submit, update and cancel orders.
 
-# Short-term roadmap
+# Roadmap
+- Account statements.
 - Remove dependencies.
 - Performance improvements.
 

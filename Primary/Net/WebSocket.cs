@@ -11,11 +11,18 @@ namespace Primary.Net
 {
     public class WebSocket<TRequest, TResponse> : IDisposable
     {
-        internal WebSocket(Api api, TRequest request, CancellationToken cancelToken)
+        internal WebSocket(Api api, TRequest request, CancellationToken cancelToken,
+            JsonSerializerSettings jsonSerializerSettings = null)
         {
             _api = api;
             _request = request;
             CancelToken = cancelToken;
+
+            if (jsonSerializerSettings == null)
+            {
+                jsonSerializerSettings = new JsonSerializerSettings();
+            }
+            _jsonSerializerSettings = jsonSerializerSettings;
 
             var wsScheme = (_api.BaseUri.Scheme == "https" ? "wss" : "ws");
             var uriBuilder = new UriBuilder(_api.BaseUri) { Scheme = wsScheme };
@@ -34,7 +41,7 @@ namespace Primary.Net
             await _client.ConnectAsync(_uri, CancelToken);
 
             // Send data to request
-            var jsonRequest = JsonConvert.SerializeObject(_request);
+            var jsonRequest = JsonConvert.SerializeObject(_request, _jsonSerializerSettings);
 
             var outputBuffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(jsonRequest));
             await _client.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancelToken);
@@ -71,6 +78,13 @@ namespace Primary.Net
 
         #endregion
 
+        protected async Task SendJsonData(string jsonData)
+        {
+            var encoded = Encoding.UTF8.GetBytes(jsonData);
+            var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+            await _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancelToken);
+        }
+
         private async Task ProcessSocketData()
         {
             IsRunning = true;
@@ -92,6 +106,11 @@ namespace Primary.Net
                         {
                             throw new Exception(response.CloseStatusDescription);
                         }
+                        else if (response.MessageType == WebSocketMessageType.Close)
+                        {
+                            await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                        }
+
                         var segment = new ArraySegment<byte>(buffer, 0, response.Count);
                         receivedMessage.AddRange(segment);
 
@@ -135,5 +154,6 @@ namespace Primary.Net
         private readonly TRequest _request;
         private readonly Api _api;
         private readonly Uri _uri;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
     }
 }

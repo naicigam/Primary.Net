@@ -15,25 +15,32 @@ namespace Primary.Tests
         {
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
 
-            OrderStatus retrievedData = null;
-            socket.OnData = ((api, orderData) => retrievedData = orderData.OrderReport);
+            OrderStatus receivedOrderData = null;
+            OrderId newOrderId = null;
+            var receivedDataSemaphore = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, orderData) =>
+            {
+                if (newOrderId != null && orderData.OrderReport.ClientOrderId == newOrderId.ClientOrderId)
+                {
+                    receivedOrderData = orderData.OrderReport;
+                    receivedDataSemaphore.Release();
+                }
+            });
             await socket.Start();
 
             // Send order
             Order order = Build.AnOrder(Api);
-            await Api.SubmitOrder(Api.DemoAccount, order);
+            newOrderId = await Api.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
-            while (retrievedData == null)
-            {
-                Thread.Sleep(100);
-            }
+            receivedDataSemaphore.Wait();
 
-            Assert.That(retrievedData.Account.Id, Is.EqualTo(Api.DemoAccount));
-            Assert.That(retrievedData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
-            Assert.That(retrievedData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
-            Assert.That(retrievedData.Price, Is.EqualTo(order.Price));
-            Assert.That(retrievedData.TransactionTime, Is.Not.EqualTo(default(long)));
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.ClientOrderId, Is.EqualTo(newOrderId.ClientOrderId));
+            Assert.That(receivedOrderData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
+            Assert.That(receivedOrderData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
+            Assert.That(receivedOrderData.Price, Is.EqualTo(order.Price));
+            Assert.That(receivedOrderData.TransactionTime, Is.Not.EqualTo(default(long)));
         }
 
         [Test]
@@ -74,7 +81,7 @@ namespace Primary.Tests
         public void SubscriptionToOrdersCannotBeStartedUnlessDataCallbackIsProvided()
         {
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
-            socket.OnData += null;
+            socket.OnData = null;
 
             var exception = Assert.ThrowsAsync<Exception>(socket.Start);
             Assert.That(exception.Message, Does.Contain(ErrorMessages.CallbackNotSet));
@@ -97,6 +104,41 @@ namespace Primary.Tests
 
             var exception = Assert.ThrowsAsync<Exception>(async () => { await socketTask; });
             Assert.That(exception.Message, Does.Contain(invalidAccount));
+        }
+
+        [Test]
+        [Timeout(10000)]
+        public async Task OrdersCanBeSentAndIdentifiedUsingWebSocketClientOrderId()
+        {
+            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+
+            OrderStatus receivedOrderData = null;
+            string newOrderWebSocketClientId = Build.RandomString();
+            var receivedDataSemaphore = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, orderData) =>
+            {
+                if (orderData.OrderReport.WebSocketClientOrderId == newOrderWebSocketClientId)
+                {
+                    receivedOrderData = orderData.OrderReport;
+                    receivedDataSemaphore.Release();
+                }
+            });
+            await socket.Start();
+
+            // Send order
+            Order order = Build.AnOrder(Api);
+            order.WebSocketClientOrderId = newOrderWebSocketClientId;
+
+            await socket.SubmitOrder(Api.DemoAccount, order);
+
+            // Wait until data arrives
+            receivedDataSemaphore.Wait();
+
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
+            Assert.That(receivedOrderData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
+            Assert.That(receivedOrderData.Price, Is.EqualTo(order.Price));
+            Assert.That(receivedOrderData.TransactionTime, Is.Not.EqualTo(default(long)));
         }
     }
 }

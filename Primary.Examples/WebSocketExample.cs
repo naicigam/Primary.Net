@@ -14,25 +14,18 @@ namespace Primary.Examples
             var api = new Api(Api.DemoEndpoint);
             await api.Login(Api.DemoUsername, Api.DemoPassword);
 
-            // Get a all dollar futures
+            // Get a all dollar futures and forwards
             Console.WriteLine("Getting available instruments...");
 
-            var allIInstruments = await api.GetAllInstruments();
-
-            var symbols = new[]
-            {
-                "DOMay20",
-                "DOJun20",
-                "DOJul20"
-            };
-            var dollarFuture = allIInstruments.Where(c => symbols.Contains(c.Symbol));
+            var allInstruments = await api.GetAllInstruments();
+            var dollarFuturesAndForwards = allInstruments.Where(c => c.Symbol.Contains("DLR/"));
 
             // Subscribe to bids and offers
             var entries = new[] { Entry.Bids, Entry.Offers };
 
             Console.WriteLine("Connecting to market data...");
 
-            using var socket = api.CreateMarketDataSocket(dollarFuture, entries, 1, 1);
+            using var socket = api.CreateMarketDataSocket(dollarFuturesAndForwards, entries, 1, 1);
             socket.OnData = OnMarketData;
 
             var socketTask = await socket.Start();
@@ -48,16 +41,22 @@ namespace Primary.Examples
             var bidSize = default(decimal);
             var offerSize = default(decimal);
 
-            foreach (var trade in marketData.Data.Bids)
+            if (marketData.Data.Bids != null)
             {
-                bid = trade.Price;
-                bidSize = trade.Size;
+                foreach (var trade in marketData.Data.Bids)
+                {
+                    bid = trade.Price;
+                    bidSize = trade.Size;
+                }
             }
 
-            foreach (var trade in marketData.Data.Offers)
+            if (marketData.Data.Offers != null)
             {
-                offer = trade.Price;
-                offerSize = trade.Size;
+                foreach (var trade in marketData.Data.Offers)
+                {
+                    offer = trade.Price;
+                    offerSize = trade.Size;
+                }
             }
 
             Console.WriteLine($"({marketData.Timestamp}) " +

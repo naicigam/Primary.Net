@@ -48,6 +48,9 @@ namespace Primary.Data.Orders
         /// <summary>The order was cancelled.</summary>
         Cancelled,
 
+        /// <summary>The order was replaced, but it is still being processed.</summary>
+        PendingReplace,
+
         /// <summary>The order was cancelled, but it is still being processed.</summary>
         PendingCancel,
 
@@ -149,6 +152,7 @@ namespace Primary.Data.Orders
                 Status.Rejected => "REJECTED",
                 Status.Cancelled => "CANCELLED",
                 Status.PendingCancel => "PENDING_CANCEL",
+                Status.PendingReplace => "PENDING_REPLACE",
                 Status.PartiallyFilled => "PARTIALLY_FILLED",
                 Status.Filled => "FILLED",
                 _ => throw new InvalidEnumStringException(value.ToString()),
@@ -164,6 +168,7 @@ namespace Primary.Data.Orders
                 "REJECTED" => Status.Rejected,
                 "CANCELLED" => Status.Cancelled,
                 "PENDING_CANCEL" => Status.PendingCancel,
+                "PENDING_REPLACE" => Status.PendingReplace,
                 "PARTIALLY_FILLED" => Status.PartiallyFilled,
                 "FILLED" => Status.Filled,
                 _ => throw new InvalidEnumStringException(value),

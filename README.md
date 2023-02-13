@@ -6,6 +6,7 @@ Provides a .NET friendly interface to interact with the Primary API.
 **This project is still under development.**
 
 [![Build Status](https://github.com/naicigam/Primary.Net/workflows/CI%20Build/badge.svg)](https://github.com/naicigam/Primary.Net/actions)
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-78%25-success?style=flat)
 [![NuGet Package](https://buildstats.info/nuget/Primary.Net?includePreReleases=true)](https://www.nuget.org/packages/Primary.Net/)
 
 Documentation: https://finanzascodificadas.com/Primary.Net/

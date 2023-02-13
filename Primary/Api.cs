@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Primary.Data;
 using Primary.Data.Orders;
+using Primary.Serialization;
 using Primary.WebSockets;
 using System;
 using System.Collections.Generic;
@@ -192,7 +194,13 @@ namespace Primary
                 Products = instrumentIds.ToArray()
             };
 
-            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken);
+            JsonSerializerSettings instrumentsSerializationSettings = new()
+            {
+                Culture = CultureInfo.InvariantCulture,
+                ContractResolver = new StrictTypeContractResolver(typeof(InstrumentId))
+            };
+
+            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken, instrumentsSerializationSettings);
         }
 
         #endregion
@@ -251,7 +259,11 @@ namespace Primary
             query["account"] = account;
             query["cancelPrevious"] = order.CancelPrevious.ToString(CultureInfo.InvariantCulture);
             query["iceberg"] = order.Iceberg.ToString(CultureInfo.InvariantCulture);
-            query["expireDate"] = order.ExpirationDate.ToString("yyyyMMdd");
+
+            if (order.Expiration == Expiration.GoodTillDate)
+            {
+                query["expireDate"] = order.ExpirationDate.ToString("yyyyMMdd");
+            }
 
             if (order.Iceberg)
             {
@@ -363,7 +375,7 @@ namespace Primary
 
             var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
 
-            var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
+            var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
                 throw new Exception($"{response.Message} ({response.Description})");

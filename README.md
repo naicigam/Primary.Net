@@ -19,7 +19,7 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 - Submit, update and cancel orders.
 
 # Roadmap
-- Account statements.
+- Account information.
 - Remove dependencies.
 - Performance improvements.
 

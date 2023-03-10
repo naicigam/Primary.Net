@@ -8,7 +8,7 @@ namespace Primary.Serialization
     /// Converts a <see cref="DateTime"/> to and from Unix epoch time.
     /// Taken from https://github.com/JamesNK/Newtonsoft.Json/issues/1652#issuecomment-513411912
     /// </summary>
-    public class UnixMillisecondsConverter : DateTimeConverterBase
+    internal class UnixMillisecondsConverter : DateTimeConverterBase
     {
         internal static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

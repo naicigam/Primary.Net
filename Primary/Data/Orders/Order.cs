@@ -18,7 +18,7 @@ namespace Primary.Data.Orders
 
         /// <summary>How much of the order quantity is shown.</summary>
         [JsonProperty("displayQty")]
-        public uint DisplayQuantity { get; set; }
+        public decimal DisplayQuantity { get; set; }
 
         /// <summary>Which instrument is the order for.</summary>
         [JsonProperty("instrumentId")]
@@ -30,11 +30,11 @@ namespace Primary.Data.Orders
 
         /// <summary>Order size.</summary>
         [JsonProperty("orderQty")]
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         /// <summary>Market or limit.</summary>
         [JsonProperty("ordType")]
-        public Orders.Type Type { get; set; }
+        public Type Type { get; set; }
 
         /// <summary>Buy or sell.</summary>
         [JsonProperty("side")]

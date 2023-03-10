@@ -418,7 +418,41 @@ namespace Primary
             public string Description;
 
             [JsonProperty("order")]
-            public OrderStatus Order;
+            public OrderStatus Order { get; set; }
+        }
+
+        #endregion
+
+        #region Accounts
+
+        public async Task<AccountStatement> GetAccountStatement(string accountId)
+        {
+            var uri = new Uri(BaseUri, "/rest/risk/accountReport/" + accountId);
+            var jsonResponse = await HttpClient.GetStringAsync(uri);
+
+            var response = JsonConvert.DeserializeObject<GetAccountStatementResponse>(jsonResponse);
+
+            //if (response.Status == Status.Error)
+            //{
+            //throw new Exception($"{response.Message} ({response.Description})");
+            //}
+
+            return response.AccountStatement;
+        }
+
+        private struct GetAccountStatementResponse
+        {
+            [JsonProperty("status")]
+            public string Status { get; set; }
+
+            [JsonProperty("message")]
+            public string Message { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+
+            [JsonProperty("accountData")]
+            public AccountStatement AccountStatement { get; set; }
         }
 
         #endregion

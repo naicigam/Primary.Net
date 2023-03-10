@@ -1,6 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Primary.Serialization;
+using System;
 
 namespace Primary.Data.Orders
 {
@@ -18,6 +18,7 @@ namespace Primary.Data.Orders
             public string Id { get; set; }
         }
 
+        /// <summary>Account of the order.</summary>
         [JsonProperty("accountId")]
         public AccountId Account { get; set; }
 
@@ -27,27 +28,29 @@ namespace Primary.Data.Orders
         [JsonProperty("transactTime")]
         [JsonConverter(typeof(DateTimeJsonDeserializer))]
         public DateTime TransactionTime { get; set; }
-        
+
+        /// <summary>Average price at which this order was execvuted.</summary>
         [JsonProperty("avgPx")]
         public decimal AveragePrice { get; set; }
 
+        /// <summary>Last price at which this order was execvuted.</summary>
         [JsonProperty("lastPx")]
         public decimal LastPrice { get; set; }
 
         /// <summary>Quantity affected in the last operation.</summary>
         [JsonProperty("lastQty")]
-        public uint LastQuantity { get; set; }
+        public decimal LastQuantity { get; set; }
 
         /// <summary>Total quantity affected on the order.</summary>
         [JsonProperty("cumQty")]
-        public uint CumulativeQuantity { get; set; }
+        public decimal CumulativeQuantity { get; set; }
 
         /// <summary>How much quantity is left on the order.</summary>
         [JsonProperty("leavesQty")]
-        public uint LeavesQuantity { get; set; }
+        public decimal LeavesQuantity { get; set; }
 
         /// <summary>Order status.</summary>
-        [JsonProperty("status")] 
+        [JsonProperty("status")]
         public Status Status { get; set; }
 
         /// <summary>More information about the order status.</summary>

@@ -38,6 +38,9 @@ namespace Primary.Examples
                     Console.WriteLine($"{trade.DateTime.ToLocalTime()}: ${trade.Price} ({trade.Size})");
                 }
             }
+
+            // Logout from server
+            await api.Logout();
         }
     }
 }

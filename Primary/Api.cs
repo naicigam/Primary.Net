@@ -425,6 +425,48 @@ namespace Primary
 
         #region Accounts
 
+        public async Task<Account[]> GetAccounts()
+        {
+            var builder = new UriBuilder(BaseUri + "rest/accounts");
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            /*
+             {
+                "status":"OK",
+                "accounts":[
+                    {
+                        "id": 123,
+                        "name":"12345",
+                        "brokerId":2,
+                        "status":true
+                    }
+                ]
+             }
+            */
+            var response = JsonConvert.DeserializeObject<AccountsResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            return response.Accounts;
+        }
+
+        public class AccountsResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+
+            [JsonProperty("accounts")]
+            public Account[] Accounts { get; set; }
+        }
+
         public async Task<AccountStatement> GetAccountStatement(string accountId)
         {
             var uri = new Uri(BaseUri, "/rest/risk/accountReport/" + accountId);
@@ -453,6 +495,64 @@ namespace Primary
 
             [JsonProperty("accountData")]
             public AccountStatement AccountStatement { get; set; }
+        }
+
+        #endregion
+
+        #region Positions
+
+        public async Task<Position[]> GetPositions(string accountName)
+        {
+            var builder = new UriBuilder(BaseUri + $"rest/risk/position/getPositions/{accountName}");
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            /*
+            {
+                "status":"OK",
+                "positions":[
+                      {
+                         "instrument":{
+                            "symbolReference":"KO",
+                            "settlType":2
+                         },
+                         "symbol":"MERV - XMEV - KO - 48hs",
+                         "buySize": 123.0,
+                         "buyPrice": 123.0,
+                         "sellSize":0.0,
+                         "sellPrice":0.0,
+                         "totalDailyDiff":12.5,
+                         "totalDiff":10.2,
+                         "tradingSymbol":"MERV - XMEV - KO - 48hs",
+                         "originalBuyPrice":123.0,
+                         "originalSellPrice":0.0,
+                         "originalBuySize":0,
+                         "originalSellSize":0
+                      }
+                 ]
+            }
+            */
+            var response = JsonConvert.DeserializeObject<PositionsResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            return response.Positions;
+        }
+
+        public class PositionsResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+
+            [JsonProperty("positions")]
+            public Position[] Positions { get; set; }
         }
 
         #endregion

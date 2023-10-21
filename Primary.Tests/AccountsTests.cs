@@ -25,5 +25,18 @@ namespace Primary.Tests
             Assert.That(detailedAccountReport.CurrencyBalance, Is.Not.Null.And.Not.Empty);
             Assert.That(detailedAccountReport.AvailableToOperate.Cash.DetailedCash, Is.Not.Empty);
         }
+
+        [Test]
+        public async Task AccountsCanBeRetrieved()
+        {
+            var accounts = await Api.GetAccounts();
+
+            Assert.That(accounts, Is.Not.Null);
+            Assert.That(accounts.Length, Is.GreaterThan(0));
+            Assert.That(accounts[0].BrokerId, Is.EqualTo(1));
+            Assert.That(accounts[0].Id, Is.EqualTo(4842));
+            Assert.That(accounts[0].Name, Is.EqualTo(Api.DemoAccount));
+            Assert.That(accounts[0].Status, Is.EqualTo(true));
+        }
     }
 }

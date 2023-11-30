@@ -29,11 +29,11 @@ namespace Primary.Data.Orders
         [JsonConverter(typeof(DateTimeJsonDeserializer))]
         public DateTime TransactionTime { get; set; }
 
-        /// <summary>Average price at which this order was execvuted.</summary>
+        /// <summary>Average price at which this order was executed.</summary>
         [JsonProperty("avgPx")]
         public decimal AveragePrice { get; set; }
 
-        /// <summary>Last price at which this order was execvuted.</summary>
+        /// <summary>Last price at which this order was executed.</summary>
         [JsonProperty("lastPx")]
         public decimal LastPrice { get; set; }
 

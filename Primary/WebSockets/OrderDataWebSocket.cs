@@ -65,5 +65,18 @@ namespace Primary.WebSockets
             await SendJsonData(jsonString);
         }
 
+        public async Task CancelOrder(Order order)
+        {
+            var jsonCancelOrder = new JObject()
+            {
+                ["type"] = "co",
+                ["clientId"] = order.ClientOrderId,
+                ["proprietary"] = order.Proprietary
+            };
+
+            var jsonString = JsonConvert.SerializeObject(jsonCancelOrder);
+            await SendJsonData(jsonString);
+        }
+
     }
 }

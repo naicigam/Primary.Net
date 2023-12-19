@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Primary.Data.Orders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Primary.Data;
 
@@ -52,10 +47,4 @@ public class Position
 
     [JsonProperty("originalSellPrice")]
     public decimal OriginalSellPrice { get; set; }
-
-    [JsonProperty("originalBuySize")]
-    public decimal OriginalBuySize { get; set; }
-
-    [JsonProperty("originalSellSize")]
-    public decimal OriginalSellSize { get; set; }
 }

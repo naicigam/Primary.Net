@@ -50,6 +50,11 @@ namespace Primary.Tests
                 Thread.Sleep(200);
                 orderStatus = await Api.GetOrderStatus(orderId);
             }
+
+            if (orderStatus.Status == Status.Rejected)
+            {
+                throw new InvalidOperationException(orderStatus.StatusText);
+            }
             return orderStatus;
         }
 

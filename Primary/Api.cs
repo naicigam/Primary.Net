@@ -425,25 +425,12 @@ namespace Primary
 
         #region Accounts
 
-        public async Task<Account[]> GetAccounts()
+        public async Task<IEnumerable<Account>> GetAccounts()
         {
             var builder = new UriBuilder(BaseUri + "rest/accounts");
 
             var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
 
-            /*
-             {
-                "status":"OK",
-                "accounts":[
-                    {
-                        "id": 123,
-                        "name":"12345",
-                        "brokerId":2,
-                        "status":true
-                    }
-                ]
-             }
-            */
             var response = JsonConvert.DeserializeObject<AccountsResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
@@ -464,7 +451,7 @@ namespace Primary
             public string Description { get; set; }
 
             [JsonProperty("accounts")]
-            public Account[] Accounts { get; set; }
+            public List<Account> Accounts { get; set; }
         }
 
         public async Task<AccountStatement> GetAccountStatement(string accountId)

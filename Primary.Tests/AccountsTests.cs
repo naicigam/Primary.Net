@@ -30,12 +30,13 @@ namespace Primary.Tests
         public async Task AccountsCanBeRetrieved()
         {
             var accounts = await Api.GetAccounts();
+            Assert.That(accounts, Is.Not.Empty);
 
-            Assert.That(accounts, Is.Not.Null.And.Not.Empty);
-            Assert.That(accounts[0].BrokerId, Is.Not.Null.And.Not.Empty);
-            Assert.That(accounts[0].Id, Is.Not.Null.And.Not.Empty);
-            Assert.That(accounts[0].Name, Is.EqualTo(Api.DemoAccount));
-            Assert.That(accounts[0].Status, Is.True);
+            var account = accounts.First();
+            Assert.That(account.BrokerId, Is.Not.EqualTo(default));
+            Assert.That(account.Id, Is.Not.EqualTo(default));
+            Assert.That(account.Name, Is.EqualTo(Api.DemoAccount));
+            Assert.That(account.Status, Is.True);
         }
     }
 }

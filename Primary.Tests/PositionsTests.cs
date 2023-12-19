@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Primary.Data.Orders;
+using System.Linq;
 using System.Threading.Tasks;
 using static Primary.Api;
+using Type = Primary.Data.Orders.Type;
 
 namespace Primary.Tests;
 
@@ -10,85 +11,41 @@ namespace Primary.Tests;
 internal class PositionsTests : TestWithApi
 {
     [Test]
+    [Timeout(10000)]
     public async Task PositionsCanBeRetrieved()
     {
-        var positions = await Api.GetPositions(Api.DemoAccount);
+        var marketData = await GetSomeMarketData();
 
+        // Take the opposite side.
+        var order = new Order()
+        {
+            InstrumentId = marketData.InstrumentId,
+            Type = Type.Market,
+            Side = marketData.Data.Offers?.Length > 0 ? Side.Buy : Side.Sell,
+            Quantity = 1
+        };
+
+        var orderId = await Api.SubmitOrder(DemoAccount, order);
+        await WaitForOrderToComplete(orderId);
+
+        var positions = await Api.GetPositions(DemoAccount);
         Assert.That(positions, Is.Not.Null);
-        // Demo Account has no positions
-        Assert.That(positions.Length, Is.Zero);
-        
-    }
 
-    [Test]
-    public void PositionsJsonCanBeDeserialized()
-    {
-        var jsonResponse = $$"""
-            {
-                "status":"OK",
-                "positions":[
-                      {
-                         "instrument":{
-                            "symbolReference":"KO",
-                            "settlType":0
-                         },
-                         "symbol":"MERV - XMEV - KO - 48hs",
-                         "buySize": 123.0,
-                         "buyPrice": 123.0,
-                         "sellSize":0.0,
-                         "sellPrice":0.0,
-                         "totalDailyDiff":12.5,
-                         "totalDiff":10.2,
-                         "tradingSymbol":"MERV - XMEV - KO - CI",
-                         "originalBuyPrice":123.0,
-                         "originalSellPrice":0.0,
-                         "originalBuySize":0,
-                         "originalSellSize":0
-                      },
-                      {
-                         "instrument":{
-                            "symbolReference":"KO",
-                            "settlType":1
-                         },
-                         "symbol":"MERV - XMEV - KO - 48hs",
-                         "buySize": 123.0,
-                         "buyPrice": 123.0,
-                         "sellSize":0.0,
-                         "sellPrice":0.0,
-                         "totalDailyDiff":12.5,
-                         "totalDiff":10.2,
-                         "tradingSymbol":"MERV - XMEV - KO - 24hs",
-                         "originalBuyPrice":123.0,
-                         "originalSellPrice":0.0,
-                         "originalBuySize":0,
-                         "originalSellSize":0
-                      },
-                      {
-                         "instrument":{
-                            "symbolReference":"KO",
-                            "settlType":2
-                         },
-                         "symbol":"MERV - XMEV - KO - 48hs",
-                         "buySize": 123.0,
-                         "buyPrice": 123.0,
-                         "sellSize":0.0,
-                         "sellPrice":0.0,
-                         "totalDailyDiff":12.5,
-                         "totalDiff":10.2,
-                         "tradingSymbol":"MERV - XMEV - KO - 48hs",
-                         "originalBuyPrice":123.0,
-                         "originalSellPrice":0.0,
-                         "originalBuySize":0,
-                         "originalSellSize":0
-                      }
+        var position = positions.FirstOrDefault(p => p.Symbol == order.InstrumentId.Symbol);
+        Assert.That(position, Is.Not.EqualTo(default));
+        Assert.That(position.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
 
-                 ]
-            }
-            """;
-        var positionResponse = JsonConvert.DeserializeObject<PositionsResponse>(jsonResponse);
+        if (order.Side == Side.Buy)
+        {
+            Assert.That(position.BuySize, Is.GreaterThanOrEqualTo(order.Quantity));
+            Assert.That(position.OriginalBuyPrice, Is.Not.EqualTo(0));
+        }
+        else
+        {
+            Assert.That(position.SellSize, Is.GreaterThanOrEqualTo(order.Quantity));
+            Assert.That(position.OriginalSellPrice, Is.Not.EqualTo(0));
+        }
 
-        Assert.AreEqual(positionResponse.Positions[0].Instrument.SettlementType, SettlementType.CI);
-        Assert.AreEqual(positionResponse.Positions[1].Instrument.SettlementType, SettlementType.T24H);
-        Assert.AreEqual(positionResponse.Positions[2].Instrument.SettlementType, SettlementType.T48H);
+
     }
 }

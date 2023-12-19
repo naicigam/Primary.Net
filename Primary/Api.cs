@@ -504,34 +504,8 @@ namespace Primary
         public async Task<Position[]> GetPositions(string accountName)
         {
             var builder = new UriBuilder(BaseUri + $"rest/risk/position/getPositions/{accountName}");
-
             var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
 
-            /*
-            {
-                "status":"OK",
-                "positions":[
-                      {
-                         "instrument":{
-                            "symbolReference":"KO",
-                            "settlType":2
-                         },
-                         "symbol":"MERV - XMEV - KO - 48hs",
-                         "buySize": 123.0,
-                         "buyPrice": 123.0,
-                         "sellSize":0.0,
-                         "sellPrice":0.0,
-                         "totalDailyDiff":12.5,
-                         "totalDiff":10.2,
-                         "tradingSymbol":"MERV - XMEV - KO - 48hs",
-                         "originalBuyPrice":123.0,
-                         "originalSellPrice":0.0,
-                         "originalBuySize":0,
-                         "originalSellSize":0
-                      }
-                 ]
-            }
-            */
             var response = JsonConvert.DeserializeObject<PositionsResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {

@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Primary.Data;
+﻿using Primary.Data;
 using Primary.Data.Orders;
 using System;
 using System.Collections.Generic;
@@ -23,24 +22,29 @@ namespace Primary.Tests
             }
 
             using var socket = Api.CreateMarketDataSocket(AllInstrumentsBySymbol.Values, new[] { Entry.Offers, Entry.Bids }, 1, 1);
-            TestContext.Out.WriteLine("Api.CreateMarketDataSocket OK");
 
             MarketData retrievedData = null;
             var dataSemaphore = new SemaphoreSlim(0, 1);
             socket.OnData = ((_, marketData) =>
             {
                 var instrument = AllInstrumentsBySymbol[marketData.InstrumentId.Symbol];
+
                 if (instrument.Type == InstrumentType.Equity &&
-                    (marketData.Data.Offers != null || marketData.Data.Bids != null))
+                    (
+                        (marketData.Data.Offers != null &&
+                         marketData.Data.Offers[0].Size > instrument.MinimumTradeVolume * 2)
+                        ||
+                        (marketData.Data.Bids != null &&
+                         marketData.Data.Bids[0].Size > instrument.MinimumTradeVolume * 2)
+                    )
+                )
                 {
-                    TestContext.Out.WriteLine($"Market data: {marketData}");
                     retrievedData = marketData;
                     dataSemaphore.Release();
                 }
             });
 
             await socket.Start();
-            TestContext.Out.WriteLine("Waiting for dataSemaphore");
             await dataSemaphore.WaitAsync();
 
             return retrievedData;
@@ -57,7 +61,7 @@ namespace Primary.Tests
 
             if (orderStatus.Status == Status.Rejected)
             {
-                throw new InvalidOperationException(orderStatus.StatusText);
+                throw new InvalidOperationException($"{orderStatus.StatusText} / {orderStatus.InstrumentId.Symbol} / {orderStatus.Side}");
             }
             return orderStatus;
         }

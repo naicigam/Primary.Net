@@ -34,12 +34,6 @@ jobs:
     - name: Build
       run: dotnet build Primary.sln --configuration Release --no-restore
 
-    - name: Install NUnit.ConsoleRunner
-      run: nuget install NUnit.ConsoleRunner -Version 3.16.3 -DirectDownload -OutputDirectory .
-        
-    - name: Run UnitTests
-      run: ./NUnit.ConsoleRunner.3.16.3/tools/nunit3-console.exe "./Primary.Tests/bin/Release/net6.0/Primary.Tests.dll"
-
     - name: Test
       run: dotnet test Primary.sln --configuration Release -- no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
       

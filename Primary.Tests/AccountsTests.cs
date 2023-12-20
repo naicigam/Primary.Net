@@ -41,11 +41,10 @@ namespace Primary.Tests
         }
 
         [Test]
-        [Timeout(10000)]
+        [Timeout(20000)]
         public async Task PositionsCanBeRetrieved()
         {
             var marketData = await GetSomeMarketData();
-            TestContext.Out.WriteLine("GetSomeMarketData OK");
             var symbol = marketData.InstrumentId.Symbol;
 
             // Take the opposite side.
@@ -58,12 +57,9 @@ namespace Primary.Tests
             };
 
             var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
-            TestContext.Out.WriteLine("Api.SubmitOrder OK");
             await WaitForOrderToComplete(orderId);
-            TestContext.Out.WriteLine("WaitForOrderToComplete OK");
 
             var positions = await Api.GetAccountPositions(Api.DemoAccount);
-            TestContext.Out.WriteLine("Api.GetAccountPositions OK");
             Assert.That(positions, Is.Not.Null);
 
             var position = positions.FirstOrDefault(p => p.Symbol == symbol);

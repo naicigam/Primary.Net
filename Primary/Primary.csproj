@@ -21,10 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 

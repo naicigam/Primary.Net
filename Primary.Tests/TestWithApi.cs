@@ -1,4 +1,5 @@
-﻿using Primary.Data;
+﻿using NUnit.Framework;
+using Primary.Data;
 using Primary.Data.Orders;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Primary.Tests
             }
 
             using var socket = Api.CreateMarketDataSocket(AllInstrumentsBySymbol.Values, new[] { Entry.Offers, Entry.Bids }, 1, 1);
-            Console.WriteLine("Api.CreateMarketDataSocket OK");
+            TestContext.Out.WriteLine("Api.CreateMarketDataSocket OK");
 
             MarketData retrievedData = null;
             var dataSemaphore = new SemaphoreSlim(0, 1);
@@ -32,14 +33,14 @@ namespace Primary.Tests
                 if (instrument.Type == InstrumentType.Equity &&
                     (marketData.Data.Offers != null || marketData.Data.Bids != null))
                 {
-                    Console.WriteLine($"Market data: {marketData}");
+                    TestContext.Out.WriteLine($"Market data: {marketData}");
                     retrievedData = marketData;
                     dataSemaphore.Release();
                 }
             });
 
             await socket.Start();
-            Console.WriteLine("Waiting for dataSemaphore");
+            TestContext.Out.WriteLine("Waiting for dataSemaphore");
             await dataSemaphore.WaitAsync();
 
             return retrievedData;

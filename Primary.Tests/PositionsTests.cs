@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Primary.Data.Orders;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static Primary.Api;
@@ -16,7 +15,7 @@ internal class PositionsTests : TestWithApi
     public async Task PositionsCanBeRetrieved()
     {
         var marketData = await GetSomeMarketData();
-        Console.WriteLine("GetSomeMarketData OK");
+        TestContext.Out.WriteLine("GetSomeMarketData OK");
         var symbol = marketData.InstrumentId.Symbol;
 
         // Take the opposite side.
@@ -29,12 +28,12 @@ internal class PositionsTests : TestWithApi
         };
 
         var orderId = await Api.SubmitOrder(DemoAccount, order);
-        Console.WriteLine("Api.SubmitOrder OK");
+        TestContext.Out.WriteLine("Api.SubmitOrder OK");
         await WaitForOrderToComplete(orderId);
-        Console.WriteLine("WaitForOrderToComplete OK");
+        TestContext.Out.WriteLine("WaitForOrderToComplete OK");
 
         var positions = await Api.GetPositions(DemoAccount);
-        Console.WriteLine("Api.GetPositions OK");
+        TestContext.Out.WriteLine("Api.GetPositions OK");
         Assert.That(positions, Is.Not.Null);
 
         var position = positions.FirstOrDefault(p => p.Symbol == symbol);

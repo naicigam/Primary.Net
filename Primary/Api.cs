@@ -488,7 +488,7 @@ namespace Primary
 
         #region Positions
 
-        public async Task<Position[]> GetPositions(string accountName)
+        public async Task<IEnumerable<Position>> GetPositions(string accountName)
         {
             var builder = new UriBuilder(BaseUri + $"rest/risk/position/getPositions/{accountName}");
             var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
@@ -513,7 +513,7 @@ namespace Primary
             public string Description;
 
             [JsonProperty("positions")]
-            public Position[] Positions { get; set; }
+            public List<Position> Positions { get; set; }
         }
 
         #endregion

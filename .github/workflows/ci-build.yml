@@ -10,10 +10,10 @@ permissions:
   contents: read  
   pull-requests: write
 
-#env:
-#  DOTNET_NOLOGO: true                     # Disable the .NET logo in the console output
-#  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience to skip caching NuGet packages and speed up the build
-#  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry to Microsoft
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo in the console output
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience to skip caching NuGet packages and speed up the build
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry to Microsoft
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
       run: ./NUnit.ConsoleRunner.3.16.3/tools/nunit3-console.exe "./Primary.Tests/bin/Release/net6.0/Primary.Tests.dll"
 
     - name: Test
-      run: dotnet test Primary.sln --configuration Debug --verbosity detailed --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test Primary.sln --configuration Release -- no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
       
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml

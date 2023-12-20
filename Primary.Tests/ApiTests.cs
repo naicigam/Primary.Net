@@ -24,6 +24,8 @@ namespace Primary.Tests
                 Assert.That(instrument.PriceConversionFactor, Is.Not.EqualTo(default));
                 Assert.That(instrument.CfiCode, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Type, Is.Not.EqualTo(InstrumentType.Unknown));
+                Assert.That(instrument.MinimumTradeVolume, Is.GreaterThanOrEqualTo(0));
+                Assert.That(instrument.MaximumTradeVolume, Is.GreaterThanOrEqualTo(0));
             }
 
             Assert.That(instruments.Where(i => i.MaturityDate != default), Is.Not.Empty);

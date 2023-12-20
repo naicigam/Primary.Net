@@ -16,18 +16,18 @@ namespace Primary.Tests
 
         protected async Task<MarketData> GetSomeMarketData()
         {
-            if (_allInstruments == null)
+            if (AllInstrumentsBySymbol == null)
             {
-                _allInstruments = (await Api.GetAllInstruments()).ToDictionary(i => i.Symbol, i => i);
+                AllInstrumentsBySymbol = (await Api.GetAllInstruments()).ToDictionary(i => i.Symbol, i => i);
             }
 
-            using var socket = Api.CreateMarketDataSocket(_allInstruments.Values, new[] { Entry.Offers, Entry.Bids }, 1, 1);
+            using var socket = Api.CreateMarketDataSocket(AllInstrumentsBySymbol.Values, new[] { Entry.Offers, Entry.Bids }, 1, 1);
 
             MarketData retrievedData = null;
             var dataSemaphore = new SemaphoreSlim(0, 1);
             socket.OnData = ((_, marketData) =>
             {
-                var instrument = _allInstruments[marketData.InstrumentId.Symbol];
+                var instrument = AllInstrumentsBySymbol[marketData.InstrumentId.Symbol];
                 if (instrument.Type == InstrumentType.Equity &&
                     (marketData.Data.Offers != null || marketData.Data.Bids != null))
                 {
@@ -58,6 +58,6 @@ namespace Primary.Tests
             return orderStatus;
         }
 
-        private Dictionary<string, Instrument> _allInstruments;
+        protected Dictionary<string, Instrument> AllInstrumentsBySymbol;
     }
 }

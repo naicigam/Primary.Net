@@ -15,6 +15,7 @@ internal class PositionsTests : TestWithApi
     public async Task PositionsCanBeRetrieved()
     {
         var marketData = await GetSomeMarketData();
+        var symbol = marketData.InstrumentId.Symbol;
 
         // Take the opposite side.
         var order = new Order()
@@ -22,7 +23,7 @@ internal class PositionsTests : TestWithApi
             InstrumentId = marketData.InstrumentId,
             Type = Type.Market,
             Side = marketData.Data.Offers?.Length > 0 ? Side.Buy : Side.Sell,
-            Quantity = 1
+            Quantity = AllInstrumentsBySymbol[symbol].MinimumTradeVolume,
         };
 
         var orderId = await Api.SubmitOrder(DemoAccount, order);
@@ -31,9 +32,9 @@ internal class PositionsTests : TestWithApi
         var positions = await Api.GetPositions(DemoAccount);
         Assert.That(positions, Is.Not.Null);
 
-        var position = positions.FirstOrDefault(p => p.Symbol == order.InstrumentId.Symbol);
+        var position = positions.FirstOrDefault(p => p.Symbol == symbol);
         Assert.That(position, Is.Not.EqualTo(default));
-        Assert.That(position.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
+        Assert.That(position.Symbol, Is.EqualTo(symbol));
 
         if (order.Side == Side.Buy)
         {

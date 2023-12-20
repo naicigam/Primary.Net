@@ -21,10 +21,10 @@ jobs:
     name: CI Build
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
 
@@ -35,12 +35,8 @@ jobs:
       run: dotnet build Primary.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test Primary.sln --configuration Debug --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage" --results-directory ./coverage  > output.txt
-
-    - name: Echo test output
-      if: always()
-      run: cat output.txt
-
+      run: dotnet test Primary.sln --configuration Debug --verbosity detailed --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage" --results-directory ./coverage
+      
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
 

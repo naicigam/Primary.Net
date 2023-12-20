@@ -17,9 +17,9 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 - Real-time market data.
 - Real-time order data.
 - Submit, update and cancel orders.
+- Accounts: available accounts, positions and statements.
 
 # Roadmap
-- Account information.
 - Remove dependencies.
 - Performance improvements.
 

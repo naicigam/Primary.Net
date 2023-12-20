@@ -35,7 +35,11 @@ jobs:
       run: dotnet build Primary.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test Primary.sln --configuration Release --no-build --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test Primary.sln --configuration Release --no-build --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage" --results-directory ./coverage  > output.txt
+
+    - name: Echo test output
+      if: always()
+      run: cat output.txt
 
     - name: Copy Coverage To Predictable Location
       run: cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml

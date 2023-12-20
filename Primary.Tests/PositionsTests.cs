@@ -12,7 +12,7 @@ namespace Primary.Tests;
 internal class PositionsTests : TestWithApi
 {
     [Test]
-    [Timeout(10000)]
+    [Timeout(20000)]
     public async Task PositionsCanBeRetrieved()
     {
         var marketData = await GetSomeMarketData();

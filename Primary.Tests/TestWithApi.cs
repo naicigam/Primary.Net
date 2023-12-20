@@ -22,6 +22,7 @@ namespace Primary.Tests
             }
 
             using var socket = Api.CreateMarketDataSocket(AllInstrumentsBySymbol.Values, new[] { Entry.Offers, Entry.Bids }, 1, 1);
+            Console.WriteLine("Api.CreateMarketDataSocket OK");
 
             MarketData retrievedData = null;
             var dataSemaphore = new SemaphoreSlim(0, 1);
@@ -31,12 +32,14 @@ namespace Primary.Tests
                 if (instrument.Type == InstrumentType.Equity &&
                     (marketData.Data.Offers != null || marketData.Data.Bids != null))
                 {
+                    Console.WriteLine($"Market data: {marketData}");
                     retrievedData = marketData;
                     dataSemaphore.Release();
                 }
             });
 
             await socket.Start();
+            Console.WriteLine("Waiting for dataSemaphore");
             await dataSemaphore.WaitAsync();
 
             return retrievedData;

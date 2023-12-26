@@ -79,6 +79,14 @@ namespace Primary.Data
             "DYXTXR" => InstrumentType.TreasureNotes,
             _ => InstrumentType.Unknown
         };
+
+        /// <summary>Minimum volume that can be traded for this instrument.</summary>
+        [JsonProperty("minTradeVol")]
+        public uint MinimumTradeVolume { get; set; }
+
+        /// <summary>Maximum volume that can be traded for this instrument.</summary>
+        [JsonProperty("maxTradeVol")]
+        public uint MaximumTradeVolume { get; set; }
     }
 
     public enum InstrumentType

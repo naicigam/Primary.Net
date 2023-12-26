@@ -3,6 +3,14 @@ using Primary.Serialization;
 
 namespace Primary.Data.Orders
 {
+    [JsonConverter(typeof(SettlementTypeJsonSerializer))]
+    public enum SettlementType
+    {
+        CI,
+        T24H,
+        T48H
+    }
+
     [JsonConverter(typeof(TypeJsonSerializer))]
     public enum Type
     {
@@ -65,6 +73,32 @@ namespace Primary.Data.Orders
 
     internal static class EnumsToApiStrings
     {
+        #region SettlementType
+
+        public static string ToApiString(this SettlementType value)
+        {
+            return value switch
+            {
+                SettlementType.CI => "0",
+                SettlementType.T24H => "1",
+                SettlementType.T48H => "2",
+                _ => throw new InvalidEnumStringException(value.ToString()),
+            };
+        }
+
+        public static SettlementType SettlementTypeFromApiString(string value)
+        {
+            return (value.ToUpper()) switch
+            {
+                "0" => SettlementType.CI,
+                "1" => SettlementType.T24H,
+                "2" => SettlementType.T48H,
+                _ => throw new InvalidEnumStringException(value),
+            };
+        }
+
+        #endregion
+
         #region Type
 
         public static string ToApiString(this Type value)
@@ -181,6 +215,19 @@ namespace Primary.Data.Orders
     #endregion
 
     #region JSON serialization
+
+    internal class SettlementTypeJsonSerializer : EnumJsonSerializer<SettlementType>
+    {
+        protected override string ToString(SettlementType enumValue)
+        {
+            return enumValue.ToApiString();
+        }
+
+        protected override SettlementType FromString(string enumString)
+        {
+            return EnumsToApiStrings.SettlementTypeFromApiString(enumString);
+        }
+    }
 
     internal class TypeJsonSerializer : EnumJsonSerializer<Type>
     {

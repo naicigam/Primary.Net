@@ -30,7 +30,14 @@ namespace Primary
         public Api(Uri baseUri, HttpClient httpClient = null)
         {
             BaseUri = baseUri;
-            HttpClient = httpClient ?? new HttpClient() { DefaultRequestVersion = new(2, 0) };
+            HttpClient = httpClient ?? new HttpClient()
+            {
+#if NET6
+                DefaultRequestVersion = new(2, 0) 
+#else
+#warning Not using HTTP/2.
+#endif
+            };
         }
 
         public Uri BaseUri { get; private set; }
@@ -425,6 +432,35 @@ namespace Primary
 
         #region Accounts
 
+        public async Task<IEnumerable<Account>> GetAccounts()
+        {
+            var builder = new UriBuilder(BaseUri + "rest/accounts");
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<AccountsResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            return response.Accounts;
+        }
+
+        public class AccountsResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message { get; set; }
+
+            [JsonProperty("description")]
+            public string Description { get; set; }
+
+            [JsonProperty("accounts")]
+            public List<Account> Accounts { get; set; }
+        }
+
         public async Task<AccountStatement> GetAccountStatement(string accountId)
         {
             var uri = new Uri(BaseUri, "/rest/risk/accountReport/" + accountId);
@@ -453,6 +489,38 @@ namespace Primary
 
             [JsonProperty("accountData")]
             public AccountStatement AccountStatement { get; set; }
+        }
+
+        #endregion
+
+        #region Positions
+
+        public async Task<IEnumerable<Position>> GetAccountPositions(string accountName)
+        {
+            var builder = new UriBuilder(BaseUri + $"rest/risk/position/getPositions/{accountName}");
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<PositionsResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+            return response.Positions;
+        }
+
+        public class PositionsResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("description")]
+            public string Description;
+
+            [JsonProperty("positions")]
+            public List<Position> Positions { get; set; }
         }
 
         #endregion

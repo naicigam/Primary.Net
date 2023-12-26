@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Primary.Serialization;
 using System;
 
@@ -21,10 +20,10 @@ namespace Primary.Data
         #region JSON serialization
 
         [JsonProperty("instrumentId.marketId")]
-        protected string NestedMarket { get { return Market; } set { Market = value; } }
+        protected string NestedMarket { get => Market; set => Market = value; }
 
         [JsonProperty("instrumentId.symbol")]
-        protected string NestedSymbol { get { return Symbol; } set { Symbol = value; } }
+        protected string NestedSymbol { get => Symbol; set => Symbol = value; }
 
         /// <summary>This is used for serialization purposes and should not be called.</summary>
         public bool ShouldSerializeNestedMarket() { return false; }
@@ -61,31 +60,25 @@ namespace Primary.Data
         public string CfiCode { get; set; }
 
         /// <summary>Instrument type from CFI code.</summary>
-        public InstrumentType Type
+        public InstrumentType Type => CfiCode switch
         {
-            get
-            {
-                return CfiCode switch
-                {
-                    "ESXXXX" => InstrumentType.Equity,
-                    "DBXXXX" => InstrumentType.Bond,
-                    "OCASPS" => InstrumentType.EquityCallOption,
-                    "OPASPS" => InstrumentType.EquityPutOption,
-                    "FXXXSX" => InstrumentType.Future,
-                    "OPAFXS" => InstrumentType.FuturePutOption,
-                    "OCAFXS" => InstrumentType.FutureCallOption,
-                    "EMXXXX" => InstrumentType.Cedear,
-                    "DBXXFR" => InstrumentType.Obligation,
-                    "MRIXXX" => InstrumentType.Index,
-                    "FXXXXX" => InstrumentType.Future,
-                    "RPXXXX" => InstrumentType.Caucion,
-                    "MXXXXX" => InstrumentType.Miscellaneous,
-                    "LRSTXH" => InstrumentType.Miscellaneous,
-                    "DYXTXR" => InstrumentType.TreasureNotes,
-                    _ => InstrumentType.Unknown
-                };
-            }
-        }
+            "ESXXXX" => InstrumentType.Equity,
+            "DBXXXX" => InstrumentType.Bond,
+            "OCASPS" => InstrumentType.EquityCallOption,
+            "OPASPS" => InstrumentType.EquityPutOption,
+            "FXXXSX" => InstrumentType.Future,
+            "OPAFXS" => InstrumentType.FuturePutOption,
+            "OCAFXS" => InstrumentType.FutureCallOption,
+            "EMXXXX" => InstrumentType.Cedear,
+            "DBXXFR" => InstrumentType.Obligation,
+            "MRIXXX" => InstrumentType.Index,
+            "FXXXXX" => InstrumentType.Future,
+            "RPXXXX" => InstrumentType.Caucion,
+            "MXXXXX" => InstrumentType.Miscellaneous,
+            "LRSTXH" => InstrumentType.Miscellaneous,
+            "DYXTXR" => InstrumentType.TreasureNotes,
+            _ => InstrumentType.Unknown
+        };
     }
 
     public enum InstrumentType

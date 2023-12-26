@@ -30,7 +30,14 @@ namespace Primary
         public Api(Uri baseUri, HttpClient httpClient = null)
         {
             BaseUri = baseUri;
-            HttpClient = httpClient ?? new HttpClient() { DefaultRequestVersion = new(2, 0) };
+            HttpClient = httpClient ?? new HttpClient()
+            {
+#if NET6
+                DefaultRequestVersion = new(2, 0) 
+#else
+#warning Not using HTTP/2.
+#endif
+            };
         }
 
         public Uri BaseUri { get; private set; }

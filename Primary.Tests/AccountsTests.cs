@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Primary.Data;
 using Primary.Data.Orders;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,20 +45,34 @@ namespace Primary.Tests
         [Timeout(20000)]
         public async Task PositionsCanBeRetrieved()
         {
-            var marketData = await GetSomeMarketData();
-            var symbol = marketData.InstrumentId.Symbol;
+            var instrument = (await AnotherApi.GetAllInstruments()).First(i => i.Type == InstrumentType.Equity);
+            var symbol = instrument.Symbol;
 
-            // Take the opposite side.
-            var order = new Order()
+            // Generate liquidity
+            var buyOrder = new Order()
             {
-                InstrumentId = marketData.InstrumentId,
-                Type = Type.Market,
-                Side = marketData.Data.Offers?.Length > 0 ? Side.Buy : Side.Sell,
-                Quantity = AllInstrumentsBySymbol[symbol].MinimumTradeVolume,
+                InstrumentId = instrument,
+                Type = Type.Limit,
+                Price = instrument.MinimumTradePrice + 10,
+                Side = Side.Buy,
+                Quantity = instrument.MinimumTradeVolume
             };
 
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
-            await WaitForOrderToComplete(orderId);
+            var orderId = await AnotherApi.SubmitOrder(AnotherApiAccount, buyOrder);
+            await WaitForOrderToComplete(AnotherApi, orderId);
+
+            // Take the opposite side
+            var order = new Order()
+            {
+                InstrumentId = instrument,
+                Type = Type.Limit,
+                Price = instrument.MinimumTradePrice,
+                Side = Side.Sell,
+                Quantity = instrument.MinimumTradeVolume
+            };
+
+            orderId = await Api.SubmitOrder(ApiAccount, order);
+            await WaitForOrderToComplete(Api, orderId);
 
             var positions = await Api.GetAccountPositions(Api.DemoAccount);
             Assert.That(positions, Is.Not.Null);

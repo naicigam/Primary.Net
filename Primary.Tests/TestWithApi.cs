@@ -10,9 +10,16 @@ namespace Primary.Tests
 {
     internal class TestWithApi
     {
+        protected string ApiAccount = Api.DemoAccount;
         protected Api Api => _lazyApi.Value;
+        private static readonly Lazy<Api> _lazyApi = new(() => Build.AnApi());
 
-        private static readonly Lazy<Api> _lazyApi = new(() => Build.AnApi().Result);
+        protected string AnotherApiAccount = "REM779";
+        protected Api AnotherApi => _lazyAnotherApi.Value;
+        private static readonly Lazy<Api> _lazyAnotherApi = new(
+            () => Build.AnApi().WithUsername("alvarezjuandev779").WithPassword("sllsrN2$")
+        );
+
 
         protected async Task<MarketData> GetSomeMarketData()
         {
@@ -50,13 +57,13 @@ namespace Primary.Tests
             return retrievedData;
         }
 
-        protected async Task<OrderStatus> WaitForOrderToComplete(OrderId orderId)
+        protected async Task<OrderStatus> WaitForOrderToComplete(Api api, OrderId orderId)
         {
-            var orderStatus = await Api.GetOrderStatus(orderId);
-            while (orderStatus.Status != Status.Rejected && orderStatus.Status != Status.Filled)
+            var orderStatus = await api.GetOrderStatus(orderId);
+            while (orderStatus.Status == Status.PendingNew)
             {
                 Thread.Sleep(200);
-                orderStatus = await Api.GetOrderStatus(orderId);
+                orderStatus = await api.GetOrderStatus(orderId);
             }
 
             if (orderStatus.Status == Status.Rejected)

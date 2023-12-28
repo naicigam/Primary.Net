@@ -140,5 +140,53 @@ namespace Primary.Tests
             Assert.That(receivedOrderData.Price, Is.EqualTo(order.Price));
             Assert.That(receivedOrderData.TransactionTime, Is.Not.EqualTo(default(long)));
         }
+
+        [Test]
+        [Timeout(10000)]
+        public async Task OrdersCanBeCancelled()
+        {
+            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+
+            OrderStatus receivedOrderData = default;
+            var newOrderWebSocketClientId = Build.RandomString();
+            var clientOrderId = string.Empty;
+            var receivedDataSemaphore = new SemaphoreSlim(0, 1);
+            socket.OnData = ((_, orderData) =>
+            {
+                // Get the new order id
+                var order = orderData.OrderReport;
+                if (order.WebSocketClientOrderId == newOrderWebSocketClientId)
+                {
+                    clientOrderId = order.ClientOrderId;
+                }
+
+                // Cancel the order
+                if (order.ClientOrderId == clientOrderId)
+                {
+                    if (order.Status == Status.Cancelled)
+                    {
+                        receivedOrderData = order;
+                        receivedDataSemaphore.Release();
+                    }
+                    else if (order.Status != Status.PendingCancel)
+                    {
+                        Task.Run(() => socket.CancelOrder(order));
+                    }
+                }
+            });
+            await socket.Start();
+
+            // Send order
+            Order order = Build.AnOrder(Api);
+            order.WebSocketClientOrderId = newOrderWebSocketClientId;
+
+            await socket.SubmitOrder(Api.DemoAccount, order);
+
+            // Wait until data arrives
+            await receivedDataSemaphore.WaitAsync();
+
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.Status, Is.EqualTo(Status.Cancelled));
+        }
     }
 }

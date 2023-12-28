@@ -36,7 +36,10 @@ namespace Primary.WebSockets
             var jsonOrder = new JObject()
             {
                 ["type"] = "no",
-                ["product"] = JToken.FromObject(order.InstrumentId),
+                ["product"] = new JObject(
+                        new JProperty("marketId", order.InstrumentId.Market),
+                        new JProperty("symbol", order.InstrumentId.Symbol)
+                    ),
                 ["account"] = account,
                 ["quantity"] = order.Quantity.ToString(CultureInfo.InvariantCulture),
                 ["side"] = order.Side.ToApiString(),
@@ -59,8 +62,20 @@ namespace Primary.WebSockets
             }
 
             var jsonString = JsonConvert.SerializeObject(jsonOrder);
+            await SendJsonData(jsonString);
+        }
 
-            await SendJsonData(jsonOrder.ToString());
+        public async Task CancelOrder(Order order)
+        {
+            var jsonCancelOrder = new JObject()
+            {
+                ["type"] = "co",
+                ["clientId"] = order.ClientOrderId,
+                ["proprietary"] = order.Proprietary
+            };
+
+            var jsonString = JsonConvert.SerializeObject(jsonCancelOrder);
+            await SendJsonData(jsonString);
         }
 
     }

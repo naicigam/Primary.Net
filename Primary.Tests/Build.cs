@@ -2,19 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Primary.Tests
 {
     public static class Build
     {
-        public static async Task<Api> AnApi()
-        {
-            var api = new Api(Api.DemoEndpoint);
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
-            return api;
-        }
-
+        public static ApiBuilder AnApi() { return new ApiBuilder(); }
         public static OrderBuilder AnOrder(Api api) { return new OrderBuilder(api); }
 
         public static string DollarFutureSymbol()

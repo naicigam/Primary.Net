@@ -127,7 +127,7 @@ namespace Primary.Net
                     {
                         if (responseJson["status"].ToString() == "ERROR")
                         {
-                            throw new Exception($"{responseJson["description"]} + [{responseJson["message"]}]");
+                            throw new Exception($"{responseJson["description"]} / [{responseJson["message"]}]");
                         }
                     }
                     else

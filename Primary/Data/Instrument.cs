@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Primary.Serialization;
 using System;
 
@@ -88,6 +87,15 @@ namespace Primary.Data
         /// <summary>Maximum volume that can be traded for this instrument.</summary>
         [JsonProperty("maxTradeVol")]
         public uint MaximumTradeVolume { get; set; }
+
+        /// <summary>Lowest price in which it can be traded.</summary>
+        [JsonProperty("lowLimitPrice")]
+        public decimal MinimumTradePrice { get; set; }
+
+        /// <summary>Highest price in which it can be traded.</summary>
+        [JsonProperty("highLimitPrice")]
+        public decimal MaximumTradePrice { get; set; }
+
     }
 
     public enum InstrumentType

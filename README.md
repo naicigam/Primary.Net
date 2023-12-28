@@ -1,7 +1,7 @@
 # Primary.NET
 > C# bindings for [Primary.API](http://api.primary.com.ar).
 
-Provides a .NET friendly interface to interact with the Primary API. 
+Provides a .Net friendly interface to interact with the Primary API. 
 
 **This project is still under development.**
 
@@ -25,7 +25,7 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 
 ## Building
 
-This project targets .NET Core 6.0. 
+This project targets .Net Core 6.0 and .Net Standard 2.0. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

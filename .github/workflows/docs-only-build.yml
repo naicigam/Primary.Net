@@ -1,4 +1,3 @@
-COPY
 name: Docs Only Build
 
 on:

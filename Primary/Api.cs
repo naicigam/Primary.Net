@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+
 using Primary.Data;
 using Primary.Data.Orders;
 using Primary.Serialization;
 using Primary.WebSockets;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -68,6 +70,23 @@ namespace Primary
                 AccessToken = result.Headers.GetValues("X-Auth-Token").FirstOrDefault();
                 HttpClient.DefaultRequestHeaders.Clear();
                 HttpClient.DefaultRequestHeaders.Add("X-Auth-Token", AccessToken);
+            }
+
+            return result.IsSuccessStatusCode;
+        }
+
+        /// <summary>
+        /// Logout from server
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> Logout()
+        {
+            var uri = new Uri(BaseUri, "/auth/removeToken");
+            var result = await HttpClient.GetAsync(uri);
+
+            if (result.IsSuccessStatusCode)
+            {
+                AccessToken = string.Empty;
             }
 
             return result.IsSuccessStatusCode;

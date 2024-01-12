@@ -82,10 +82,6 @@ namespace Primary
         public async Task<bool> Logout()
         {
             var uri = new Uri(BaseUri, "/auth/removeToken");
-
-            // Header already there
-            // HttpClient.DefaultRequestHeaders.Add("X-Auth-Token", AccessToken.ToString());
-
             var result = await HttpClient.GetAsync(uri);
 
             if (result.IsSuccessStatusCode)

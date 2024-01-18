@@ -28,7 +28,7 @@ namespace Primary.Examples
             using var socket = api.CreateMarketDataSocket(dollarFuturesAndForwards, entries, 1, 1);
             socket.OnData = OnMarketData;
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
             socketTask.Wait();
             await socketTask;
         }

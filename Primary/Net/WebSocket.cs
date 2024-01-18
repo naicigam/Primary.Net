@@ -29,34 +29,75 @@ namespace Primary.Net
             _uri = uriBuilder.Uri;
         }
 
-        public async Task<Task> Start()
+        public async Task Start()
         {
             if (OnData == null)
             {
                 throw new Exception(ErrorMessages.CallbackNotSet);
             }
 
-            _client.Options.SetRequestHeader("X-Auth-Token", _api.AccessToken);
+            var factory = new Func<Uri, CancellationToken, Task<WebSocket>>(async (uri, token) =>
+            {
+                var client = new ClientWebSocket
+                {
+                    Options =
+                    {
+                        KeepAliveInterval = TimeSpan.FromSeconds(30)
+                    }
+                };
+                client.Options.SetRequestHeader("X-Auth-Token", _api.AccessToken);
 
-            await _client.ConnectAsync(_uri, CancelToken);
+                await client.ConnectAsync(uri, CancelToken).ConfigureAwait(false);
+                return client;
+            });
 
-            // Send data to request
+            Exception closedByException = null;
+
+            var logger = _loggerFactory.CreateLogger<WebsocketClient>();
+            _client = new WebsocketClient(_uri, logger, factory);
+
+            _client.ReconnectionHappened.Subscribe(info =>
+            {
             var jsonRequest = JsonConvert.SerializeObject(_request, _jsonSerializerSettings);
+                _client.Send(jsonRequest);
+                logger.LogInformation("Reconnection happened, type: {type}, url: {url}", info.Type, _client.Url);
+            });
 
-            var outputBuffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(jsonRequest));
-            await _client.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancelToken);
+            _client.DisconnectionHappened.Subscribe(info =>
+            {
+                IsRunning = false;
+                logger.LogWarning("Disconnection happened, type: {type}, exception: {exception}", info.Type, info.Exception);
+                closedByException = info.Exception;
+                _exitEvent.Set();
+            });
 
-            // Receive
-            var socketTask = Task.Factory.StartNew(ProcessSocketData, CancelToken,
-                                                   TaskCreationOptions.LongRunning,
-                                                   TaskScheduler.Default
-            );
+            _client.MessageReceived.Subscribe(msg =>
+            {
+                logger.LogInformation("Message received: {message}", msg);
+                OnMessageReceived(msg);
+            });
 
-            return socketTask.Unwrap();
+            CancelToken.Register(() =>
+            {
+                _client.Stop(WebSocketCloseStatus.NormalClosure, "Closed by handler.");
+            });
+
+            await _client.StartOrFail();
+            IsRunning = true;
+            _exitEvent.WaitOne();
+
+            if (closedByException != null)
+            {
+                throw closedByException;
+        }
+
+            CancelToken.ThrowIfCancellationRequested();
         }
 
         public bool IsRunning { get; private set; }
         public CancellationToken CancelToken { get; }
+
+        private readonly ManualResetEvent _exitEvent = new(false);
 
         public Action<Api, TResponse> OnData { get; set; }
 
@@ -70,7 +111,7 @@ namespace Primary.Net
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (_client != null && disposing)
             {
                 _client.Dispose();
             }
@@ -78,47 +119,15 @@ namespace Primary.Net
 
         #endregion
 
-        protected async Task SendJsonData(string jsonData)
+        protected void SendJsonData(string jsonData)
         {
-            var encoded = Encoding.UTF8.GetBytes(jsonData);
-            var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
-            await _client.SendAsync(buffer, WebSocketMessageType.Text, true, CancelToken);
+            _client.Send(jsonData);
         }
 
-        private async Task ProcessSocketData()
-        {
-            IsRunning = true;
-
-            // Buffers for received data
-            var receivedMessage = new List<byte>();
-            var buffer = new byte[9192];
-
-            while (true)
-            {
-                try
-                {
-                    // Get data until the complete message is received
-                    WebSocketReceiveResult response;
-                    do
-                    {
-                        response = await _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancelToken);
-                        if (response.CloseStatus != null)
+        private void OnMessageReceived(ResponseMessage receivedMessage)
                         {
-                            throw new Exception(response.CloseStatusDescription);
-                        }
-                        else if (response.MessageType == WebSocketMessageType.Close)
-                        {
-                            await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                        }
-
-                        var segment = new ArraySegment<byte>(buffer, 0, response.Count);
-                        receivedMessage.AddRange(segment);
-
-                    } while (!response.EndOfMessage);
-
                     // Decode the message
-                    var messageJson = Encoding.ASCII.GetString(receivedMessage.ToArray());
-                    receivedMessage.Clear();
+            var messageJson = receivedMessage.Text;
 
                     // Parse and notify subscriber
                     var responseJson = JObject.Parse(messageJson);
@@ -136,20 +145,9 @@ namespace Primary.Net
                         OnData(_api, data);
                     }
                 }
-                catch (OperationCanceledException) { }
 
-                if (CancelToken.IsCancellationRequested)
-                {
-                    IsRunning = false;
-                    CancelToken.ThrowIfCancellationRequested();
-                }
-            }
-        }
-
-        private readonly ClientWebSocket _client = new()
-        {
-            Options = { KeepAliveInterval = TimeSpan.FromSeconds(30) }
-        };
+        private IWebsocketClient _client;
+        private readonly ILoggerFactory _loggerFactory;
 
         private readonly TRequest _request;
         private readonly Api _api;

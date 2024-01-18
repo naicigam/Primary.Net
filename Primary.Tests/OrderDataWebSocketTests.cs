@@ -55,7 +55,7 @@ namespace Primary.Tests
             Assert.That(!socket.IsRunning);
             socket.OnData += ((api, orderData) => { });
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
 
             // Wait until it is running
             while (!socket.IsRunning)
@@ -96,7 +96,7 @@ namespace Primary.Tests
             using var socket = Api.CreateOrderDataSocket(new[] { invalidAccount });
             socket.OnData += ((api, orderData) => { });
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
             while (!socket.IsRunning)
             {
                 Thread.Sleep(10);
@@ -129,7 +129,7 @@ namespace Primary.Tests
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            await socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
             receivedDataSemaphore.Wait();
@@ -180,7 +180,7 @@ namespace Primary.Tests
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            await socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
             await receivedDataSemaphore.WaitAsync();

@@ -4,7 +4,6 @@ using Primary.Data.Orders;
 using Primary.Net;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Primary.WebSockets
 {
@@ -31,7 +30,7 @@ namespace Primary.WebSockets
         base(api, orderDataToRequest, cancelToken)
         { }
 
-        public async Task SubmitOrder(string account, Order order)
+        public void SubmitOrder(string account, Order order)
         {
             var jsonOrder = new JObject()
             {
@@ -62,10 +61,10 @@ namespace Primary.WebSockets
             }
 
             var jsonString = JsonConvert.SerializeObject(jsonOrder);
-            await SendJsonData(jsonString);
+            SendJsonData(jsonString);
         }
 
-        public async Task CancelOrder(Order order)
+        public void CancelOrder(Order order)
         {
             var jsonCancelOrder = new JObject()
             {
@@ -75,7 +74,7 @@ namespace Primary.WebSockets
             };
 
             var jsonString = JsonConvert.SerializeObject(jsonCancelOrder);
-            await SendJsonData(jsonString);
+            SendJsonData(jsonString);
         }
 
     }

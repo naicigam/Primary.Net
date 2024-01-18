@@ -1,28 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Websocket.Client;
 
 namespace Primary.Net
 {
     public class WebSocket<TRequest, TResponse> : IDisposable
     {
         internal WebSocket(Api api, TRequest request, CancellationToken cancelToken,
-            JsonSerializerSettings jsonSerializerSettings = null)
+            JsonSerializerSettings jsonSerializerSettings = null,
+            ILoggerFactory loggerFactory = null)
         {
             _api = api;
             _request = request;
             CancelToken = cancelToken;
 
-            if (jsonSerializerSettings == null)
-            {
-                jsonSerializerSettings = new JsonSerializerSettings();
-            }
-            _jsonSerializerSettings = jsonSerializerSettings;
+            _loggerFactory = loggerFactory ?? new NullLoggerFactory();
+            _jsonSerializerSettings = jsonSerializerSettings ?? new JsonSerializerSettings();
 
             var wsScheme = (_api.BaseUri.Scheme == "https" ? "wss" : "ws");
             var uriBuilder = new UriBuilder(_api.BaseUri) { Scheme = wsScheme };
@@ -58,7 +57,7 @@ namespace Primary.Net
 
             _client.ReconnectionHappened.Subscribe(info =>
             {
-            var jsonRequest = JsonConvert.SerializeObject(_request, _jsonSerializerSettings);
+                var jsonRequest = JsonConvert.SerializeObject(_request, _jsonSerializerSettings);
                 _client.Send(jsonRequest);
                 logger.LogInformation("Reconnection happened, type: {type}, url: {url}", info.Type, _client.Url);
             });
@@ -89,7 +88,7 @@ namespace Primary.Net
             if (closedByException != null)
             {
                 throw closedByException;
-        }
+            }
 
             CancelToken.ThrowIfCancellationRequested();
         }
@@ -125,26 +124,26 @@ namespace Primary.Net
         }
 
         private void OnMessageReceived(ResponseMessage receivedMessage)
-                        {
-                    // Decode the message
+        {
+            // Decode the message
             var messageJson = receivedMessage.Text;
 
-                    // Parse and notify subscriber
-                    var responseJson = JObject.Parse(messageJson);
-                    if (responseJson.ContainsKey("status") && responseJson.ContainsKey("message") &&
-                        responseJson.ContainsKey("description"))
-                    {
-                        if (responseJson["status"].ToString() == "ERROR")
-                        {
-                            throw new Exception($"{responseJson["description"]} / [{responseJson["message"]}]");
-                        }
-                    }
-                    else
-                    {
-                        var data = responseJson.ToObject<TResponse>();
-                        OnData(_api, data);
-                    }
+            // Parse and notify subscriber
+            var responseJson = JObject.Parse(messageJson);
+            if (responseJson.ContainsKey("status") && responseJson.ContainsKey("message") &&
+                responseJson.ContainsKey("description"))
+            {
+                if (responseJson["status"].ToString() == "ERROR")
+                {
+                    throw new Exception($"{responseJson["description"]} / [{responseJson["message"]}]");
                 }
+            }
+            else
+            {
+                var data = responseJson.ToObject<TResponse>();
+                OnData(_api, data);
+            }
+        }
 
         private IWebsocketClient _client;
         private readonly ILoggerFactory _loggerFactory;

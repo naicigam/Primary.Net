@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-
 using Primary.Data;
 using Primary.Data.Orders;
 using Primary.Serialization;
@@ -29,7 +30,7 @@ namespace Primary
         /// <summary>
         /// Build a new API object.
         /// </summary>
-        public Api(Uri baseUri, HttpClient httpClient = null)
+        public Api(Uri baseUri, HttpClient httpClient = null, ILoggerFactory loggerFactory = null)
         {
             BaseUri = baseUri;
             HttpClient = httpClient ?? new HttpClient()
@@ -40,6 +41,9 @@ namespace Primary
 #warning Not using HTTP/2.
 #endif
             };
+
+            loggerFactory ??= new NullLoggerFactory();
+            _logger = loggerFactory.CreateLogger<Api>();
         }
 
         public Uri BaseUri { get; private set; }
@@ -57,6 +61,11 @@ namespace Primary
         /// <returns></returns>
         public async Task<bool> Login(string username, string password)
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Logging to {BaseUri} with user {Username}", BaseUri, username);
+            }
+
             var uri = new Uri(BaseUri, "/auth/getToken");
 
             HttpClient.DefaultRequestHeaders.Clear();
@@ -147,6 +156,11 @@ namespace Primary
 
             if (data.Status == Status.Error)
             {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError("Error when getting historical trades: {Message}, {Description}", data.Message, data.Description);
+                }
+
                 throw new Exception($"{data.Message} ({data.Description})");
             }
 
@@ -212,6 +226,12 @@ namespace Primary
                                                           CancellationToken cancellationToken
         )
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating market data socket: @{Instruments}, @{Entries}, {Level}, {Depth}",
+                    instrumentIds, entries, level, depth);
+            }
+
             var marketDataToRequest = new MarketDataInfo()
             {
                 Depth = depth,
@@ -253,6 +273,11 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating order data socket: @{Accounts}", accounts);
+            }
+
             var request = new OrderDataRequest
             {
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a }).ToArray()
@@ -273,6 +298,11 @@ namespace Primary
         /// <returns>Order identifier.</returns>
         public async Task<OrderId> SubmitOrder(string account, Order order)
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Submitting order: @{Order}", order);
+            }
+
             var builder = new UriBuilder(BaseUri + "/rest/order/newSingleOrder");
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = "ROFX";
@@ -552,5 +582,7 @@ namespace Primary
         }
 
         #endregion
+
+        private readonly ILogger<Api> _logger;
     }
 }

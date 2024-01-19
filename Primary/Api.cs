@@ -35,11 +35,7 @@ namespace Primary
             BaseUri = baseUri;
             HttpClient = httpClient ?? new HttpClient()
             {
-#if NET6
-                DefaultRequestVersion = new(2, 0) 
-#else
-#warning Not using HTTP/2.
-#endif
+                DefaultRequestVersion = new Version(2, 0)
             };
 
             loggerFactory ??= new NullLoggerFactory();

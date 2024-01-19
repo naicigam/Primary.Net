@@ -64,10 +64,15 @@ namespace Primary.Net
 
             _client.DisconnectionHappened.Subscribe(info =>
             {
-                IsRunning = false;
                 logger.LogWarning("Disconnection happened, type: {type}, exception: {exception}", info.Type, info.Exception);
+
                 closedByException = info.Exception;
-                _exitEvent.Set();
+
+                if (CancelToken.IsCancellationRequested || closedByException != null)
+                {
+                    _exitEvent.Set();
+                    IsRunning = false;
+                }
             });
 
             _client.MessageReceived.Subscribe(msg =>
@@ -78,7 +83,7 @@ namespace Primary.Net
 
             CancelToken.Register(() =>
             {
-                _client.Stop(WebSocketCloseStatus.NormalClosure, "Closed by handler.");
+                _client.Stop(WebSocketCloseStatus.NormalClosure, "Closed by cancellation token.");
             });
 
             await _client.StartOrFail();

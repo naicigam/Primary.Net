@@ -91,7 +91,7 @@ namespace Primary
 
             if (result.IsSuccessStatusCode)
             {
-                AccessToken = string.Empty;
+                AccessToken = null;
             }
 
             return result.IsSuccessStatusCode;

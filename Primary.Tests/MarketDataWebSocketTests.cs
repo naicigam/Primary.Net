@@ -12,7 +12,7 @@ namespace Primary.Tests
     {
         [Test]
         [Timeout(10000)]
-        public async Task SubscriptionToMarketDataCanBeCreated()
+        public void SubscriptionToMarketDataCanBeCreated()
         {
             var instrumentId = new InstrumentId()
             {
@@ -24,14 +24,13 @@ namespace Primary.Tests
             using var socket = Api.CreateMarketDataSocket(new[] { instrumentId }, new[] { Entry.Close }, 1, 1);
 
             MarketData retrievedData = null;
-            socket.OnData = ((api, marketData) => retrievedData = marketData);
-            await socket.Start();
+            var dataReceived = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, marketData) => { retrievedData = marketData; dataReceived.Release(); });
+
+            _ = socket.Start();
 
             // Wait until data arrives
-            while (retrievedData == null)
-            {
-                Thread.Sleep(100);
-            }
+            dataReceived.Wait();
 
             Assert.That(retrievedData.InstrumentId.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.InstrumentId.Symbol, Is.Not.Null.And.Not.Empty);
@@ -64,7 +63,7 @@ namespace Primary.Tests
 
             Assert.That(!socket.IsRunning);
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
 
             // Wait until it is running
             while (!socket.IsRunning)
@@ -99,16 +98,13 @@ namespace Primary.Tests
             using var socket = Api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
 
             MarketData retrievedData = null;
-            socket.OnData = ((api, marketData) =>
-                                    retrievedData = (marketData.Data.IndexValue != null ? marketData : null)
-            );
-            await socket.Start();
+            var dataReceived = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, marketData) => { retrievedData = (marketData.Data.IndexValue != null ? marketData : null); dataReceived.Release(); });
+
+            _ = socket.Start();
 
             // Wait until data arrives
-            while (retrievedData == null)
-            {
-                Thread.Sleep(100);
-            }
+            dataReceived.Wait();
 
             Assert.That(retrievedData.InstrumentId.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.InstrumentId.Symbol, Is.Not.Null.And.Not.Empty);
@@ -136,7 +132,7 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task TryingToSubscribeToMarketDataForAnInvalidInstrumentTriggersAnError()
+        public void TryingToSubscribeToMarketDataForAnInvalidInstrumentTriggersAnError()
         {
             var invalidInstrumentId = new InstrumentId()
             {
@@ -145,9 +141,9 @@ namespace Primary.Tests
             };
             var entries = new[] { Entry.IndexValue };
             using var socket = Api.CreateMarketDataSocket(new[] { invalidInstrumentId }, entries, 1, 1);
-            socket.OnData += ((api, orderData) => { });
+            socket.OnData += ((_, _) => { });
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
             while (!socket.IsRunning)
             {
                 Thread.Sleep(10);
@@ -156,21 +152,5 @@ namespace Primary.Tests
             var exception = Assert.ThrowsAsync<Exception>(async () => { await socketTask; });
             Assert.That(exception.Message, Does.Contain(invalidInstrumentId.Symbol));
         }
-
-        public static Entry[] AllEntries = {
-            Entry.Bids,
-            Entry.Offers,
-            Entry.Last,
-            Entry.Open,
-            Entry.Close,
-            Entry.SettlementPrice,
-            Entry.SessionHighPrice,
-            Entry.SessionLowPrice,
-            Entry.Volume,
-            Entry.OpenInterest,
-            Entry.IndexValue,
-            Entry.EffectiveVolume,
-            Entry.NominalVolume
-        };
     }
 }

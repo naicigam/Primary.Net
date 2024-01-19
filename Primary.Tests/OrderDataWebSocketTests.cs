@@ -18,7 +18,7 @@ namespace Primary.Tests
             OrderStatus receivedOrderData = null;
             OrderId newOrderId = null;
             var receivedDataSemaphore = new SemaphoreSlim(0, 1);
-            socket.OnData = ((api, orderData) =>
+            socket.OnData = ((_, orderData) =>
             {
                 if (newOrderId != null && orderData.OrderReport.ClientOrderId == newOrderId.ClientOrderId)
                 {
@@ -26,7 +26,7 @@ namespace Primary.Tests
                     receivedDataSemaphore.Release();
                 }
             });
-            await socket.Start();
+            _ = socket.Start();
 
             // Send order
             Order order = Build.AnOrder(Api);
@@ -55,7 +55,7 @@ namespace Primary.Tests
             Assert.That(!socket.IsRunning);
             socket.OnData += ((api, orderData) => { });
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
 
             // Wait until it is running
             while (!socket.IsRunning)
@@ -89,14 +89,14 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task TryingToStartSocketWithAnInvalidAccountTriggersAnError()
+        public void TryingToStartSocketWithAnInvalidAccountTriggersAnError()
         {
             var invalidAccount = Build.RandomString();
 
             using var socket = Api.CreateOrderDataSocket(new[] { invalidAccount });
-            socket.OnData += ((api, orderData) => { });
+            socket.OnData += ((_, _) => { });
 
-            var socketTask = await socket.Start();
+            var socketTask = socket.Start();
             while (!socket.IsRunning)
             {
                 Thread.Sleep(10);
@@ -108,14 +108,15 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task OrdersCanBeSentAndIdentifiedUsingWebSocketClientOrderId()
+        public void OrdersCanBeSentAndIdentifiedUsingWebSocketClientOrderId()
         {
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
 
             OrderStatus receivedOrderData = null;
-            string newOrderWebSocketClientId = Build.RandomString();
+            var newOrderWebSocketClientId = Build.RandomString();
             var receivedDataSemaphore = new SemaphoreSlim(0, 1);
-            socket.OnData = ((api, orderData) =>
+
+            socket.OnData = ((_, orderData) =>
             {
                 if (orderData.OrderReport.WebSocketClientOrderId == newOrderWebSocketClientId)
                 {
@@ -123,13 +124,13 @@ namespace Primary.Tests
                     receivedDataSemaphore.Release();
                 }
             });
-            await socket.Start();
+            _ = socket.Start();
 
             // Send order
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            await socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
             receivedDataSemaphore.Wait();
@@ -143,7 +144,7 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task OrdersCanBeCancelled()
+        public void OrdersCanBeCancelled()
         {
             using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
 
@@ -174,16 +175,16 @@ namespace Primary.Tests
                     }
                 }
             });
-            await socket.Start();
+            _ = socket.Start();
 
             // Send order
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            await socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(Api.DemoAccount, order);
 
             // Wait until data arrives
-            await receivedDataSemaphore.WaitAsync();
+            receivedDataSemaphore.Wait();
 
             Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
             Assert.That(receivedOrderData.Status, Is.EqualTo(Status.Cancelled));

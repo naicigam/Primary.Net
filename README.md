@@ -25,7 +25,7 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 
 ## Building
 
-This project targets .Net Core 6.0 and .Net Standard 2.0. 
+This project targets .Net Core 6.0. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

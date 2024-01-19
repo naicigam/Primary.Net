@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-
 using Primary.Data;
 using Primary.Data.Orders;
 using Primary.Serialization;
@@ -29,17 +30,16 @@ namespace Primary
         /// <summary>
         /// Build a new API object.
         /// </summary>
-        public Api(Uri baseUri, HttpClient httpClient = null)
+        public Api(Uri baseUri, HttpClient httpClient = null, ILoggerFactory loggerFactory = null)
         {
             BaseUri = baseUri;
             HttpClient = httpClient ?? new HttpClient()
             {
-#if NET6
-                DefaultRequestVersion = new(2, 0) 
-#else
-#warning Not using HTTP/2.
-#endif
+                DefaultRequestVersion = new Version(2, 0)
             };
+
+            _loggerFactory = loggerFactory ?? new NullLoggerFactory();
+            _logger = _loggerFactory.CreateLogger<Api>();
         }
 
         public Uri BaseUri { get; private set; }
@@ -57,6 +57,11 @@ namespace Primary
         /// <returns></returns>
         public async Task<bool> Login(string username, string password)
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Logging to {BaseUri} with user {Username}", BaseUri, username);
+            }
+
             var uri = new Uri(BaseUri, "/auth/getToken");
 
             HttpClient.DefaultRequestHeaders.Clear();
@@ -86,7 +91,7 @@ namespace Primary
 
             if (result.IsSuccessStatusCode)
             {
-                AccessToken = string.Empty;
+                AccessToken = null;
             }
 
             return result.IsSuccessStatusCode;
@@ -134,7 +139,7 @@ namespace Primary
                                                                     DateTime dateFrom,
                                                                     DateTime dateTo)
         {
-            UriBuilder builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
+            var builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = instrumentId.Market;
             query["symbol"] = instrumentId.Symbol;
@@ -147,6 +152,11 @@ namespace Primary
 
             if (data.Status == Status.Error)
             {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError("Error when getting historical trades: {Message}, {Description}", data.Message, data.Description);
+                }
+
                 throw new Exception($"{data.Message} ({data.Description})");
             }
 
@@ -166,6 +176,13 @@ namespace Primary
 
             [JsonProperty("trades")]
             public List<Trade> Trades { get; set; }
+
+            public GetTradesResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         #endregion
@@ -212,6 +229,12 @@ namespace Primary
                                                           CancellationToken cancellationToken
         )
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating market data socket: @{Instruments}, @{Entries}, {Level}, {Depth}",
+                    instrumentIds, entries, level, depth);
+            }
+
             var marketDataToRequest = new MarketDataInfo()
             {
                 Depth = depth,
@@ -226,7 +249,8 @@ namespace Primary
                 ContractResolver = new StrictTypeContractResolver(typeof(InstrumentId))
             };
 
-            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken, instrumentsSerializationSettings);
+            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken,
+                instrumentsSerializationSettings, _loggerFactory);
         }
 
         #endregion
@@ -253,6 +277,11 @@ namespace Primary
                                                         CancellationToken cancellationToken
         )
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Creating order data socket: @{Accounts}", accounts);
+            }
+
             var request = new OrderDataRequest
             {
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a }).ToArray()
@@ -273,6 +302,11 @@ namespace Primary
         /// <returns>Order identifier.</returns>
         public async Task<OrderId> SubmitOrder(string account, Order order)
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Submitting order: @{Order}", order);
+            }
+
             var builder = new UriBuilder(BaseUri + "/rest/order/newSingleOrder");
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = "ROFX";
@@ -384,6 +418,13 @@ namespace Primary
 
             [JsonProperty("description")]
             public string Description;
+
+            public StatusResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         /// <summary>
@@ -430,6 +471,14 @@ namespace Primary
 
             [JsonProperty("order")]
             public Id Order;
+
+            public OrderIdResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+                Order = new Id();
+            }
         }
 
         private struct GetOrderResponse
@@ -445,6 +494,13 @@ namespace Primary
 
             [JsonProperty("order")]
             public OrderStatus Order { get; set; }
+
+            public GetOrderResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         #endregion
@@ -552,5 +608,8 @@ namespace Primary
         }
 
         #endregion
+
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger<Api> _logger;
     }
 }

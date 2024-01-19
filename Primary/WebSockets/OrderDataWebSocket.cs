@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Primary.Data.Orders;
 using Primary.Net;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Primary.WebSockets
 {
@@ -25,13 +25,13 @@ namespace Primary.WebSockets
 
     public class OrderDataWebSocket : WebSocket<OrderDataRequest, OrderData>
     {
-        internal OrderDataWebSocket(Api api, OrderDataRequest orderDataToRequest,
-                                    CancellationToken cancelToken)
+        internal OrderDataWebSocket(Api api, OrderDataRequest orderDataToRequest, CancellationToken cancelToken,
+            JsonSerializerSettings jsonSerializerSettings = null, ILoggerFactory loggerFactory = null)
         :
-        base(api, orderDataToRequest, cancelToken)
+        base(api, orderDataToRequest, cancelToken, jsonSerializerSettings, loggerFactory)
         { }
 
-        public async Task SubmitOrder(string account, Order order)
+        public void SubmitOrder(string account, Order order)
         {
             var jsonOrder = new JObject()
             {
@@ -62,10 +62,10 @@ namespace Primary.WebSockets
             }
 
             var jsonString = JsonConvert.SerializeObject(jsonOrder);
-            await SendJsonData(jsonString);
+            SendJsonData(jsonString);
         }
 
-        public async Task CancelOrder(Order order)
+        public void CancelOrder(Order order)
         {
             var jsonCancelOrder = new JObject()
             {
@@ -75,7 +75,7 @@ namespace Primary.WebSockets
             };
 
             var jsonString = JsonConvert.SerializeObject(jsonCancelOrder);
-            await SendJsonData(jsonString);
+            SendJsonData(jsonString);
         }
 
     }

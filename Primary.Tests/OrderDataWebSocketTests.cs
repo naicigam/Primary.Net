@@ -89,7 +89,7 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task TryingToStartSocketWithAnInvalidAccountTriggersAnError()
+        public void TryingToStartSocketWithAnInvalidAccountTriggersAnError()
         {
             var invalidAccount = Build.RandomString();
 
@@ -124,7 +124,7 @@ namespace Primary.Tests
                     receivedDataSemaphore.Release();
                 }
             });
-            socket.Start();
+            _ = socket.Start();
 
             // Send order
             Order order = Build.AnOrder(Api);

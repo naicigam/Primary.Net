@@ -139,7 +139,7 @@ namespace Primary
                                                                     DateTime dateFrom,
                                                                     DateTime dateTo)
         {
-            UriBuilder builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
+            var builder = new UriBuilder(BaseUri + "/rest/data/getTrades");
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["marketId"] = instrumentId.Market;
             query["symbol"] = instrumentId.Symbol;
@@ -176,6 +176,13 @@ namespace Primary
 
             [JsonProperty("trades")]
             public List<Trade> Trades { get; set; }
+
+            public GetTradesResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         #endregion
@@ -411,6 +418,13 @@ namespace Primary
 
             [JsonProperty("description")]
             public string Description;
+
+            public StatusResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         /// <summary>
@@ -457,6 +471,14 @@ namespace Primary
 
             [JsonProperty("order")]
             public Id Order;
+
+            public OrderIdResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+                Order = new Id();
+            }
         }
 
         private struct GetOrderResponse
@@ -472,6 +494,13 @@ namespace Primary
 
             [JsonProperty("order")]
             public OrderStatus Order { get; set; }
+
+            public GetOrderResponse()
+            {
+                Status = null;
+                Message = null;
+                Description = null;
+            }
         }
 
         #endregion

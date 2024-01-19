@@ -10,7 +10,7 @@ namespace Primary.Tests.Builders
         #region API builder
 
         [Test]
-        public async Task ApiIsBuiltLoggedIn()
+        public void ApiIsBuiltLoggedIn()
         {
             Api api = Build.AnApi();
             Assert.That(api.AccessToken, Is.Not.Null.And.Not.Empty);

@@ -12,7 +12,7 @@ namespace Primary.Tests
     {
         [Test]
         [Timeout(10000)]
-        public async Task SubscriptionToMarketDataCanBeCreated()
+        public void SubscriptionToMarketDataCanBeCreated()
         {
             var instrumentId = new InstrumentId()
             {
@@ -132,7 +132,7 @@ namespace Primary.Tests
 
         [Test]
         [Timeout(10000)]
-        public async Task TryingToSubscribeToMarketDataForAnInvalidInstrumentTriggersAnError()
+        public void TryingToSubscribeToMarketDataForAnInvalidInstrumentTriggersAnError()
         {
             var invalidInstrumentId = new InstrumentId()
             {

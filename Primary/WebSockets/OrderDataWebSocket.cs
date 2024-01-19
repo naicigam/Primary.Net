@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Primary.Data.Orders;
 using Primary.Net;
@@ -24,10 +25,10 @@ namespace Primary.WebSockets
 
     public class OrderDataWebSocket : WebSocket<OrderDataRequest, OrderData>
     {
-        internal OrderDataWebSocket(Api api, OrderDataRequest orderDataToRequest,
-                                    CancellationToken cancelToken)
+        internal OrderDataWebSocket(Api api, OrderDataRequest orderDataToRequest, CancellationToken cancelToken,
+            JsonSerializerSettings jsonSerializerSettings = null, ILoggerFactory loggerFactory = null)
         :
-        base(api, orderDataToRequest, cancelToken)
+        base(api, orderDataToRequest, cancelToken, jsonSerializerSettings, loggerFactory)
         { }
 
         public void SubmitOrder(string account, Order order)

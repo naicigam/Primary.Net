@@ -52,19 +52,24 @@ namespace Primary.Net
 
             Exception closedByException = null;
 
-            var logger = _loggerFactory.CreateLogger<WebsocketClient>();
-            _client = new WebsocketClient(_uri, logger, factory);
+            _logger = _loggerFactory.CreateLogger<WebSocket<TRequest, TResponse>>();
+            var webSocketLogger = _loggerFactory.CreateLogger<WebsocketClient>();
+            _client = new WebsocketClient(_uri, webSocketLogger, factory);
 
             _client.ReconnectionHappened.Subscribe(info =>
             {
                 var jsonRequest = JsonConvert.SerializeObject(_request, _jsonSerializerSettings);
                 _client.Send(jsonRequest);
-                logger.LogInformation("Reconnection happened, type: {type}, url: {url}", info.Type, _client.Url);
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Reconnection happened, type: {type}, url: {url}", info.Type, _client.Url);
+                }
             });
 
             _client.DisconnectionHappened.Subscribe(info =>
             {
-                logger.LogWarning("Disconnection happened, type: {type}, exception: {exception}", info.Type, info.Exception);
+                _logger.LogWarning("Disconnection happened, type: {type}, exception: {exception}", info.Type, info.Exception);
 
                 closedByException = info.Exception;
 
@@ -77,7 +82,11 @@ namespace Primary.Net
 
             _client.MessageReceived.Subscribe(msg =>
             {
-                logger.LogInformation("Message received: {message}", msg);
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Message received: {message}", msg);
+                }
+
                 OnMessageReceived(msg);
             });
 
@@ -151,6 +160,7 @@ namespace Primary.Net
         }
 
         private IWebsocketClient _client;
+        private ILogger<WebSocket<TRequest, TResponse>> _logger;
         private readonly ILoggerFactory _loggerFactory;
 
         private readonly TRequest _request;

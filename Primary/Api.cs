@@ -38,8 +38,8 @@ namespace Primary
                 DefaultRequestVersion = new Version(2, 0)
             };
 
-            loggerFactory ??= new NullLoggerFactory();
-            _logger = loggerFactory.CreateLogger<Api>();
+            _loggerFactory = loggerFactory ?? new NullLoggerFactory();
+            _logger = _loggerFactory.CreateLogger<Api>();
         }
 
         public Uri BaseUri { get; private set; }
@@ -242,7 +242,8 @@ namespace Primary
                 ContractResolver = new StrictTypeContractResolver(typeof(InstrumentId))
             };
 
-            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken, instrumentsSerializationSettings);
+            return new MarketDataWebSocket(this, marketDataToRequest, cancellationToken,
+                instrumentsSerializationSettings, _loggerFactory);
         }
 
         #endregion
@@ -579,6 +580,7 @@ namespace Primary
 
         #endregion
 
+        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Api> _logger;
     }
 }

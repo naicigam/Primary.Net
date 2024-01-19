@@ -8,15 +8,38 @@ namespace Primary.Tests
     internal class TestWithApi
     {
         protected string ApiAccount = Api.DemoAccount;
-        protected Api Api => _lazyApi.Value;
-        private static readonly Lazy<Api> _lazyApi = new(() => Build.AnApi());
+        protected Api Api
+        {
+            get
+            {
+                // Create a new one if it was logged out.
+                if (_lazyApi == null || string.IsNullOrEmpty(_lazyApi.Value.AccessToken))
+                {
+                    _lazyApi = new Lazy<Api>(() => Build.AnApi());
+                }
+
+                return _lazyApi.Value;
+            }
+        }
+
+        private static Lazy<Api> _lazyApi;
 
         protected string AnotherApiAccount = "REM779";
-        protected Api AnotherApi => _lazyAnotherApi.Value;
+        protected Api AnotherApi
+        {
+            get
+            {
+                // Create a new one if it was logged out.
+                if (_lazyAnotherApi == null || string.IsNullOrEmpty(_lazyAnotherApi.Value.AccessToken))
+                {
+                    _lazyAnotherApi = new Lazy<Api>(() => Build.AnApi().WithUsername("alvarezjuandev779").WithPassword("sllsrN2$"));
+                }
 
-        private static readonly Lazy<Api> _lazyAnotherApi = new(
-            () => Build.AnApi().WithUsername("alvarezjuandev779").WithPassword("sllsrN2$")
-        );
+                return _lazyAnotherApi.Value;
+            }
+        }
+
+        private static Lazy<Api> _lazyAnotherApi;
 
         protected async Task<OrderStatus> WaitForOrderToComplete(Api api, OrderId orderId)
         {

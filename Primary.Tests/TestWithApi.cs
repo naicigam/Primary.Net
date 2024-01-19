@@ -8,8 +8,21 @@ namespace Primary.Tests
     internal class TestWithApi
     {
         protected string ApiAccount = Api.DemoAccount;
-        protected Api Api => _lazyApi.Value;
-        private static readonly Lazy<Api> _lazyApi = new(() => Build.AnApi());
+        protected Api Api
+        {
+            get
+            {
+                // Create a new one if it was logged out.
+                if (string.IsNullOrEmpty(_lazyApi.Value.AccessToken))
+                {
+                    _lazyApi = new Lazy<Api>(() => Build.AnApi());
+                }
+
+                return _lazyApi.Value;
+            }
+        }
+
+        private static Lazy<Api> _lazyApi = new(() => Build.AnApi());
 
         protected string AnotherApiAccount = "REM779";
         protected Api AnotherApi => _lazyAnotherApi.Value;

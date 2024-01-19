@@ -24,12 +24,13 @@ namespace Primary.Tests
             using var socket = Api.CreateMarketDataSocket(new[] { instrumentId }, new[] { Entry.Close }, 1, 1);
 
             MarketData retrievedData = null;
-            var dataReceived = new ManualResetEvent(false);
-            socket.OnData = ((api, marketData) => { retrievedData = marketData; dataReceived.Set(); });
-            await socket.Start();
+            var dataReceived = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, marketData) => { retrievedData = marketData; dataReceived.Release(); });
+
+            _ = socket.Start();
 
             // Wait until data arrives
-            dataReceived.WaitOne();
+            dataReceived.Wait();
 
             Assert.That(retrievedData.InstrumentId.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.InstrumentId.Symbol, Is.Not.Null.And.Not.Empty);
@@ -97,13 +98,13 @@ namespace Primary.Tests
             using var socket = Api.CreateMarketDataSocket(new[] { instrument }, entries, 1, 1);
 
             MarketData retrievedData = null;
-            var dataReceived = new ManualResetEvent(false);
-            socket.OnData = ((api, marketData) => { retrievedData = (marketData.Data.IndexValue != null ? marketData : null); dataReceived.Set(); });
+            var dataReceived = new SemaphoreSlim(0, 1);
+            socket.OnData = ((api, marketData) => { retrievedData = (marketData.Data.IndexValue != null ? marketData : null); dataReceived.Release(); });
 
-            await socket.Start();
+            _ = socket.Start();
 
             // Wait until data arrives
-            dataReceived.WaitOne();
+            dataReceived.Wait();
 
             Assert.That(retrievedData.InstrumentId.Market, Is.Not.Null.And.Not.Empty);
             Assert.That(retrievedData.InstrumentId.Symbol, Is.Not.Null.And.Not.Empty);

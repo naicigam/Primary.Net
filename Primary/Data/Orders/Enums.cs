@@ -44,6 +44,9 @@ namespace Primary.Data.Orders
     [JsonConverter(typeof(StatusJsonSerializer))]
     public enum Status
     {
+        /// <summary>The order does not have a status yet.</summary>
+        NotSet,
+
         /// <summary>The order was successfully submitted.</summary>
         New,
 

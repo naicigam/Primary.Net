@@ -408,6 +408,66 @@ namespace Primary
             };
         }
 
+        /// <summary>
+        /// Cancel an order.
+        /// </summary>
+        /// <param name="orderId">Order identifier to cancel.</param>
+        public async Task CancelOrder(OrderId orderId)
+        {
+            var builder = new UriBuilder(BaseUri + "/rest/order/cancelById");
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["clOrdId"] = orderId.ClientOrderId;
+            query["proprietary"] = orderId.Proprietary;
+            builder.Query = query.ToString();
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+        }
+
+        /// <summary>
+        /// Get all the active orders for a specific account.
+        /// </summary>
+        /// <param name="accountId">Account to get orders from.</param>
+        public async Task<IEnumerable<OrderStatus>> GetActiveOrderStatuses(string accountId)
+        {
+            var builder = new UriBuilder(BaseUri + "/rest/order/actives");
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["accountId"] = accountId;
+            builder.Query = query.ToString();
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<OrdersStatusResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message})");
+            }
+            return response.Orders;
+        }
+
+        private struct OrdersStatusResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("orders")]
+            public IEnumerable<OrderStatus> Orders;
+
+            public OrdersStatusResponse()
+            {
+                Status = null;
+                Orders = null;
+            }
+        }
+
         private struct StatusResponse
         {
             [JsonProperty("status")]
@@ -424,28 +484,6 @@ namespace Primary
                 Status = null;
                 Message = null;
                 Description = null;
-            }
-        }
-
-        /// <summary>
-        /// Cancel an order.
-        /// </summary>
-        /// <param name="orderId">Order identifier to cancel.</param>
-        public async Task CancelOrder(OrderId orderId)
-        {
-
-            var builder = new UriBuilder(BaseUri + "/rest/order/cancelById");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["clOrdId"] = orderId.ClientOrderId;
-            query["proprietary"] = orderId.Proprietary;
-            builder.Query = query.ToString();
-
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
-
-            var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
-            if (response.Status == Status.Error)
-            {
-                throw new Exception($"{response.Message} ({response.Description})");
             }
         }
 

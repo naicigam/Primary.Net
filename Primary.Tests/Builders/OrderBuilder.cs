@@ -1,6 +1,6 @@
 ﻿using Primary.Data;
 using Primary.Data.Orders;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Primary.Tests.Builders
@@ -16,24 +16,20 @@ namespace Primary.Tests.Builders
 
         private Order Build()
         {
-            var instrumentId = new InstrumentId()
+            if (_instruments == null)
             {
-                Market = "ROFX",
-                Symbol = Tests.Build.DollarFutureSymbol()
-            };
+                _instruments = _api.GetAllInstruments().Result;
+            }
 
-            // Get a valid price
-            var today = DateTime.Today;
-            var prices = _api.GetHistoricalTrades(instrumentId, today.AddDays(-5), today).Result;
-
+            var instrument = _instruments.First(i => i.Symbol.Contains("GGAL"));
             return new Order
             {
-                InstrumentId = instrumentId,
+                InstrumentId = instrument,
                 Expiration = Expiration.Day,
-                Type = Data.Orders.Type.Limit,
+                Type = Type.Limit,
                 Side = Side.Buy,
                 Quantity = 1,
-                Price = prices.Last().Price - 1m
+                Price = instrument.MinimumTradePrice
             };
         }
 
@@ -41,5 +37,7 @@ namespace Primary.Tests.Builders
         {
             return builder.Build();
         }
+
+        private IEnumerable<Instrument> _instruments;
     }
 }

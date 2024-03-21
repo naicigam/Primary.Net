@@ -1,5 +1,5 @@
 # Primary.NET
-> C# bindings for [Primary.API](http://api.primary.com.ar).
+> C# bindings for [Primary.API](https://apihub.primary.com.ar/).
 
 Provides a .Net friendly interface to interact with the Primary API. 
 
@@ -18,7 +18,8 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 - Real-time order data.
 - Submit, update and cancel orders.
 - Accounts: available accounts, positions and statements.
-
+- Active orders.
+- 
 # Roadmap
 - Remove dependencies.
 - Performance improvements.

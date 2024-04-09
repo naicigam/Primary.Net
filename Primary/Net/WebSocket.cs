@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Primary.WebSockets;
 using System;
 using System.Net.WebSockets;
 using System.Threading;
@@ -134,6 +135,7 @@ namespace Primary.Net
 
         protected void SendJsonData(string jsonData)
         {
+            Console.WriteLine($"Sent: {jsonData}");
             _client.Send(jsonData);
         }
 
@@ -141,6 +143,11 @@ namespace Primary.Net
         {
             // Decode the message
             var messageJson = receivedMessage.Text;
+
+            if (this is OrderDataWebSocket)
+            {
+                Console.WriteLine($"Received: {messageJson}");
+            }
 
             // Parse and notify subscriber
             var responseJson = JObject.Parse(messageJson);

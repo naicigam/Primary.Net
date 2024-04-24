@@ -69,7 +69,10 @@ namespace Primary.Data.Orders
         PartiallyFilled,
 
         /// <summary>The order was filled.</summary>
-        Filled
+        Filled,
+
+        /// <summary>The order expired.</summary>
+        Expired
     }
 
     #region String serialization
@@ -192,6 +195,7 @@ namespace Primary.Data.Orders
                 Status.PendingReplace => "PENDING_REPLACE",
                 Status.PartiallyFilled => "PARTIALLY_FILLED",
                 Status.Filled => "FILLED",
+                Status.Expired => "EXPIRED",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
@@ -208,6 +212,7 @@ namespace Primary.Data.Orders
                 "PENDING_REPLACE" => Status.PendingReplace,
                 "PARTIALLY_FILLED" => Status.PartiallyFilled,
                 "FILLED" => Status.Filled,
+                "EXPIRED" => Status.Expired,
                 _ => throw new InvalidEnumStringException(value),
             };
         }

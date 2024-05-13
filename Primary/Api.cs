@@ -21,11 +21,11 @@ namespace Primary
     public class Api
     {
         /// <summary>This is the default production endpoint.</summary>
-        public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
+        public static Uri ProductionEndpoint => new("https://api.primary.com.ar");
 
         /// <summary>This is the default demo endpoint.</summary>
         /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
-        public static Uri DemoEndpoint => new Uri("https://api.remarkets.primary.com.ar");
+        public static Uri DemoEndpoint => new("https://api.remarkets.primary.com.ar");
 
         /// <summary>
         /// Build a new API object.
@@ -287,7 +287,7 @@ namespace Primary
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a }).ToArray()
             };
 
-            return new OrderDataWebSocket(this, request, cancellationToken);
+            return new OrderDataWebSocket(this, request, cancellationToken, null, _loggerFactory);
         }
 
         #endregion

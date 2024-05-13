@@ -83,9 +83,9 @@ namespace Primary.Net
 
             _client.MessageReceived.Subscribe(msg =>
             {
-                if (_logger.IsEnabled(LogLevel.Information))
+                if (_logger.IsEnabled(LogLevel.Trace))
                 {
-                    _logger.LogInformation("Message received: {message}", msg);
+                    _logger.LogTrace("Message received: {message}", msg);
                 }
 
                 OnMessageReceived(msg);
@@ -135,7 +135,11 @@ namespace Primary.Net
 
         protected void SendJsonData(string jsonData)
         {
-            Console.WriteLine($"Sent: {jsonData}");
+            if (_logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogTrace("Send message: {message}", jsonData);
+            }
+
             _client.Send(jsonData);
         }
 
@@ -146,7 +150,10 @@ namespace Primary.Net
 
             if (this is OrderDataWebSocket)
             {
-                Console.WriteLine($"Received: {messageJson}");
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTrace("Send message: {messageJson}", messageJson);
+                }
             }
 
             // Parse and notify subscriber

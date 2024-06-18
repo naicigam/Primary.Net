@@ -45,7 +45,7 @@ namespace Primary.Tests
         [Timeout(20000)]
         public async Task PositionsCanBeRetrieved()
         {
-            var instrument = (await AnotherApi.GetAllInstruments()).First(i => i.Type == InstrumentType.Equity);
+            var instrument = await RandomInstrument(AnotherApi);
             var symbol = instrument.Symbol;
 
             // Generate liquidity
@@ -54,7 +54,7 @@ namespace Primary.Tests
                 InstrumentId = instrument,
                 Type = Type.Limit,
                 Price = instrument.MinimumTradePrice + 10,
-                Side = Side.Buy,
+                Side = Side.Sell,
                 Quantity = instrument.MinimumTradeVolume
             };
 
@@ -65,16 +65,15 @@ namespace Primary.Tests
             var order = new Order()
             {
                 InstrumentId = instrument,
-                Type = Type.Limit,
-                Price = instrument.MinimumTradePrice,
-                Side = Side.Sell,
+                Type = Type.Market,
+                Side = Side.Buy,
                 Quantity = instrument.MinimumTradeVolume
             };
 
             orderId = await Api.SubmitOrder(ApiAccount, order);
             await WaitForOrderToComplete(Api, orderId);
 
-            var positions = await Api.GetAccountPositions(Api.DemoAccount);
+            var positions = await Api.GetAccountPositions(ApiAccount);
             Assert.That(positions, Is.Not.Null);
 
             var position = positions.FirstOrDefault(p => p.Symbol == symbol);
@@ -92,5 +91,12 @@ namespace Primary.Tests
                 Assert.That(position.OriginalSellPrice, Is.Not.EqualTo(0));
             }
         }
+
+        private static async Task<Instrument> RandomInstrument(Api api)
+        {
+            var instruments = (await api.GetAllInstruments()).Where(i => i.Type == InstrumentType.Equity);
+            return instruments.ElementAt(_random.Next(0, instruments.Count()));
+        }
+        private static readonly System.Random _random = new();
     }
 }

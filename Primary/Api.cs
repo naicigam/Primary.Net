@@ -317,8 +317,8 @@ namespace Primary
             query["side"] = order.Side.ToApiString();
             query["timeInForce"] = order.Expiration.ToApiString();
             query["account"] = account;
-            query["cancelPrevious"] = order.CancelPrevious.ToString(CultureInfo.InvariantCulture);
-            query["iceberg"] = order.Iceberg.ToString(CultureInfo.InvariantCulture);
+            query["cancelPrevious"] = JsonConvert.SerializeObject(order.CancelPrevious);
+            query["iceberg"] = JsonConvert.SerializeObject(order.Iceberg);
 
             if (order.Expiration == Expiration.GoodTillDate)
             {

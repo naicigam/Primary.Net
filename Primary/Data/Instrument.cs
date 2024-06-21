@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Primary.Serialization;
 using System;
+using System.Collections.Generic;
 
 namespace Primary.Data
 {
@@ -36,7 +37,7 @@ namespace Primary.Data
 
     public class Instrument : InstrumentId
     {
-        /// <summary>Dezscription of the instrument.</summary>
+        /// <summary>Description of the instrument.</summary>
         [JsonProperty("securityDescription")]
         public string Description { get; set; }
 
@@ -95,6 +96,22 @@ namespace Primary.Data
         /// <summary>Highest price in which it can be traded.</summary>
         [JsonProperty("highLimitPrice")]
         public decimal MaximumTradePrice { get; set; }
+
+        public class TickPriceRange
+        {
+            [JsonProperty("lowerLimit")]
+            public decimal LowerLimit { get; set; }
+
+            [JsonProperty("upperLimit")]
+            public decimal? UpperLimit { get; set; }
+
+            [JsonProperty("tick")]
+            public decimal Tick { get; set; }
+        }
+
+        /// <summary>Dynamic price ticks of each contract.</summary>
+        [JsonProperty("tickPriceRanges")]
+        public Dictionary<string, TickPriceRange> TickPriceRanges { get; set; }
     }
 
     public enum InstrumentType

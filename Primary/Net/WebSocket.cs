@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Primary.WebSockets;
 using System;
 using System.Net.WebSockets;
 using System.Threading;
@@ -82,9 +83,9 @@ namespace Primary.Net
 
             _client.MessageReceived.Subscribe(msg =>
             {
-                if (_logger.IsEnabled(LogLevel.Information))
+                if (_logger.IsEnabled(LogLevel.Trace))
                 {
-                    _logger.LogInformation("Message received: {message}", msg);
+                    _logger.LogTrace("Message received: {message}", msg);
                 }
 
                 OnMessageReceived(msg);
@@ -134,6 +135,11 @@ namespace Primary.Net
 
         protected void SendJsonData(string jsonData)
         {
+            if (_logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogTrace("Send message: {message}", jsonData);
+            }
+
             _client.Send(jsonData);
         }
 
@@ -141,6 +147,14 @@ namespace Primary.Net
         {
             // Decode the message
             var messageJson = receivedMessage.Text;
+
+            if (this is OrderDataWebSocket)
+            {
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTrace("Send message: {messageJson}", messageJson);
+                }
+            }
 
             // Parse and notify subscriber
             var responseJson = JObject.Parse(messageJson);

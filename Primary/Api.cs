@@ -21,11 +21,11 @@ namespace Primary
     public class Api
     {
         /// <summary>This is the default production endpoint.</summary>
-        public static Uri ProductionEndpoint => new Uri("https://api.primary.com.ar");
+        public static Uri ProductionEndpoint => new("https://api.primary.com.ar");
 
         /// <summary>This is the default demo endpoint.</summary>
         /// <remarks>You can get a demo username at https://remarkets.primary.ventures.</remarks>
-        public static Uri DemoEndpoint => new Uri("https://api.remarkets.primary.com.ar");
+        public static Uri DemoEndpoint => new("https://api.remarkets.primary.com.ar");
 
         /// <summary>
         /// Build a new API object.
@@ -287,7 +287,7 @@ namespace Primary
                 Accounts = accounts.Select(a => new OrderStatus.AccountId() { Id = a }).ToArray()
             };
 
-            return new OrderDataWebSocket(this, request, cancellationToken);
+            return new OrderDataWebSocket(this, request, cancellationToken, null, _loggerFactory);
         }
 
         #endregion
@@ -317,8 +317,8 @@ namespace Primary
             query["side"] = order.Side.ToApiString();
             query["timeInForce"] = order.Expiration.ToApiString();
             query["account"] = account;
-            query["cancelPrevious"] = order.CancelPrevious.ToString(CultureInfo.InvariantCulture);
-            query["iceberg"] = order.Iceberg.ToString(CultureInfo.InvariantCulture);
+            query["cancelPrevious"] = JsonConvert.SerializeObject(order.CancelPrevious);
+            query["iceberg"] = JsonConvert.SerializeObject(order.Iceberg);
 
             if (order.Expiration == Expiration.GoodTillDate)
             {
@@ -408,6 +408,66 @@ namespace Primary
             };
         }
 
+        /// <summary>
+        /// Cancel an order.
+        /// </summary>
+        /// <param name="orderId">Order identifier to cancel.</param>
+        public async Task CancelOrder(OrderId orderId)
+        {
+            var builder = new UriBuilder(BaseUri + "/rest/order/cancelById");
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["clOrdId"] = orderId.ClientOrderId;
+            query["proprietary"] = orderId.Proprietary;
+            builder.Query = query.ToString();
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message} ({response.Description})");
+            }
+        }
+
+        /// <summary>
+        /// Get all the active orders for a specific account.
+        /// </summary>
+        /// <param name="accountId">Account to get orders from.</param>
+        public async Task<IEnumerable<OrderStatus>> GetActiveOrderStatuses(string accountId)
+        {
+            var builder = new UriBuilder(BaseUri + "/rest/order/actives");
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["accountId"] = accountId;
+            builder.Query = query.ToString();
+
+            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+
+            var response = JsonConvert.DeserializeObject<OrdersStatusResponse>(jsonResponse);
+            if (response.Status == Status.Error)
+            {
+                throw new Exception($"{response.Message})");
+            }
+            return response.Orders;
+        }
+
+        private struct OrdersStatusResponse
+        {
+            [JsonProperty("status")]
+            public string Status;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("orders")]
+            public IEnumerable<OrderStatus> Orders;
+
+            public OrdersStatusResponse()
+            {
+                Status = null;
+                Orders = null;
+            }
+        }
+
         private struct StatusResponse
         {
             [JsonProperty("status")]
@@ -424,28 +484,6 @@ namespace Primary
                 Status = null;
                 Message = null;
                 Description = null;
-            }
-        }
-
-        /// <summary>
-        /// Cancel an order.
-        /// </summary>
-        /// <param name="orderId">Order identifier to cancel.</param>
-        public async Task CancelOrder(OrderId orderId)
-        {
-
-            var builder = new UriBuilder(BaseUri + "/rest/order/cancelById");
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            query["clOrdId"] = orderId.ClientOrderId;
-            query["proprietary"] = orderId.Proprietary;
-            builder.Query = query.ToString();
-
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
-
-            var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
-            if (response.Status == Status.Error)
-            {
-                throw new Exception($"{response.Message} ({response.Description})");
             }
         }
 

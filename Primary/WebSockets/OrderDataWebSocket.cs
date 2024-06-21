@@ -43,12 +43,12 @@ namespace Primary.WebSockets
                 ["account"] = account,
                 ["quantity"] = order.Quantity.ToString(CultureInfo.InvariantCulture),
                 ["side"] = order.Side.ToApiString(),
-                ["iceberg"] = order.Iceberg.ToString(CultureInfo.InvariantCulture),
+                ["iceberg"] = order.Iceberg,
                 ["price"] = order.Price?.ToString(CultureInfo.InvariantCulture),
                 ["ordType"] = order.Type.ToApiString(),
                 ["wsClOrdId"] = order.WebSocketClientOrderId,
                 ["timeInForce"] = order.Expiration.ToApiString(),
-                ["cancelPrevious"] = order.CancelPrevious.ToString(CultureInfo.InvariantCulture)
+                ["cancelPrevious"] = order.CancelPrevious
             };
 
             if (order.Expiration == Expiration.GoodTillDate)

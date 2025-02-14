@@ -23,7 +23,7 @@ namespace Primary.Tests
                 Assert.That(instrument.Currency, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.PriceConversionFactor, Is.Not.EqualTo(default));
                 Assert.That(instrument.CfiCode, Is.Not.Null.And.Not.Empty);
-                Assert.That(instrument.Type, Is.Not.EqualTo(InstrumentType.Unknown));
+                Assert.That(instrument.Type, Is.Not.EqualTo(InstrumentType.Unknown), instrument.CfiCode);
                 Assert.That(instrument.MinimumTradeVolume, Is.GreaterThanOrEqualTo(0));
                 Assert.That(instrument.MaximumTradeVolume, Is.GreaterThanOrEqualTo(0));
             }

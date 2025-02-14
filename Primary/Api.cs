@@ -97,9 +97,9 @@ namespace Primary
             return result.IsSuccessStatusCode;
         }
 
-        public const string DemoUsername = "naicigam2046";
-        public const string DemoPassword = "nczhmL9@";
-        public const string DemoAccount = "REM2046";
+        public const string DemoUsername = "naicigam20858";
+        public const string DemoPassword = "qoqmeS6$";
+        public const string DemoAccount = "REM20858";
 
         #endregion
 

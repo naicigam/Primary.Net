@@ -24,7 +24,7 @@ namespace Primary.Tests
 
         private static Lazy<Api> _lazyApi;
 
-        protected string AnotherApiAccount = "REM779";
+        protected string AnotherApiAccount = "REM20859";
         protected Api AnotherApi
         {
             get
@@ -32,7 +32,7 @@ namespace Primary.Tests
                 // Create a new one if it was logged out.
                 if (_lazyAnotherApi == null || string.IsNullOrEmpty(_lazyAnotherApi.Value.AccessToken))
                 {
-                    _lazyAnotherApi = new Lazy<Api>(() => Build.AnApi().WithUsername("alvarezjuandev779").WithPassword("sllsrN2$"));
+                    _lazyAnotherApi = new Lazy<Api>(() => Build.AnApi().WithUsername("alvarezjuandev20859").WithPassword("lolpzX4$"));
                 }
 
                 return _lazyAnotherApi.Value;

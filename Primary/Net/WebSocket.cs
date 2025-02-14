@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Primary.WebSockets;
 using System;
 using System.Net.WebSockets;
 using System.Threading;
@@ -148,12 +147,9 @@ namespace Primary.Net
             // Decode the message
             var messageJson = receivedMessage.Text;
 
-            if (this is OrderDataWebSocket)
+            if (_logger.IsEnabled(LogLevel.Trace))
             {
-                if (_logger.IsEnabled(LogLevel.Trace))
-                {
-                    _logger.LogTrace("Send message: {messageJson}", messageJson);
-                }
+                _logger.LogTrace("Send message: {messageJson}", messageJson);
             }
 
             // Parse and notify subscriber

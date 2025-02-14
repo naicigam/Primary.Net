@@ -70,6 +70,7 @@ namespace Primary.Data
             "FXXXSX" => InstrumentType.Future,
             "OPAFXS" => InstrumentType.FuturePutOption,
             "OCAFXS" => InstrumentType.FutureCallOption,
+            "OCEFXS" => InstrumentType.FutureCallOption,
             "EMXXXX" => InstrumentType.Cedear,
             "DBXXFR" => InstrumentType.Obligation,
             "MRIXXX" => InstrumentType.Index,
@@ -112,6 +113,10 @@ namespace Primary.Data
         /// <summary>Dynamic price ticks of each contract.</summary>
         [JsonProperty("tickPriceRanges")]
         public Dictionary<string, TickPriceRange> TickPriceRanges { get; set; }
+
+        /// <summary>Strike price.</summary>
+        [JsonProperty("strike")]
+        public decimal Strike { get; set; }
     }
 
     public enum InstrumentType

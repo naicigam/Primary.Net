@@ -19,14 +19,14 @@ Documentation: https://finanzascodificadas.com/Primary.Net/
 - Submit, update and cancel orders.
 - Accounts: available accounts, positions and statements.
 - Active orders.
-- 
+
 # Roadmap
 - Remove dependencies.
 - Performance improvements.
 
 ## Building
 
-This project targets .Net Core 6.0. 
+This project targets .Net Core 8.0. 
 
 You can build it using Visual Studio 2019, or using the command line:
 

@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
 
     - name: Restore Dependencies
       run: dotnet restore Primary.sln
@@ -45,13 +45,13 @@ jobs:
         output: 'both'
 
     - name: Upload Coverage Artifact
-      uses: actions/upload-artifact@v2.3.0
+      uses: actions/upload-artifact@v4.6.0
       with:
         name: release-nugets
         path: code-coverage-results.md
 
     - name: Upload Nuget Artifact
-      uses: actions/upload-artifact@v2.3.0
+      uses: actions/upload-artifact@v4.6.0
       with:
         name: release-nugets
         path: Primary/bin/Release/Primary*.nupkg

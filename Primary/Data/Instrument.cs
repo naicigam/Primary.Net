@@ -113,6 +113,10 @@ namespace Primary.Data
         /// <summary>Dynamic price ticks of each contract.</summary>
         [JsonProperty("tickPriceRanges")]
         public Dictionary<string, TickPriceRange> TickPriceRanges { get; set; }
+
+        /// <summary>Strike price.</summary>
+        [JsonProperty("strike")]
+        public decimal Strike { get; set; }
     }
 
     public enum InstrumentType

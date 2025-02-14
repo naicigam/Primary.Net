@@ -70,6 +70,7 @@ namespace Primary.Data
             "FXXXSX" => InstrumentType.Future,
             "OPAFXS" => InstrumentType.FuturePutOption,
             "OCAFXS" => InstrumentType.FutureCallOption,
+            "OCEFXS" => InstrumentType.FutureCallOption,
             "EMXXXX" => InstrumentType.Cedear,
             "DBXXFR" => InstrumentType.Obligation,
             "MRIXXX" => InstrumentType.Index,

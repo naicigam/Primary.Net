@@ -25,7 +25,14 @@ namespace Primary.Tests
 
             MarketData retrievedData = null;
             var dataReceived = new SemaphoreSlim(0, 1);
-            socket.OnData = ((api, marketData) => { retrievedData = marketData; dataReceived.Release(); });
+            socket.OnData = ((api, marketData) =>
+            {
+                if (marketData.Data.Close != null)
+                {
+                    retrievedData = marketData;
+                    dataReceived.Release();
+                }
+            });
 
             _ = socket.Start();
 

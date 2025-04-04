@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+
 using Primary.Data;
 using Primary.Data.Orders;
 using Primary.Serialization;
@@ -9,6 +10,7 @@ using Primary.WebSockets;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -116,6 +118,53 @@ namespace Primary
 
             var data = JsonConvert.DeserializeObject<GetAllInstrumentsResponse>(response);
             return data.Instruments;
+        }
+
+        /// <summary>
+        /// Same as <see cref="GetAllInstruments"/> but with cache capabilities
+        /// </summary>
+        /// <param name="fileCacheName">(optional) File to use as cache</param>
+        /// <param name="cacheValidAntiquity">(optional) How long the cache is valid, in days.</param>
+        /// <returns>Instruments information or null if information can not be retrieved</returns>
+        public async Task<IEnumerable<Instrument>> GetAllInstrumentsFileCache(string fileCacheName = null, uint cacheValidAntiquity = 1)
+        {
+            IEnumerable<Instrument> instrumentDetail = null;
+            Serialization.CacheInstrumentsDetails cache = null;
+            bool shouldRefresh = false;
+
+            if (fileCacheName == null)
+                fileCacheName = System.IO.Path.GetTempPath() + "AllMarketInstrumentsDetailsCache.json";
+
+
+            if (System.IO.File.Exists(fileCacheName) == true)
+            {
+                cache = InstrumentsDetailsSerializer.DesSerializeInstrumentDetail(fileCacheName);
+                if (cache != null && (DateTime.Now.Date - cache.CacheDate.Date).Days < (int)cacheValidAntiquity)
+                {
+                    shouldRefresh = false;
+                    instrumentDetail = cache.InstrumentDetailList;
+                    cache = null;
+                }
+                else
+                    shouldRefresh = true;
+            }
+            else
+                shouldRefresh = true;
+
+            if (shouldRefresh)
+            {
+                instrumentDetail = await GetAllInstruments();
+                if (instrumentDetail != null)
+                {
+                    cache = new CacheInstrumentsDetails();
+                    cache.CacheDate = DateTime.Now.Date;
+                    cache.InstrumentDetailList = new List<Instrument>(instrumentDetail);
+                    InstrumentsDetailsSerializer.SerializeInstrumentsDetails(cache, fileCacheName);
+                    cache = null;
+                }
+            }
+
+            return instrumentDetail;
         }
 
         private class GetAllInstrumentsResponse

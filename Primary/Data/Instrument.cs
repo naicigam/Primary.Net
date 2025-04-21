@@ -41,6 +41,10 @@ namespace Primary.Data
         [JsonProperty("securityDescription")]
         public string Description { get; set; }
 
+        /// <summary>Underlying security.</summary>
+        [JsonProperty("underlying")]
+        public string Underlying { get; set; }
+
         /// <summary>Currency.</summary>
         [JsonProperty("currency")]
         public string Currency { get; set; }

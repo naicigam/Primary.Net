@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Primary.Data;
 using Primary.Data.Orders;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace Primary.Tests
             Assert.That(accountStatement.DetailedAccountReports, Is.Not.Empty);
 
             var detailedAccountReport = accountStatement.DetailedAccountReports.Values.First();
-            Assert.That(detailedAccountReport.SettlementDate, Is.Not.EqualTo(default));
+            Assert.That(detailedAccountReport.SettlementDate, Is.Not.EqualTo(default(DateTime)));
             Assert.That(detailedAccountReport.CurrencyBalance, Is.Not.Null.And.Not.Empty);
             Assert.That(detailedAccountReport.AvailableToOperate.Cash.DetailedCash, Is.Not.Empty);
         }
@@ -35,8 +36,8 @@ namespace Primary.Tests
             Assert.That(accounts, Is.Not.Empty);
 
             var account = accounts.First();
-            Assert.That(account.BrokerId, Is.Not.EqualTo(default));
-            Assert.That(account.Id, Is.Not.EqualTo(default));
+            Assert.That(account.BrokerId, Is.Not.EqualTo(default(int)));
+            Assert.That(account.Id, Is.Not.EqualTo(default(int)));
             Assert.That(account.Name, Is.EqualTo(Api.DemoAccount));
             Assert.That(account.Status, Is.True);
         }
@@ -52,7 +53,7 @@ namespace Primary.Tests
             var buyOrder = new Order()
             {
                 InstrumentId = instrument,
-                Type = Type.Limit,
+                Type = Data.Orders.Type.Limit,
                 Price = instrument.MinimumTradePrice + 10,
                 Side = Side.Sell,
                 Quantity = instrument.MinimumTradeVolume
@@ -65,7 +66,7 @@ namespace Primary.Tests
             var order = new Order()
             {
                 InstrumentId = instrument,
-                Type = Type.Market,
+                Type = Data.Orders.Type.Market,
                 Side = Side.Buy,
                 Quantity = instrument.MinimumTradeVolume
             };
@@ -77,7 +78,7 @@ namespace Primary.Tests
             Assert.That(positions, Is.Not.Null);
 
             var position = positions.FirstOrDefault(p => p.Symbol == symbol);
-            Assert.That(position, Is.Not.EqualTo(default));
+            Assert.That(position, Is.Not.EqualTo(default(DateTime)));
             Assert.That(position.Symbol, Is.EqualTo(symbol));
 
             if (order.Side == Side.Buy)

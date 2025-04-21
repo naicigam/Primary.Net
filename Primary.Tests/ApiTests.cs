@@ -21,7 +21,7 @@ namespace Primary.Tests
                 Assert.That(instrument.Symbol, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Description, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Currency, Is.Not.Null.And.Not.Empty);
-                Assert.That(instrument.PriceConversionFactor, Is.Not.EqualTo(default));
+                Assert.That(instrument.PriceConversionFactor, Is.Not.EqualTo(default(float)));
                 Assert.That(instrument.CfiCode, Is.Not.Null.And.Not.Empty);
                 Assert.That(instrument.Type, Is.Not.EqualTo(InstrumentType.Unknown), instrument.CfiCode);
                 Assert.That(instrument.MinimumTradeVolume, Is.GreaterThanOrEqualTo(0));
@@ -48,10 +48,10 @@ namespace Primary.Tests
 
             foreach (var trade in trades)
             {
-                Assert.That(trade.Price, Is.Not.EqualTo(default));
-                Assert.That(trade.Size, Is.Not.EqualTo(default));
-                Assert.That(trade.DateTime, Is.Not.EqualTo(default));
-                Assert.That(trade.ServerTime, Is.Not.EqualTo(default));
+                Assert.That(trade.Price, Is.Not.EqualTo(default(decimal)));
+                Assert.That(trade.Size, Is.Not.EqualTo(default(decimal)));
+                Assert.That(trade.DateTime, Is.Not.EqualTo(default(DateTime)));
+                Assert.That(trade.ServerTime, Is.Not.EqualTo(default(long)));
 
                 Assert.That(trade.DateTime.Date, Is.GreaterThanOrEqualTo(dateFrom).And.LessThanOrEqualTo(dateTo));
             }

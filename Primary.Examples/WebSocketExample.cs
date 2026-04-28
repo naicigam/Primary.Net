@@ -12,7 +12,7 @@ namespace Primary.Examples
             Console.WriteLine("Connecting to ReMarkets...");
 
             var api = new Api(Api.DemoEndpoint);
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
+            await api.Login(DemoCredentials.Username, DemoCredentials.Password);
 
             // Get a all dollar futures and forwards
             Console.WriteLine("Getting available instruments...");

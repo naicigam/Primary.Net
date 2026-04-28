@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -18,7 +18,7 @@ using System.Web;
 
 namespace Primary
 {
-    public class Api
+    public class Api : IDisposable
     {
         /// <summary>This is the default production endpoint.</summary>
         public static Uri ProductionEndpoint => new("https://api.primary.com.ar");
@@ -33,10 +33,20 @@ namespace Primary
         public Api(Uri baseUri, HttpClient httpClient = null, ILoggerFactory loggerFactory = null)
         {
             BaseUri = baseUri;
-            HttpClient = httpClient ?? new HttpClient()
+
+            if (httpClient != null)
             {
-                DefaultRequestVersion = new Version(2, 0)
-            };
+                HttpClient = httpClient;
+                _ownsHttpClient = false;
+            }
+            else
+            {
+                HttpClient = new HttpClient()
+                {
+                    DefaultRequestVersion = new Version(2, 0)
+                };
+                _ownsHttpClient = true;
+            }
 
             _loggerFactory = loggerFactory ?? new NullLoggerFactory();
             _logger = _loggerFactory.CreateLogger<Api>();
@@ -64,17 +74,16 @@ namespace Primary
 
             var uri = new Uri(BaseUri, "/auth/getToken");
 
-            HttpClient.DefaultRequestHeaders.Clear();
-            HttpClient.DefaultRequestHeaders.Add("X-Username", username);
-            HttpClient.DefaultRequestHeaders.Add("X-Password", password);
+            using var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Headers.Add("X-Username", username);
+            request.Headers.Add("X-Password", password);
+            request.Content = new StringContent(string.Empty);
 
-            var result = await HttpClient.PostAsync(uri, new StringContent(string.Empty));
+            var result = await HttpClient.SendAsync(request);
 
             if (result.IsSuccessStatusCode)
             {
                 AccessToken = result.Headers.GetValues("X-Auth-Token").FirstOrDefault();
-                HttpClient.DefaultRequestHeaders.Clear();
-                HttpClient.DefaultRequestHeaders.Add("X-Auth-Token", AccessToken);
             }
 
             return result.IsSuccessStatusCode;
@@ -87,7 +96,8 @@ namespace Primary
         public async Task<bool> Logout()
         {
             var uri = new Uri(BaseUri, "/auth/removeToken");
-            var result = await HttpClient.GetAsync(uri);
+            using var request = CreateAuthenticatedRequest(HttpMethod.Get, uri);
+            var result = await HttpClient.SendAsync(request);
 
             if (result.IsSuccessStatusCode)
             {
@@ -96,10 +106,6 @@ namespace Primary
 
             return result.IsSuccessStatusCode;
         }
-
-        public const string DemoUsername = "naicigam20858";
-        public const string DemoPassword = "qoqmeS6$";
-        public const string DemoAccount = "REM20858";
 
         #endregion
 
@@ -112,7 +118,7 @@ namespace Primary
         public async Task<IEnumerable<Instrument>> GetAllInstruments()
         {
             var uri = new Uri(BaseUri, "/rest/instruments/details");
-            var response = await HttpClient.GetStringAsync(uri);
+            var response = await AuthenticatedGetStringAsync(uri);
 
             var data = JsonConvert.DeserializeObject<GetAllInstrumentsResponse>(response);
             return data.Instruments;
@@ -147,7 +153,7 @@ namespace Primary
             query["dateTo"] = dateTo.ToString("yyyy-MM-dd");
             builder.Query = query.ToString();
 
-            var response = await HttpClient.GetStringAsync(builder.Uri);
+            var response = await AuthenticatedGetStringAsync(builder.Uri);
             var data = JsonConvert.DeserializeObject<GetTradesResponse>(response);
 
             if (data.Status == Status.Error)
@@ -157,7 +163,7 @@ namespace Primary
                     _logger.LogError("Error when getting historical trades: {Message}, {Description}", data.Message, data.Description);
                 }
 
-                throw new Exception($"{data.Message} ({data.Description})");
+                throw new PrimaryApiException(data.Message, data.Description);
             }
 
             return data.Trades;
@@ -268,7 +274,7 @@ namespace Primary
         }
 
         /// <summary>
-        /// Create a Market Data web socket to receive real-time market data.
+        /// Create an Order Data web socket to receive real-time order data.
         /// </summary>
         /// <param name="accounts">Accounts to get order events from.</param>
         /// <param name="cancellationToken">Custom cancellation token to end the socket task.</param>
@@ -312,7 +318,7 @@ namespace Primary
             query["marketId"] = "ROFX";
             query["symbol"] = order.InstrumentId.Symbol;
             query["price"] = order.Price?.ToString(CultureInfo.InvariantCulture);
-            query["orderQty"] = order.Quantity.ToString();
+            query["orderQty"] = order.Quantity.ToString(CultureInfo.InvariantCulture);
             query["ordType"] = order.Type.ToApiString();
             query["side"] = order.Side.ToApiString();
             query["timeInForce"] = order.Expiration.ToApiString();
@@ -331,12 +337,12 @@ namespace Primary
             }
             builder.Query = query.ToString();
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
 
             return new OrderId()
@@ -360,12 +366,12 @@ namespace Primary
             query["proprietary"] = orderId.Proprietary;
             builder.Query = query.ToString();
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<GetOrderResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
 
             return response.Order;
@@ -384,7 +390,7 @@ namespace Primary
             var query = HttpUtility.ParseQueryString(builder.Query);
             query["clOrdId"] = orderId.ClientOrderId;
             query["proprietary"] = orderId.Proprietary;
-            query["orderQty"] = newQuantity.ToString();
+            query["orderQty"] = newQuantity.ToString(CultureInfo.InvariantCulture);
 
             if (newPrice != null)
             {
@@ -393,12 +399,12 @@ namespace Primary
 
             builder.Query = query.ToString();
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<OrderIdResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
 
             return new OrderId()
@@ -420,12 +426,12 @@ namespace Primary
             query["proprietary"] = orderId.Proprietary;
             builder.Query = query.ToString();
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<StatusResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
         }
 
@@ -440,12 +446,12 @@ namespace Primary
             query["accountId"] = accountId;
             builder.Query = query.ToString();
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<OrdersStatusResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message})");
+                throw new PrimaryApiException(response.Message);
             }
             return response.Orders;
         }
@@ -464,6 +470,7 @@ namespace Primary
             public OrdersStatusResponse()
             {
                 Status = null;
+                Message = null;
                 Orders = null;
             }
         }
@@ -547,14 +554,14 @@ namespace Primary
 
         public async Task<IEnumerable<Account>> GetAccounts()
         {
-            var builder = new UriBuilder(BaseUri + "rest/accounts");
+            var builder = new UriBuilder(BaseUri + "/rest/accounts");
 
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<AccountsResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
             return response.Accounts;
         }
@@ -577,14 +584,14 @@ namespace Primary
         public async Task<AccountStatement> GetAccountStatement(string accountId)
         {
             var uri = new Uri(BaseUri, "/rest/risk/accountReport/" + accountId);
-            var jsonResponse = await HttpClient.GetStringAsync(uri);
+            var jsonResponse = await AuthenticatedGetStringAsync(uri);
 
             var response = JsonConvert.DeserializeObject<GetAccountStatementResponse>(jsonResponse);
 
-            //if (response.Status == Status.Error)
-            //{
-            //throw new Exception($"{response.Message} ({response.Description})");
-            //}
+            if (response.Status == Status.Error)
+            {
+                throw new PrimaryApiException(response.Message, response.Description);
+            }
 
             return response.AccountStatement;
         }
@@ -610,13 +617,13 @@ namespace Primary
 
         public async Task<IEnumerable<Position>> GetAccountPositions(string accountName)
         {
-            var builder = new UriBuilder(BaseUri + $"rest/risk/position/getPositions/{accountName}");
-            var jsonResponse = await HttpClient.GetStringAsync(builder.Uri);
+            var builder = new UriBuilder(BaseUri + $"/rest/risk/position/getPositions/{accountName}");
+            var jsonResponse = await AuthenticatedGetStringAsync(builder.Uri);
 
             var response = JsonConvert.DeserializeObject<PositionsResponse>(jsonResponse);
             if (response.Status == Status.Error)
             {
-                throw new Exception($"{response.Message} ({response.Description})");
+                throw new PrimaryApiException(response.Message, response.Description);
             }
             return response.Positions;
         }
@@ -638,6 +645,24 @@ namespace Primary
 
         #endregion
 
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && _ownsHttpClient)
+            {
+                HttpClient?.Dispose();
+            }
+        }
+
+        #endregion
+
         #region Constants
 
         private static class Status
@@ -647,7 +672,30 @@ namespace Primary
 
         #endregion
 
+        #region Private helpers
+
+        private HttpRequestMessage CreateAuthenticatedRequest(HttpMethod method, Uri uri)
+        {
+            var request = new HttpRequestMessage(method, uri);
+            if (AccessToken != null)
+            {
+                request.Headers.Add("X-Auth-Token", AccessToken);
+            }
+            return request;
+        }
+
+        private async Task<string> AuthenticatedGetStringAsync(Uri uri)
+        {
+            using var request = CreateAuthenticatedRequest(HttpMethod.Get, uri);
+            var response = await HttpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        #endregion
+
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<Api> _logger;
+        private readonly bool _ownsHttpClient;
     }
 }

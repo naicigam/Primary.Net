@@ -13,7 +13,7 @@ namespace Primary.Tests
         [Timeout(10000)]
         public async Task SubscriptionToOrdersDataCanBeCreated()
         {
-            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+            using var socket = Api.CreateOrderDataSocket(new[] { DemoCredentials.Account });
 
             OrderStatus receivedOrderData = null;
             OrderId newOrderId = null;
@@ -30,12 +30,12 @@ namespace Primary.Tests
 
             // Send order
             Order order = Build.AnOrder(Api);
-            newOrderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            newOrderId = await Api.SubmitOrder(DemoCredentials.Account, order);
 
             // Wait until data arrives
             receivedDataSemaphore.Wait();
 
-            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(DemoCredentials.Account));
             Assert.That(receivedOrderData.ClientOrderId, Is.EqualTo(newOrderId.ClientOrderId));
             Assert.That(receivedOrderData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
             Assert.That(receivedOrderData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
@@ -51,7 +51,7 @@ namespace Primary.Tests
             using var cancellationSource = new CancellationTokenSource();
 
             // Create and start the web socket
-            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount }, cancellationSource.Token);
+            using var socket = Api.CreateOrderDataSocket(new[] { DemoCredentials.Account }, cancellationSource.Token);
             Assert.That(!socket.IsRunning);
             socket.OnData += ((api, orderData) => { });
 
@@ -80,7 +80,7 @@ namespace Primary.Tests
         [Timeout(10000)]
         public void SubscriptionToOrdersCannotBeStartedUnlessDataCallbackIsProvided()
         {
-            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+            using var socket = Api.CreateOrderDataSocket(new[] { DemoCredentials.Account });
             socket.OnData = null;
 
             var exception = Assert.ThrowsAsync<Exception>(socket.Start);
@@ -110,7 +110,7 @@ namespace Primary.Tests
         [Timeout(10000)]
         public void OrdersCanBeSentAndIdentifiedUsingWebSocketClientOrderId()
         {
-            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+            using var socket = Api.CreateOrderDataSocket(new[] { DemoCredentials.Account });
 
             OrderStatus receivedOrderData = null;
             var newOrderWebSocketClientId = Build.RandomString();
@@ -130,12 +130,12 @@ namespace Primary.Tests
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(DemoCredentials.Account, order);
 
             // Wait until data arrives
             receivedDataSemaphore.Wait();
 
-            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(DemoCredentials.Account));
             Assert.That(receivedOrderData.InstrumentId.Symbol, Is.EqualTo(order.InstrumentId.Symbol));
             Assert.That(receivedOrderData.InstrumentId.Market, Is.EqualTo(order.InstrumentId.Market));
             Assert.That(receivedOrderData.Price, Is.EqualTo(order.Price));
@@ -146,7 +146,7 @@ namespace Primary.Tests
         [Timeout(10000)]
         public void OrdersCanBeCancelled()
         {
-            using var socket = Api.CreateOrderDataSocket(new[] { Api.DemoAccount });
+            using var socket = Api.CreateOrderDataSocket(new[] { DemoCredentials.Account });
 
             OrderStatus receivedOrderData = default;
             var newOrderWebSocketClientId = Build.RandomString();
@@ -181,12 +181,12 @@ namespace Primary.Tests
             Order order = Build.AnOrder(Api);
             order.WebSocketClientOrderId = newOrderWebSocketClientId;
 
-            socket.SubmitOrder(Api.DemoAccount, order);
+            socket.SubmitOrder(DemoCredentials.Account, order);
 
             // Wait until data arrives
             receivedDataSemaphore.Wait();
 
-            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(Api.DemoAccount));
+            Assert.That(receivedOrderData.Account.Id, Is.EqualTo(DemoCredentials.Account));
             Assert.That(receivedOrderData.Status, Is.EqualTo(Status.Cancelled));
         }
     }

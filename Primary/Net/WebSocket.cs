@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -50,8 +50,6 @@ namespace Primary.Net
                 return client;
             });
 
-            Exception closedByException = null;
-
             _logger = _loggerFactory.CreateLogger<WebSocket<TRequest, TResponse>>();
             var webSocketLogger = _loggerFactory.CreateLogger<WebsocketClient>();
             _client = new WebsocketClient(_uri, webSocketLogger, factory);
@@ -71,11 +69,14 @@ namespace Primary.Net
             {
                 _logger.LogWarning("Disconnection happened, type: {type}, exception: {exception}", info.Type, info.Exception);
 
-                closedByException = info.Exception;
-
-                if (CancelToken.IsCancellationRequested || closedByException != null)
+                if (info.Exception != null)
                 {
-                    _exitEvent.Set();
+                    _completionSource.TrySetException(info.Exception);
+                    IsRunning = false;
+                }
+                else if (CancelToken.IsCancellationRequested)
+                {
+                    _completionSource.TrySetResult(true);
                     IsRunning = false;
                 }
             });
@@ -97,12 +98,7 @@ namespace Primary.Net
 
             await _client.StartOrFail();
             IsRunning = true;
-            _exitEvent.WaitOne();
-
-            if (closedByException != null)
-            {
-                throw closedByException;
-            }
+            await _completionSource.Task;
 
             CancelToken.ThrowIfCancellationRequested();
         }
@@ -110,7 +106,7 @@ namespace Primary.Net
         public bool IsRunning { get; private set; }
         public CancellationToken CancelToken { get; }
 
-        private readonly ManualResetEvent _exitEvent = new(false);
+        private readonly TaskCompletionSource<bool> _completionSource = new();
 
         public Action<Api, TResponse> OnData { get; set; }
 
@@ -144,29 +140,32 @@ namespace Primary.Net
 
         private void OnMessageReceived(ResponseMessage receivedMessage)
         {
-            // Decode the message
             var messageJson = receivedMessage.Text;
 
             if (_logger.IsEnabled(LogLevel.Trace))
             {
-                _logger.LogTrace("Send message: {messageJson}", messageJson);
+                _logger.LogTrace("Received message: {messageJson}", messageJson);
             }
 
-            // Parse and notify subscriber
             var responseJson = JObject.Parse(messageJson);
             if (responseJson.ContainsKey("status") && responseJson.ContainsKey("message") &&
                 responseJson.ContainsKey("description"))
             {
                 if (responseJson["status"].ToString() == "ERROR")
                 {
-                    throw new Exception($"{responseJson["description"]} / [{responseJson["message"]}]");
+                    _completionSource.TrySetException(
+                        new PrimaryApiException(
+                            responseJson["message"].ToString(),
+                            responseJson["description"].ToString()
+                        )
+                    );
+                    IsRunning = false;
+                    return;
                 }
             }
-            else
-            {
-                var data = responseJson.ToObject<TResponse>();
-                OnData(_api, data);
-            }
+
+            var data = responseJson.ToObject<TResponse>();
+            OnData(_api, data);
         }
 
         private IWebsocketClient _client;

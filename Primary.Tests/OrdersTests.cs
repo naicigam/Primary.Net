@@ -15,7 +15,7 @@ namespace Primary.Tests
         {
             // Submit an order
             Order order = Build.AnOrder(Api);
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await Api.SubmitOrder(DemoCredentials.Account, order);
             Assert.That(orderId, Is.Not.EqualTo(default(ulong)));
 
             // Retrieve the order
@@ -34,17 +34,17 @@ namespace Primary.Tests
         {
             // Submit some orders
             Order order = Build.AnOrder(Api);
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await Api.SubmitOrder(DemoCredentials.Account, order);
 
             Order anotherOrder = Build.AnOrder(Api);
-            var anotherOrderId = await Api.SubmitOrder(Api.DemoAccount, anotherOrder);
+            var anotherOrderId = await Api.SubmitOrder(DemoCredentials.Account, anotherOrder);
 
             Order otherToBeCancelled = Build.AnOrder(Api);
-            var orderToBeCancelledId = await Api.SubmitOrder(Api.DemoAccount, otherToBeCancelled);
+            var orderToBeCancelledId = await Api.SubmitOrder(DemoCredentials.Account, otherToBeCancelled);
             await Api.CancelOrder(orderToBeCancelledId);
 
             // Retrieve active orders
-            var activeOrderStatuses = await Api.GetActiveOrderStatuses(Api.DemoAccount);
+            var activeOrderStatuses = await Api.GetActiveOrderStatuses(DemoCredentials.Account);
             Assert.That(activeOrderStatuses, Has.One.Matches<OrderStatus>(o => o.ClientOrderId == orderId.ClientOrderId));
             Assert.That(activeOrderStatuses, Has.One.Matches<OrderStatus>(o => o.ClientOrderId == anotherOrderId.ClientOrderId));
             Assert.That(activeOrderStatuses, Has.None.Matches<OrderStatus>(o => o.ClientOrderId == orderToBeCancelledId.ClientOrderId));
@@ -55,7 +55,7 @@ namespace Primary.Tests
         {
             // Submit an order
             Order order = Build.AnOrder(Api);
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await Api.SubmitOrder(DemoCredentials.Account, order);
 
             var orderStatus = await Api.GetOrderStatus(orderId);
             Assert.That(orderStatus.Quantity, Is.EqualTo(order.Quantity));
@@ -79,7 +79,7 @@ namespace Primary.Tests
         public async Task OrdersCanBeCancelled()
         {
             Order order = Build.AnOrder(Api);
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await Api.SubmitOrder(DemoCredentials.Account, order);
 
             var retrievedOrder = await Api.GetOrderStatus(orderId);
             Assert.That(retrievedOrder.Status, Is.Not.EqualTo(Status.Cancelled));
@@ -107,7 +107,7 @@ namespace Primary.Tests
             };
             var order = new Order { InstrumentId = invalidInstrument };
 
-            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.SubmitOrder(Api.DemoAccount, order));
+            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.SubmitOrder(DemoCredentials.Account, order));
             Assert.That(exception.Message, Does.Contain(invalidInstrument.Symbol));
         }
 
@@ -120,7 +120,7 @@ namespace Primary.Tests
                 Proprietary = "invalid_proprietary"
             };
 
-            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.GetOrderStatus(invalidOrderId));
+            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.GetOrderStatus(invalidOrderId));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientOrderId));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.Proprietary));
         }
@@ -130,7 +130,7 @@ namespace Primary.Tests
         {
             var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
 
-            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.UpdateOrder(order, 0, 0));
+            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.UpdateOrder(order, 0, 0));
             Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
         }
 
@@ -139,7 +139,7 @@ namespace Primary.Tests
         {
             var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
 
-            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.CancelOrder(order));
+            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.CancelOrder(order));
             Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
         }
 
@@ -147,7 +147,7 @@ namespace Primary.Tests
         public void GettingActiveOrdersWithInvalidAccountGeneratesAnException()
         {
             const string invalidAccountId = "invalid_account_id";
-            Assert.ThrowsAsync<Exception>(async () => await Api.GetActiveOrderStatuses(invalidAccountId));
+            Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.GetActiveOrderStatuses(invalidAccountId));
         }
     }
 }

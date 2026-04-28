@@ -10,7 +10,7 @@ namespace Primary.Examples
         public static async Task Run()
         {
             var api = new Api(Api.DemoEndpoint);
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
+            await api.Login(DemoCredentials.Username, DemoCredentials.Password);
 
             // Get a valid instrument and price
             var instruments = await api.GetAllInstruments();
@@ -23,13 +23,13 @@ namespace Primary.Examples
             {
                 InstrumentId = instrumentId,
                 Expiration = Expiration.Day,
-                Type = Data.Orders.Type.Limit,
+                Type = OrderType.Limit,
                 Price = prices.Last().Price,
                 Side = Side.Sell,
                 Quantity = 100
             };
 
-            var orderId = await api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await api.SubmitOrder(DemoCredentials.Account, order);
             Console.WriteLine($"{orderId.ClientOrderId} / {orderId.Proprietary}");
 
             var retrievedOrder = await api.GetOrderStatus(orderId);

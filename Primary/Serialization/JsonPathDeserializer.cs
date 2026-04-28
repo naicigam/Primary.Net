@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -36,14 +35,10 @@ namespace Primary.Serialization
 
                         if (converter != null && converter.CanRead)
                         {
-                            using (var sr = new StringReader(token.ToString()))
-                            using (var jr = new JsonTextReader(sr))
+                            using var tokenReader = token.CreateReader();
+                            if (tokenReader.Read())
                             {
-                                var tokenReader = token.CreateReader();
-                                if (tokenReader.Read())
-                                {
-                                    value = converter.ReadJson(tokenReader, prop.PropertyType, value, serializer);
-                                }
+                                value = converter.ReadJson(tokenReader, prop.PropertyType, value, serializer);
                             }
                         }
                     }

@@ -23,7 +23,7 @@ namespace Primary.Tests.Builders
         {
             // Submit an order
             var order = Build.AnOrder(Api);
-            var orderId = await Api.SubmitOrder(Api.DemoAccount, order);
+            var orderId = await Api.SubmitOrder(DemoCredentials.Account, order);
             Assert.That(orderId, Is.Not.EqualTo(default(ulong)));
 
             // Retrieve the order

@@ -7,7 +7,7 @@ namespace Primary.Tests
 {
     internal class TestWithApi
     {
-        protected string ApiAccount = Api.DemoAccount;
+        protected string ApiAccount = DemoCredentials.Account;
         protected Api Api
         {
             get

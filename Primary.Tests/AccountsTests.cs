@@ -13,7 +13,7 @@ namespace Primary.Tests
         public async Task AccountStatementCanBeRetrieved()
         {
             // Submit an order
-            var accountStatement = await Api.GetAccountStatement(Api.DemoAccount);
+            var accountStatement = await Api.GetAccountStatement(DemoCredentials.Account);
 
             Assert.That(accountStatement, Is.Not.Null);
             Assert.That(accountStatement.Name, Is.Not.Null.And.Not.Empty);
@@ -37,7 +37,7 @@ namespace Primary.Tests
             var account = accounts.First();
             Assert.That(account.BrokerId, Is.Not.EqualTo(default));
             Assert.That(account.Id, Is.Not.EqualTo(default));
-            Assert.That(account.Name, Is.EqualTo(Api.DemoAccount));
+            Assert.That(account.Name, Is.EqualTo(DemoCredentials.Account));
             Assert.That(account.Status, Is.True);
         }
 
@@ -52,7 +52,7 @@ namespace Primary.Tests
             var buyOrder = new Order()
             {
                 InstrumentId = instrument,
-                Type = Type.Limit,
+                Type = OrderType.Limit,
                 Price = instrument.MinimumTradePrice + 10,
                 Side = Side.Sell,
                 Quantity = instrument.MinimumTradeVolume
@@ -65,7 +65,7 @@ namespace Primary.Tests
             var order = new Order()
             {
                 InstrumentId = instrument,
-                Type = Type.Market,
+                Type = OrderType.Market,
                 Side = Side.Buy,
                 Quantity = instrument.MinimumTradeVolume
             };

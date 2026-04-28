@@ -14,7 +14,7 @@ namespace Primary.Tests
             var api = new Api(Api.DemoEndpoint);
             Assert.That(api.AccessToken, Is.Null);
 
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
+            await api.Login(DemoCredentials.Username, DemoCredentials.Password);
             Assert.That(api.AccessToken, Is.Not.Null);
         }
 
@@ -23,7 +23,7 @@ namespace Primary.Tests
         public async Task CanLogoutFromServer()
         {
             var api = new Api(Api.DemoEndpoint);
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
+            await api.Login(DemoCredentials.Username, DemoCredentials.Password);
 
             await api.Logout();
             Assert.That(api.AccessToken, Is.Null);

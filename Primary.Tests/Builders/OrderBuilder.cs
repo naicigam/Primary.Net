@@ -26,7 +26,7 @@ namespace Primary.Tests.Builders
             {
                 InstrumentId = instrument,
                 Expiration = Expiration.Day,
-                Type = Type.Limit,
+                Type = OrderType.Limit,
                 Side = Side.Buy,
                 Quantity = 1,
                 Price = instrument.MinimumTradePrice

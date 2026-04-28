@@ -11,7 +11,7 @@ namespace Primary.Examples
             Console.WriteLine("Connecting to ReMarkets...");
 
             var api = new Api(Api.DemoEndpoint);
-            await api.Login(Api.DemoUsername, Api.DemoPassword);
+            await api.Login(DemoCredentials.Username, DemoCredentials.Password);
 
             // Get instruments
             Console.WriteLine("Getting available instruments...");

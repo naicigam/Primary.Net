@@ -34,7 +34,7 @@ namespace Primary.Data.Orders
 
         /// <summary>Market or limit.</summary>
         [JsonProperty("ordType")]
-        public Type Type { get; set; }
+        public OrderType Type { get; set; }
 
         /// <summary>Buy or sell.</summary>
         [JsonProperty("side")]

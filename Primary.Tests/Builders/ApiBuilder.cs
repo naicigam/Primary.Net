@@ -9,14 +9,14 @@ namespace Primary.Tests.Builders
             _username = username;
             return this;
         }
-        private string _username = Api.DemoUsername;
+        private string _username = DemoCredentials.Username;
 
         public ApiBuilder WithPassword(string password)
         {
             _password = password;
             return this;
         }
-        private string _password = Api.DemoPassword;
+        private string _password = DemoCredentials.Password;
 
         protected async Task<Api> Build()
         {

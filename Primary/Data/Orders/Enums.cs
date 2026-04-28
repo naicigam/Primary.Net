@@ -11,8 +11,8 @@ namespace Primary.Data.Orders
         T48H
     }
 
-    [JsonConverter(typeof(TypeJsonSerializer))]
-    public enum Type
+    [JsonConverter(typeof(OrderTypeJsonSerializer))]
+    public enum OrderType
     {
         Market,
         Limit
@@ -107,22 +107,22 @@ namespace Primary.Data.Orders
 
         #region Type
 
-        public static string ToApiString(this Type value)
+        public static string ToApiString(this OrderType value)
         {
             return value switch
             {
-                Type.Market => "MARKET",
-                Type.Limit => "LIMIT",
+                OrderType.Market => "MARKET",
+                OrderType.Limit => "LIMIT",
                 _ => throw new InvalidEnumStringException(value.ToString()),
             };
         }
 
-        public static Type TypeFromApiString(string value)
+        public static OrderType OrderTypeFromApiString(string value)
         {
             return (value.ToUpper()) switch
             {
-                "MARKET" => Type.Market,
-                "LIMIT" => Type.Limit,
+                "MARKET" => OrderType.Market,
+                "LIMIT" => OrderType.Limit,
                 _ => throw new InvalidEnumStringException(value),
             };
         }
@@ -237,16 +237,16 @@ namespace Primary.Data.Orders
         }
     }
 
-    internal class TypeJsonSerializer : EnumJsonSerializer<Type>
+    internal class OrderTypeJsonSerializer : EnumJsonSerializer<OrderType>
     {
-        protected override string ToString(Type enumValue)
+        protected override string ToString(OrderType enumValue)
         {
             return enumValue.ToApiString();
         }
 
-        protected override Type FromString(string enumString)
+        protected override OrderType FromString(string enumString)
         {
-            return EnumsToApiStrings.TypeFromApiString(enumString);
+            return EnumsToApiStrings.OrderTypeFromApiString(enumString);
         }
     }
 

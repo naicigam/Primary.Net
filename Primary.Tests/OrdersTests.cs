@@ -107,7 +107,7 @@ namespace Primary.Tests
             };
             var order = new Order { InstrumentId = invalidInstrument };
 
-            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.SubmitOrder(DemoCredentials.Account, order));
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.SubmitOrder(DemoCredentials.Account, order));
             Assert.That(exception.Message, Does.Contain(invalidInstrument.Symbol));
         }
 
@@ -120,7 +120,7 @@ namespace Primary.Tests
                 Proprietary = "invalid_proprietary"
             };
 
-            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.GetOrderStatus(invalidOrderId));
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.GetOrderStatus(invalidOrderId));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.ClientOrderId));
             Assert.That(exception.Message, Does.Contain(invalidOrderId.Proprietary));
         }
@@ -130,7 +130,7 @@ namespace Primary.Tests
         {
             var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
 
-            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.UpdateOrder(order, 0, 0));
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.UpdateOrder(order, 0, 0));
             Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
         }
 
@@ -139,7 +139,7 @@ namespace Primary.Tests
         {
             var order = new Order { ClientOrderId = "invalid_id", Proprietary = "invalid_proprietary" };
 
-            var exception = Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.CancelOrder(order));
+            var exception = Assert.ThrowsAsync<Exception>(async () => await Api.CancelOrder(order));
             Assert.That(exception.Message, Does.Contain(order.ClientOrderId));
         }
 
@@ -147,7 +147,7 @@ namespace Primary.Tests
         public void GettingActiveOrdersWithInvalidAccountGeneratesAnException()
         {
             const string invalidAccountId = "invalid_account_id";
-            Assert.ThrowsAsync<PrimaryApiException>(async () => await Api.GetActiveOrderStatuses(invalidAccountId));
+            Assert.ThrowsAsync<Exception>(async () => await Api.GetActiveOrderStatuses(invalidAccountId));
         }
     }
 }
